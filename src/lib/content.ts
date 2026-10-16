@@ -303,6 +303,16 @@ const en: Content = {
       { title: "Personal support", text: "Technicians on the phone to help with read errors or special cases." },
     ],
   },
+  tuningDrive: {
+    kicker: "Tuning Drive",
+    title: "From stock to Stage 3 – in seconds.",
+    stages: [
+      { label: "Stock", title: "Factory standard", text: "The ECU in its original state – the baseline for every optimisation.", ps: "150 PS", nm: "320 Nm" },
+      { label: "Stage 1", title: "More power, no modifications", text: "Optimised map on stock hardware. The most common job – no modifications needed.", ps: "190 PS", nm: "400 Nm" },
+      { label: "Stage 2", title: "Hardware upgrade", text: "Adjusted boost and injection curve for cars with downpipe or sports air filter.", ps: "220 PS", nm: "440 Nm" },
+      { label: "Stage 3", title: "Maximum power", text: "Full potential with larger turbo and reinforced components – for performance projects.", ps: "280 PS", nm: "500 Nm" },
+    ],
+  },
   steps: {
     kicker: "Chapter 04 · The process",
     title: "From reading to handover in four steps.",
