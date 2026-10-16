@@ -1,0 +1,167 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * TuningFiles design system — dark industrial base with a single tuning-red accent.
+ * Light "Werkstatt-Papier" is the default (:root); `.dark` on <html> switches to the dark theme.
+ * All colors use oklch.
+ */
+
+@theme inline {
+  --font-sans: "Mulish", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Chakra Petch", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Chakra Petch", ui-monospace, Menlo, monospace;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-strong: var(--strong);
+  --color-faint: var(--faint);
+  --color-sunken: var(--sunken);
+  --color-raised: var(--raised);
+  --color-media-surface: var(--media-surface);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+}
+
+:root {
+  color-scheme: light;
+  --radius: 0.5rem;
+  --media-surface: oklch(0.163 0 0);
+  --primary: oklch(0.52 0.19 26);
+  --primary-hover: oklch(0.57 0.21 27);
+  --primary-foreground: oklch(1 0 0);
+  --destructive: oklch(0.57 0.21 27);
+  --destructive-foreground: oklch(1 0 0);
+  --success: oklch(0.6 0.14 152);
+  --ring: oklch(0.52 0.19 26);
+  --background: oklch(0.976 0.001 286);
+  --foreground: oklch(0.25 0 0);
+  --strong: oklch(0.198 0 0);
+  --faint: oklch(0.55 0 0);
+  --sunken: oklch(0.955 0.002 286);
+  --raised: oklch(0.94 0.003 286);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.25 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.25 0 0);
+  --primary-soft: oklch(0.52 0.19 26 / 9%);
+  --secondary: oklch(0.94 0.003 286);
+  --secondary-foreground: oklch(0.198 0 0);
+  --muted: oklch(0.94 0.003 286);
+  --muted-foreground: oklch(0.47 0 0);
+  --accent: oklch(0.94 0.003 286);
+  --accent-foreground: oklch(0.198 0 0);
+  --border: oklch(0.92 0.004 286);
+  --border-strong: oklch(0.87 0.005 286);
+  --input: oklch(0.87 0.005 286);
+}
+
+
+.dark {
+  color-scheme: dark;
+  --radius: 0.5rem;
+  --media-surface: oklch(0.163 0 0);
+  --background: oklch(0.198 0 0);
+  --foreground: oklch(0.946 0 0);
+  --strong: oklch(1 0 0);
+  --faint: oklch(0.637 0 0);
+  --sunken: oklch(0.163 0 0);
+  --raised: oklch(0.25 0 0);
+  --card: oklch(0.222 0 0);
+  --card-foreground: oklch(0.946 0 0);
+  --popover: oklch(0.222 0 0);
+  --popover-foreground: oklch(0.946 0 0);
+  --primary: oklch(0.52 0.19 26);
+  --primary-hover: oklch(0.57 0.21 27);
+  --primary-soft: oklch(0.52 0.19 26 / 16%);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.25 0 0);
+  --secondary-foreground: oklch(0.946 0 0);
+  --muted: oklch(0.25 0 0);
+  --muted-foreground: oklch(0.77 0 0);
+  --accent: oklch(0.25 0 0);
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.57 0.21 27);
+  --destructive-foreground: oklch(1 0 0);
+  --success: oklch(0.67 0.14 152);
+  --border: oklch(0.277 0 0);
+  --border-strong: oklch(0.31 0 0);
+  --input: oklch(0.31 0 0);
+  --ring: oklch(0.52 0.19 26);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    color: var(--color-strong);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@utility kicker {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+@utility label-caps {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
