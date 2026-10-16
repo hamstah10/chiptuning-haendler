@@ -129,7 +129,7 @@ function ChapterRail({ c }: { c: Content }) {
                 </span>
                 <span
                   className={cn(
-                    "label-caps text-[10px] transition-all duration-300",
+                    "label-caps hidden text-[10px] transition-all duration-300 2xl:inline",
                     on ? "translate-x-0 text-strong opacity-100" : "-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100",
                   )}
                 >
@@ -191,19 +191,18 @@ function HeroDyno({ c }: { c: Content }) {
             d={curve(base, max)}
             fill="none"
             className="stroke-faint"
-            strokeWidth="1.5"
-            strokeDasharray="3 3"
-            vectorEffect="non-scaling-stroke"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 1.4, delay: 0.3, ease: "easeInOut" }}
+            strokeWidth="0.5"
+            strokeDasharray="1.5 1.5"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
           />
           <motion.path
             d={curve(tuned, max)}
             fill="none"
             className="stroke-primary"
-            strokeWidth="3"
-            vectorEffect="non-scaling-stroke"
+            strokeWidth="1"
+            strokeLinecap="round"
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
             transition={{ duration: 1.8, delay: 1.1, ease: "easeInOut" }}
