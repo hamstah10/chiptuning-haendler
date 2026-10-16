@@ -187,26 +187,16 @@ function HeroDyno({ c }: { c: Content }) {
           {[20, 40, 60, 80].map((x) => (
             <line key={`v${x}`} x1={x} y1="0" x2={x} y2="100" className="stroke-border" strokeWidth="0.3" />
           ))}
-          <motion.path
-            d={curve(base, max)}
-            fill="none"
-            className="stroke-faint"
-            strokeWidth="0.5"
-            strokeDasharray="1.5 1.5"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-          />
-          <motion.path
-            d={curve(tuned, max)}
-            fill="none"
-            className="stroke-primary"
-            strokeWidth="1"
-            strokeLinecap="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 1.8, delay: 1.1, ease: "easeInOut" }}
-          />
+          <defs>
+            <clipPath id="dyno-base">
+              <motion.rect x="0" y="0" height="100" initial={{ width: 0 }} animate={{ width: 100 }} transition={{ duration: 1.2, delay: 0.3, ease: "easeInOut" }} />
+            </clipPath>
+            <clipPath id="dyno-tuned">
+              <motion.rect x="0" y="0" height="100" initial={{ width: 0 }} animate={{ width: 100 }} transition={{ duration: 1.8, delay: 1, ease: "easeInOut" }} />
+            </clipPath>
+          </defs>
+          <path d={curve(base, max)} fill="none" className="stroke-faint" strokeWidth="1.5" vectorEffect="non-scaling-stroke" clipPath="url(#dyno-base)" />
+          <path d={curve(tuned, max)} fill="none" className="stroke-primary" strokeWidth="3" vectorEffect="non-scaling-stroke" clipPath="url(#dyno-tuned)" />
         </svg>
         <div className="absolute left-3 top-3 grid gap-1 font-mono text-[11px] uppercase tracking-wider">
           <span className="text-faint">— — {c.dyno.series}</span>
