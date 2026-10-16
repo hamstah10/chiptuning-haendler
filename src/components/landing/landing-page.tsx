@@ -1,11 +1,10 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { motion, MotionConfig, useScroll, useTransform } from "motion/react";
+import { motion, MotionConfig, useReducedMotion, useScroll, useTransform } from "motion/react";
 import {
-  AlertTriangle,
   ArrowRight,
   Calculator,
-  ChevronDown,
+  Check,
   Clock,
   Cpu,
   Download,
@@ -19,15 +18,20 @@ import {
   Sun,
   Upload,
   UserPlus,
-  Wallet,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { cn } from "@/lib/utils";
+import { formatNumber } from "@/lib/format";
 import { CountUp, Reveal, ScrollProgress } from "./motion";
 import { Configurator } from "./configurator";
 import { PartnerWizard } from "./partner-wizard";
 import { EarningsCalculator } from "./earnings-calculator";
 import type { Content } from "@/lib/content";
+
+/** Section ids in chapter order (01–08). */
+const CHAPTER_IDS = ["problem", "loesung", "anmeldung", "ablauf", "verdienst", "konfigurator", "vertrauen", "faq"];
 
 function Logo() {
   return (
@@ -43,51 +47,37 @@ function Logo() {
 }
 
 function ThemeToggle({ c }: { c: Content }) {
-  const [light, setLight] = useState(false);
+  const [dark, setDark] = useState(false);
   useEffect(() => {
-    setLight(localStorage.getItem("tf-theme") === "light");
+    setDark(localStorage.getItem("tf-theme") === "dark");
   }, []);
   useEffect(() => {
-    document.documentElement.classList.toggle("light", light);
-  }, [light]);
+    document.documentElement.classList.toggle("dark", dark);
+  }, [dark]);
   return (
     <Button
       variant="outline"
       size="icon"
       className="rounded-sm"
-      aria-label={light ? c.nav.themeDark : c.nav.themeLight}
+      aria-label={dark ? c.nav.themeLight : c.nav.themeDark}
       onClick={() => {
-        const nextLight = !light;
-        setLight(nextLight);
-        localStorage.setItem("tf-theme", nextLight ? "light" : "dark");
+        const next = !dark;
+        setDark(next);
+        localStorage.setItem("tf-theme", next ? "dark" : "light");
       }}
     >
-      {light ? <Moon /> : <Sun />}
+      {dark ? <Sun /> : <Moon />}
     </Button>
   );
 }
 
 function Header({ c }: { c: Content }) {
-  const links: [string, string][] = [
-    ["#problem", c.nav.story],
-    ["#ablauf", c.nav.process],
-    ["#verdienst", c.nav.calculator],
-    ["#konfigurator", c.nav.configurator],
-    ["#faq", c.nav.faq],
-  ];
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/85 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5">
         <a href="#top" aria-label="Tuningfiles-download.com">
           <Logo />
         </a>
-        <nav className="hidden items-center gap-6 lg:flex">
-          {links.map(([href, label]) => (
-            <a key={href} href={href} className="label-caps whitespace-nowrap text-xs text-muted-foreground transition-colors hover:text-strong">
-              {label}
-            </a>
-          ))}
-        </nav>
         <div className="flex items-center gap-2">
           <Button asChild variant="ghost" size="sm" className="label-caps rounded-sm text-xs">
             <Link to={c.locale === "de" ? "/en" : "/"} hrefLang={c.locale === "de" ? "en" : "de"}>
@@ -108,9 +98,55 @@ function Header({ c }: { c: Content }) {
   );
 }
 
-function Section({ id, kicker, title, children, intro }: { id: string; kicker: string; title: string; intro?: string; children: ReactNode }) {
+function ChapterRail({ c }: { c: Content }) {
+  const [active, setActive] = useState(-1);
+
+  useEffect(() => {
+    const els = CHAPTER_IDS.map((id) => document.getElementById(id)).filter((el): el is HTMLElement => el !== null);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive(CHAPTER_IDS.indexOf(e.target.id));
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" },
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section id={id} className="scroll-mt-20 border-b">
+    <nav aria-label={c.chapterLabel} className="fixed left-5 top-1/2 z-40 hidden -translate-y-1/2 xl:block">
+      <ol className="grid gap-1">
+        {CHAPTER_IDS.map((id, i) => {
+          const on = i === active;
+          return (
+            <li key={id}>
+              <a href={`#${id}`} className="group flex items-center gap-2.5 py-1" aria-current={on ? "step" : undefined}>
+                <span className={cn("h-px transition-all duration-300", on ? "w-8 bg-primary" : "w-3 bg-border-strong group-hover:w-5")} />
+                <span className={cn("font-mono text-xs transition-colors", on ? "text-primary" : "text-faint group-hover:text-strong")}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span
+                  className={cn(
+                    "label-caps text-[10px] transition-all duration-300",
+                    on ? "translate-x-0 text-strong opacity-100" : "-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100",
+                  )}
+                >
+                  {c.chapters[i]}
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+}
+
+function Section({ id, kicker, title, children, intro, className }: { id: string; kicker: string; title: string; intro?: string; children: ReactNode; className?: string }) {
+  return (
+    <section id={id} className={cn("scroll-mt-16 border-b", className)}>
       <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
         <Reveal>
           <span className="kicker">{kicker}</span>
@@ -123,66 +159,276 @@ function Section({ id, kicker, title, children, intro }: { id: string; kicker: s
   );
 }
 
-function Hero({ c }: { c: Content }) {
-  const { scrollY } = useScroll();
-  const glowY = useTransform(scrollY, [0, 600], [0, 160]);
-  const gaugeRotate = useTransform(scrollY, [0, 600], [-40, 80]);
+function curve(peak: number, max: number) {
+  const pts = 48;
+  return Array.from({ length: pts }, (_, i) => {
+    const x = i / (pts - 1);
+    const y = Math.pow(Math.sin(Math.PI * Math.pow(x, 0.78)), 0.9);
+    const v = peak * (0.12 + 0.88 * y);
+    return `${i ? "L" : "M"}${(x * 100).toFixed(2)},${(100 - (v / max) * 100).toFixed(2)}`;
+  }).join(" ");
+}
 
+function HeroDyno({ c }: { c: Content }) {
+  const base = 150;
+  const tuned = 190;
+  const max = tuned * 1.15;
+  return (
+    <div className="rounded-md border bg-card p-5 shadow-xl md:p-6">
+      <div className="flex items-center justify-between">
+        <span className="label-caps text-xs text-strong">Dyno · PS</span>
+        <span className="font-mono text-[11px] uppercase text-faint">{c.dyno.caption}</span>
+      </div>
+      <div className="relative mt-4 aspect-[4/3] overflow-hidden rounded-sm border bg-sunken">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full" aria-hidden>
+          {[20, 40, 60, 80].map((y) => (
+            <line key={`h${y}`} x1="0" y1={y} x2="100" y2={y} className="stroke-border" strokeWidth="0.3" />
+          ))}
+          {[20, 40, 60, 80].map((x) => (
+            <line key={`v${x}`} x1={x} y1="0" x2={x} y2="100" className="stroke-border" strokeWidth="0.3" />
+          ))}
+          <motion.path
+            d={curve(base, max)}
+            fill="none"
+            className="stroke-faint"
+            strokeWidth="1.5"
+            strokeDasharray="3 3"
+            vectorEffect="non-scaling-stroke"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 1.4, delay: 0.3, ease: "easeInOut" }}
+          />
+          <motion.path
+            d={curve(tuned, max)}
+            fill="none"
+            className="stroke-primary"
+            strokeWidth="3"
+            vectorEffect="non-scaling-stroke"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 1.8, delay: 1.1, ease: "easeInOut" }}
+          />
+        </svg>
+        <div className="absolute left-3 top-3 grid gap-1 font-mono text-[11px] uppercase tracking-wider">
+          <span className="text-faint">— — {c.dyno.series}</span>
+          <span className="text-primary">—— {c.dyno.tuned}</span>
+        </div>
+      </div>
+      <div className="mt-5 grid grid-cols-3 gap-3">
+        <div>
+          <div className="font-mono text-[11px] uppercase text-faint">{c.dyno.series}</div>
+          <div className="font-display text-2xl font-bold text-strong">{formatNumber(base, c.locale)} PS</div>
+        </div>
+        <div>
+          <div className="font-mono text-[11px] uppercase text-primary">{c.dyno.tuned}</div>
+          <div className="font-display text-2xl font-bold text-primary">
+            <CountUp to={tuned} locale={c.locale} suffix=" PS" />
+          </div>
+        </div>
+        <div>
+          <div className="font-mono text-[11px] uppercase text-faint">{c.dyno.gain}</div>
+          <div className="font-display text-2xl font-bold text-strong">
+            <CountUp to={Math.round(((tuned - base) / base) * 100)} locale={c.locale} prefix="+" suffix=" %" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Hero({ c }: { c: Content }) {
   return (
     <section id="top" className="relative overflow-hidden border-b">
-      <div aria-hidden className="grid-lines absolute inset-0 opacity-60" />
-      <motion.div aria-hidden className="glow-red absolute -right-40 -top-48 size-[680px] rounded-full" style={{ y: glowY }} />
-      <motion.div aria-hidden className="absolute -right-24 top-24 hidden size-[420px] rounded-full border-2 border-dashed border-border-strong lg:block" style={{ rotate: gaugeRotate }}>
-        <div className="absolute left-1/2 top-4 h-1/2 w-1 -translate-x-1/2 origin-bottom rounded-full bg-primary" />
-      </motion.div>
+      <div aria-hidden className="grid-lines absolute inset-0 opacity-70" />
+      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-14 md:pt-20 lg:grid-cols-[1.05fr_0.95fr]">
+        <div>
+          <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="kicker block">
+            {c.hero.kicker}
+          </motion.span>
+          <h1 className="mt-5 text-[2.4rem] leading-[1.02] sm:text-6xl">
+            <motion.span className="block" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}>
+              {c.hero.title1}
+            </motion.span>
+            <motion.span className="block text-primary" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }}>
+              {c.hero.title2}
+            </motion.span>
+          </h1>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7, delay: 0.5 }} className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
+            {c.hero.lead}
+          </motion.p>
 
-      <div className="relative mx-auto max-w-6xl px-5 pb-16 pt-20 md:pt-28">
-        <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="kicker block">
-          {c.hero.kicker}
-        </motion.span>
-        <h1 className="mt-5 text-[2.6rem] leading-[1.02] sm:text-6xl md:text-7xl">
-          <motion.span className="block" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}>
-            {c.hero.title1}
-          </motion.span>
-          <motion.span className="block text-primary" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }}>
-            {c.hero.title2}
-          </motion.span>
-        </h1>
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7, delay: 0.55 }} className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-          {c.hero.lead}
-        </motion.p>
-        <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.7 }} className="mt-9 flex flex-wrap gap-3">
-          <Button asChild size="lg" className="label-caps h-13 rounded-sm px-6">
-            <a href="#anmeldung">
-              {c.hero.primary}
-              <ArrowRight />
-            </a>
-          </Button>
-          <Button asChild size="lg" variant="outline" className="label-caps h-13 rounded-sm bg-card px-6">
-            <a href="#verdienst">
-              <Calculator />
-              {c.hero.secondary}
-            </a>
-          </Button>
+          <motion.a
+            href="#anmeldung"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="group mt-8 flex max-w-xl items-center gap-4 rounded-md border border-l-4 border-l-primary bg-card p-4 transition-colors hover:border-primary"
+          >
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-sm bg-primary text-primary-foreground">
+              <UserPlus className="size-5" />
+            </span>
+            <span className="flex-1">
+              <span className="block font-display font-bold uppercase text-strong">{c.teaser.title}</span>
+              <span className="block text-sm text-muted-foreground">{c.teaser.text}</span>
+            </span>
+            <span className="label-caps hidden items-center gap-1.5 text-xs text-primary sm:inline-flex">
+              {c.teaser.cta}
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+            </span>
+          </motion.a>
+
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }} className="mt-4">
+            <Button asChild variant="ghost" className="label-caps rounded-sm px-0 text-xs hover:bg-transparent hover:text-primary">
+              <a href="#verdienst">
+                <Calculator />
+                {c.hero.secondary}
+              </a>
+            </Button>
+          </motion.div>
+        </div>
+
+        <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
+          <HeroDyno c={c} />
         </motion.div>
+      </div>
 
-        <div className="mt-16 grid grid-cols-2 gap-6 border-t pt-8 md:grid-cols-4">
+      <div className="relative border-t bg-card">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 md:grid-cols-4">
           {c.hero.kpis.map((k, i) => (
-            <Reveal key={k.label} delay={0.1 * i}>
-              <div className="font-display text-3xl font-bold text-strong md:text-4xl">
+            <div key={k.label} className={cn("px-5 py-6", i > 0 && "md:border-l", i % 2 === 1 && "border-l")}>
+              <div className="font-display text-3xl font-bold text-strong">
                 <CountUp to={k.to} prefix={k.prefix} suffix={k.suffix} locale={c.locale} />
               </div>
               <div className="mt-1 text-sm text-muted-foreground">{k.label}</div>
-            </Reveal>
+            </div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
 
-        <a href="#problem" className="mt-14 flex items-center gap-2 text-xs uppercase tracking-widest text-faint hover:text-strong">
-          <motion.span animate={{ y: [0, 6, 0] }} transition={{ duration: 1.6, repeat: Infinity }}>
-            <ChevronDown className="size-4" />
-          </motion.span>
-          {c.hero.scroll}
-        </a>
+function Compare({ c }: { c: Content }) {
+  const t = c.compare;
+  return (
+    <div className="grid overflow-hidden rounded-md border md:grid-cols-2">
+      <Reveal className="bg-sunken p-7 md:p-10">
+        <span className="label-caps text-xs text-faint">{t.before}</span>
+        <ul className="mt-6 grid gap-4">
+          {t.beforeItems.map((item) => (
+            <li key={item} className="flex items-start gap-3 text-lg text-muted-foreground line-through decoration-faint/50">
+              <span className="mt-1 flex size-6 shrink-0 items-center justify-center rounded-full border text-faint">
+                <X className="size-3.5" />
+              </span>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </Reveal>
+      <Reveal delay={0.2} className="bg-strong p-7 text-background md:p-10">
+        <span className="label-caps text-xs text-primary">{t.after}</span>
+        <ul className="mt-6 grid gap-4">
+          {t.afterItems.map((item, i) => (
+            <motion.li
+              key={item}
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.35 + i * 0.12 }}
+              className="flex items-start gap-3 text-lg font-semibold"
+            >
+              <span className="mt-1 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <Check className="size-3.5" />
+              </span>
+              {item}
+            </motion.li>
+          ))}
+        </ul>
+      </Reveal>
+    </div>
+  );
+}
+
+const STEP_ICONS = [UserPlus, Download, Upload, Cpu];
+
+function StepCard({ c, i }: { c: Content; i: number }) {
+  const s = c.steps.items[i];
+  if (!s) return null;
+  const Icon = STEP_ICONS[i] ?? Cpu;
+  return (
+    <div className="flex h-full flex-col rounded-md border bg-card p-7">
+      <div className="flex items-center justify-between">
+        <span className="font-display text-6xl font-bold text-primary">0{i + 1}</span>
+        <span className="flex size-12 items-center justify-center rounded-sm border bg-sunken text-primary">
+          <Icon className="size-5" />
+        </span>
+      </div>
+      <h3 className="mt-auto pt-10 text-2xl">{s.title}</h3>
+      <p className="mt-2 leading-relaxed text-muted-foreground">{s.text}</p>
+    </div>
+  );
+}
+
+function PinnedSteps({ c }: { c: Content }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const x = useTransform(scrollYProgress, [0.05, 0.95], ["0%", "-62%"]);
+  const bar = useTransform(scrollYProgress, [0.05, 0.95], [0, 1]);
+
+  const header = (
+    <div>
+      <span className="kicker">{c.steps.kicker}</span>
+      <h2 className="mt-3 max-w-3xl text-3xl leading-[1.08] md:text-5xl">{c.steps.title}</h2>
+    </div>
+  );
+
+  const grid = (
+    <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {c.steps.items.map((s, i) => (
+        <Reveal key={s.title} delay={0.1 * i} className="h-full">
+          <StepCard c={c} i={i} />
+        </Reveal>
+      ))}
+    </div>
+  );
+
+  if (reduce) {
+    return (
+      <section id="ablauf" className="scroll-mt-16 border-b bg-sunken">
+        <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+          {header}
+          {grid}
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section id="ablauf" className="scroll-mt-16 border-b bg-sunken">
+      <div className="mx-auto max-w-6xl px-5 py-20 md:hidden">
+        {header}
+        {grid}
+      </div>
+      <div ref={ref} className="relative hidden h-[300vh] md:block">
+        <div className="sticky top-16 flex h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden">
+          <div className="mx-auto w-full max-w-6xl px-5">
+            {header}
+            <div className="mt-6 flex items-center gap-4">
+              <div className="h-0.5 flex-1 overflow-hidden bg-border">
+                <motion.div className="h-full origin-left bg-primary" style={{ scaleX: bar }} />
+              </div>
+              <span className="font-mono text-[11px] uppercase text-faint">{c.stepsHint}</span>
+            </div>
+          </div>
+          <motion.div style={{ x }} className="mt-10 flex gap-6 pl-[max(1.25rem,calc((100vw-72rem)/2+1.25rem))]">
+            {c.steps.items.map((s, i) => (
+              <div key={s.title} className="h-80 w-[min(26rem,70vw)] shrink-0">
+                <StepCard c={c} i={i} />
+              </div>
+            ))}
+          </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -202,37 +448,7 @@ function IconCard({ icon, title, text, index }: { icon: ReactNode; title: string
   );
 }
 
-function Steps({ c }: { c: Content }) {
-  const icons = [UserPlus, Download, Upload, Cpu];
-  return (
-    <div className="relative grid gap-6 md:grid-cols-4">
-      <motion.div
-        aria-hidden
-        className="absolute left-0 right-0 top-6 hidden h-0.5 origin-left bg-primary md:block"
-        initial={{ scaleX: 0 }}
-        whileInView={{ scaleX: 1 }}
-        viewport={{ once: true, margin: "-120px" }}
-        transition={{ duration: 1.4, ease: "easeInOut" }}
-      />
-      {c.steps.items.map((s, i) => {
-        const Icon = icons[i] ?? Cpu;
-        return (
-          <Reveal key={s.title} delay={0.25 * i} className="relative">
-            <div className="relative z-10 flex size-12 items-center justify-center rounded-full border-2 border-primary bg-background text-primary">
-              <Icon className="size-5" />
-            </div>
-            <div className="mt-5 font-mono text-xs text-primary">0{i + 1}</div>
-            <h3 className="mt-1 text-xl">{s.title}</h3>
-            <p className="mt-2 leading-relaxed text-muted-foreground">{s.text}</p>
-          </Reveal>
-        );
-      })}
-    </div>
-  );
-}
-
 export function LandingPage({ c }: { c: Content }) {
-  const problemIcons = [Wallet, Clock, AlertTriangle];
   const solutionIcons = [ShieldCheck, Clock, Layers, Headphones];
   const year = 2026;
 
@@ -240,16 +456,12 @@ export function LandingPage({ c }: { c: Content }) {
     <MotionConfig reducedMotion="user">
       <ScrollProgress />
       <Header c={c} />
+      <ChapterRail c={c} />
       <main>
         <Hero c={c} />
 
         <Section id="problem" kicker={c.problem.kicker} title={c.problem.title} intro={c.problem.text}>
-          <div className="grid gap-5 md:grid-cols-3">
-            {c.problem.points.map((p, i) => {
-              const Icon = problemIcons[i] ?? AlertTriangle;
-              return <IconCard key={p.title} index={i} icon={<Icon className="size-5" />} title={p.title} text={p.text} />;
-            })}
-          </div>
+          <Compare c={c} />
         </Section>
 
         <Section id="loesung" kicker={c.solution.kicker} title={c.solution.title} intro={c.solution.text}>
@@ -261,25 +473,8 @@ export function LandingPage({ c }: { c: Content }) {
           </div>
         </Section>
 
-        <Section id="ablauf" kicker={c.steps.kicker} title={c.steps.title}>
-          <Steps c={c} />
-        </Section>
-
-        <Section id="verdienst" kicker={c.calculator.kicker} title={c.calculator.title}>
-          <Reveal>
-            <EarningsCalculator c={c} />
-          </Reveal>
-        </Section>
-
-        <Section id="konfigurator" kicker={c.configurator.kicker} title={c.configurator.title} intro={c.configurator.text}>
-          <Reveal>
-            <Configurator c={c} />
-          </Reveal>
-        </Section>
-
-        <section id="anmeldung" className="relative scroll-mt-20 overflow-hidden border-b">
-          <div aria-hidden className="glow-red absolute -left-60 top-0 size-[640px] rounded-full" />
-          <div className="relative mx-auto grid max-w-6xl gap-12 px-5 py-20 md:py-28 lg:grid-cols-[0.8fr_1.2fr]">
+        <section id="anmeldung" className="scroll-mt-16 border-b bg-card">
+          <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:py-28 lg:grid-cols-[0.8fr_1.2fr]">
             <Reveal>
               <span className="kicker">{c.wizard.kicker}</span>
               <h2 className="mt-3 text-4xl leading-[1.04] md:text-5xl">{c.wizard.title}</h2>
@@ -298,6 +493,20 @@ export function LandingPage({ c }: { c: Content }) {
             </Reveal>
           </div>
         </section>
+
+        <PinnedSteps c={c} />
+
+        <Section id="verdienst" kicker={c.calculator.kicker} title={c.calculator.title}>
+          <Reveal>
+            <EarningsCalculator c={c} />
+          </Reveal>
+        </Section>
+
+        <Section id="konfigurator" kicker={c.configurator.kicker} title={c.configurator.title} intro={c.configurator.text} className="bg-sunken">
+          <Reveal>
+            <Configurator c={c} />
+          </Reveal>
+        </Section>
 
         <Section id="vertrauen" kicker={c.trust.kicker} title={c.trust.title}>
           <div className="grid gap-5 md:grid-cols-3">
@@ -337,12 +546,11 @@ export function LandingPage({ c }: { c: Content }) {
           </Reveal>
         </Section>
 
-        <section className="relative overflow-hidden">
-          <div aria-hidden className="grid-lines absolute inset-0 opacity-50" />
-          <div className="relative mx-auto max-w-4xl px-5 py-24 text-center md:py-32">
+        <section className="bg-strong text-background">
+          <div className="mx-auto max-w-4xl px-5 py-24 text-center md:py-32">
             <Reveal>
-              <h2 className="text-4xl leading-[1.04] md:text-6xl">{c.final.title}</h2>
-              <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">{c.final.text}</p>
+              <h2 className="text-4xl leading-[1.04] text-background md:text-6xl">{c.final.title}</h2>
+              <p className="mx-auto mt-5 max-w-xl text-lg opacity-75">{c.final.text}</p>
               <Button asChild size="lg" className="label-caps mt-9 h-13 rounded-sm px-7">
                 <a href="#anmeldung">
                   {c.final.cta}
