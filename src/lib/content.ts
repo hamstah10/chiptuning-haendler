@@ -68,6 +68,16 @@ const de = {
       { title: "Persönlicher Support", text: "Techniker am Telefon, die bei Lesefehlern oder Sonderfällen helfen." },
     ],
   },
+  tuningDrive: {
+    kicker: "Tuning Drive",
+    title: "Von Serie bis Stage 3 – in Sekunden.",
+    stages: [
+      { label: "Stock", title: "Serienstand", text: "Das Steuergerät im Originalzustand – die Basis für jede Optimierung.", ps: "150 PS", nm: "320 Nm" },
+      { label: "Stage 1", title: "Mehr Leistung, keine Umbauten", text: "Optimiertes Kennfeld auf Serienhardware. Der häufigste Auftrag – kein Umbau nötig.", ps: "190 PS", nm: "400 Nm" },
+      { label: "Stage 2", title: "Hardware-Upgrade", text: "Angepasste Ladedruck- und Einspritzkurve für Fahrzeuge mit Downpipe oder Sportluftfilter.", ps: "220 PS", nm: "440 Nm" },
+      { label: "Stage 3", title: "Maximale Leistung", text: "Volle Ausschöpfung mit größerem Turbo und verstärkten Anbauteilen – für Performance-Projekte.", ps: "280 PS", nm: "500 Nm" },
+    ],
+  },
   steps: {
     kicker: "Kapitel 04 · Der Ablauf",
     title: "Vom Auslesen bis zur Übergabe in vier Schritten.",
@@ -291,6 +301,16 @@ const en: Content = {
       { title: "30 to 60 minutes", text: "Short delivery times so the car leaves your yard the same day." },
       { title: "Stage 1 to 3", text: "From stock hardware to modified cars, plus extras like Vmax or start-stop." },
       { title: "Personal support", text: "Technicians on the phone to help with read errors or special cases." },
+    ],
+  },
+  tuningDrive: {
+    kicker: "Tuning Drive",
+    title: "From stock to Stage 3 – in seconds.",
+    stages: [
+      { label: "Stock", title: "Factory standard", text: "The ECU in its original state – the baseline for every optimisation.", ps: "150 PS", nm: "320 Nm" },
+      { label: "Stage 1", title: "More power, no modifications", text: "Optimised map on stock hardware. The most common job – no modifications needed.", ps: "190 PS", nm: "400 Nm" },
+      { label: "Stage 2", title: "Hardware upgrade", text: "Adjusted boost and injection curve for cars with downpipe or sports air filter.", ps: "220 PS", nm: "440 Nm" },
+      { label: "Stage 3", title: "Maximum power", text: "Full potential with larger turbo and reinforced components – for performance projects.", ps: "280 PS", nm: "500 Nm" },
     ],
   },
   steps: {
