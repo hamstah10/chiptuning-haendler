@@ -35,7 +35,7 @@ function Logo() {
       <span className="flex size-8 items-center justify-center rounded-sm bg-primary">
         <Gauge className="size-4 text-primary-foreground" />
       </span>
-      <span className="label-caps text-[15px] text-strong">
+      <span className="label-caps whitespace-nowrap text-[15px] text-strong">
         Tuningfiles<span className="text-primary">-download</span>
       </span>
     </span>
@@ -83,7 +83,7 @@ function Header({ c }: { c: Content }) {
         </a>
         <nav className="hidden items-center gap-6 lg:flex">
           {links.map(([href, label]) => (
-            <a key={href} href={href} className="label-caps text-xs text-muted-foreground transition-colors hover:text-strong">
+            <a key={href} href={href} className="label-caps whitespace-nowrap text-xs text-muted-foreground transition-colors hover:text-strong">
               {label}
             </a>
           ))}

@@ -176,7 +176,7 @@ const de = {
     done: {
       title: "Anfrage ist raus",
       text: "Wir prüfen die Betriebsdaten und rufen innerhalb eines Werktags zurück – mit Hardware-Empfehlung und Terminvorschlag fürs Onboarding.",
-      items: ["Bestätigung per E-Mail unterwegs", "Rückruf innerhalb eines Werktags", "Onboarding-Termin nach Absprache"],
+      items: ["Angaben sicher gespeichert", "Rückruf innerhalb eines Werktags", "Onboarding-Termin nach Absprache"],
     },
   },
   packages: [
@@ -389,7 +389,7 @@ const en: Content = {
     done: {
       title: "Enquiry sent",
       text: "We review your business details and call you back within one working day – with a hardware recommendation and a suggested onboarding date.",
-      items: ["Confirmation email on its way", "Call-back within one working day", "Onboarding date by arrangement"],
+      items: ["Details stored securely", "Call-back within one working day", "Onboarding date by arrangement"],
     },
   },
   packages: [
