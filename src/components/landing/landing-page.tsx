@@ -439,6 +439,7 @@ function IconCard({ icon, title, text, index }: { icon: ReactNode; title: string
 
 function TuningDrive({ c }: { c: Content }) {
   const ref = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const stages = c.tuningDrive.stages;
 
@@ -452,6 +453,61 @@ function TuningDrive({ c }: { c: Content }) {
     return unsub;
   }, [scrollYProgress, stages.length]);
 
+  /* Sync the animation playhead to scroll progress. The Stage player inside
+     tuning-drive.html pauses its own clock and renders an exact frame when a
+     `data-om-seek-to-time-frame` event lands on its exportable svg. */
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+    let svg: SVGSVGElement | null = null;
+    let duration = 12;
+    let poll: number | undefined;
+
+    const findStage = () => {
+      const doc = iframe.contentDocument;
+      const found = doc?.querySelector<SVGSVGElement>("svg[data-om-exportable-video-with-duration-secs]");
+      if (found) {
+        svg = found;
+        duration = parseFloat(found.getAttribute("data-om-exportable-video-with-duration-secs") ?? "") || 12;
+        return true;
+      }
+      return false;
+    };
+
+    const seek = (progress: number) => {
+      if (!svg) return;
+      const time = Math.min(duration - 0.05, Math.max(0, progress * duration));
+      svg.dispatchEvent(
+        new CustomEvent("data-om-seek-to-time-frame", { detail: { time, sync: true } }),
+      );
+    };
+
+    const onLoad = () => {
+      if (findStage()) {
+        seek(scrollYProgress.get());
+        return;
+      }
+      /* The bundle unpacks asynchronously — poll until the stage svg exists. */
+      poll = window.setInterval(() => {
+        if (findStage()) {
+          window.clearInterval(poll);
+          poll = undefined;
+          seek(scrollYProgress.get());
+        }
+      }, 250);
+    };
+
+    const unsub = scrollYProgress.on("change", seek);
+    iframe.addEventListener("load", onLoad);
+    if (iframe.contentDocument?.readyState === "complete") onLoad();
+
+    return () => {
+      unsub();
+      iframe.removeEventListener("load", onLoad);
+      if (poll !== undefined) window.clearInterval(poll);
+    };
+  }, [scrollYProgress]);
+
   return (
     <section ref={ref} className="relative border-b" style={{ background: "#0e0e0e", height: `${(stages.length + 1) * 100}vh` }}>
       <div className="sticky top-0 h-screen overflow-hidden">
@@ -460,11 +516,11 @@ function TuningDrive({ c }: { c: Content }) {
           <div className="relative mx-auto w-full max-w-[280px] shrink-0 lg:mx-0 lg:max-w-[320px]">
             <div className="overflow-hidden rounded-md" style={{ aspectRatio: "9/16" }}>
               <iframe
+                ref={iframeRef}
                 src="/tuning-drive.html"
                 title="Tuning Drive Animation – Stock → Stage 1 → 2 → 3"
                 className="h-full w-full border-0"
                 loading="lazy"
-                sandbox="allow-scripts"
               />
             </div>
           </div>
