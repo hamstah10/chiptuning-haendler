@@ -6,7 +6,7 @@
 
 /*
  * TuningFiles design system — dark industrial base with a single tuning-red accent.
- * Dark is the default (:root); `.light` on <html> switches to the paper theme.
+ * Light "Werkstatt-Papier" is the default (:root); `.dark` on <html> switches to the dark theme.
  * All colors use oklch.
  */
 
@@ -49,6 +49,40 @@
 }
 
 :root {
+  color-scheme: light;
+  --radius: 0.5rem;
+  --primary: oklch(0.52 0.19 26);
+  --primary-hover: oklch(0.57 0.21 27);
+  --primary-foreground: oklch(1 0 0);
+  --destructive: oklch(0.57 0.21 27);
+  --destructive-foreground: oklch(1 0 0);
+  --success: oklch(0.6 0.14 152);
+  --ring: oklch(0.52 0.19 26);
+  --background: oklch(0.976 0.001 286);
+  --foreground: oklch(0.25 0 0);
+  --strong: oklch(0.198 0 0);
+  --faint: oklch(0.55 0 0);
+  --sunken: oklch(0.955 0.002 286);
+  --raised: oklch(0.94 0.003 286);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.25 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.25 0 0);
+  --primary-soft: oklch(0.52 0.19 26 / 9%);
+  --secondary: oklch(0.94 0.003 286);
+  --secondary-foreground: oklch(0.198 0 0);
+  --muted: oklch(0.94 0.003 286);
+  --muted-foreground: oklch(0.47 0 0);
+  --accent: oklch(0.94 0.003 286);
+  --accent-foreground: oklch(0.198 0 0);
+  --border: oklch(0.92 0.004 286);
+  --border-strong: oklch(0.87 0.005 286);
+  --input: oklch(0.87 0.005 286);
+  --glow: oklch(0.52 0.19 26 / 8%);
+}
+
+
+.dark {
   color-scheme: dark;
   --radius: 0.5rem;
   --background: oklch(0.198 0 0);
@@ -79,31 +113,6 @@
   --input: oklch(0.31 0 0);
   --ring: oklch(0.52 0.19 26);
   --glow: oklch(0.52 0.19 26 / 14%);
-}
-
-.light {
-  color-scheme: light;
-  --background: oklch(0.976 0.001 286);
-  --foreground: oklch(0.25 0 0);
-  --strong: oklch(0.198 0 0);
-  --faint: oklch(0.55 0 0);
-  --sunken: oklch(0.955 0.002 286);
-  --raised: oklch(0.94 0.003 286);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.25 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.25 0 0);
-  --primary-soft: oklch(0.52 0.19 26 / 9%);
-  --secondary: oklch(0.94 0.003 286);
-  --secondary-foreground: oklch(0.198 0 0);
-  --muted: oklch(0.94 0.003 286);
-  --muted-foreground: oklch(0.47 0 0);
-  --accent: oklch(0.94 0.003 286);
-  --accent-foreground: oklch(0.198 0 0);
-  --border: oklch(0.92 0.004 286);
-  --border-strong: oklch(0.87 0.005 286);
-  --input: oklch(0.87 0.005 286);
-  --glow: oklch(0.52 0.19 26 / 8%);
 }
 
 @layer base {
