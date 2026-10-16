@@ -45,10 +45,10 @@ function Logo() {
 function ThemeToggle({ c }: { c: Content }) {
   const [light, setLight] = useState(false);
   useEffect(() => {
-    setLight(localStorage.getItem("tf-theme") === "light");
+    setLight(localStorage.getItem("tf-theme-dark-design") === "light");
   }, []);
   useEffect(() => {
-    document.documentElement.classList.toggle("light", light);
+    document.documentElement.classList.toggle("dark", !light);
   }, [light]);
   return (
     <Button
@@ -59,7 +59,7 @@ function ThemeToggle({ c }: { c: Content }) {
       onClick={() => {
         const nextLight = !light;
         setLight(nextLight);
-        localStorage.setItem("tf-theme", nextLight ? "light" : "dark");
+        localStorage.setItem("tf-theme-dark-design", nextLight ? "light" : "dark");
       }}
     >
       {light ? <Moon /> : <Sun />}
@@ -108,12 +108,18 @@ function Header({ c }: { c: Content }) {
   );
 }
 
+/** Kickers carry the chapter number of the light design; renumber them for this design's order. */
+const DARK_ORDER = ["problem", "loesung", "ablauf", "verdienst", "konfigurator", "anmeldung", "vertrauen", "faq"];
+function chapterKicker(kicker: string, id: string) {
+  return kicker.replace(/\d{2}/, String(DARK_ORDER.indexOf(id) + 1).padStart(2, "0"));
+}
+
 function Section({ id, kicker, title, children, intro }: { id: string; kicker: string; title: string; intro?: string; children: ReactNode }) {
   return (
     <section id={id} className="scroll-mt-20 border-b">
       <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
         <Reveal>
-          <span className="kicker">{kicker}</span>
+          <span className="kicker">{chapterKicker(kicker, id)}</span>
           <h2 className="mt-3 max-w-3xl text-3xl leading-[1.08] md:text-5xl">{title}</h2>
           {intro && <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">{intro}</p>}
         </Reveal>
@@ -231,7 +237,7 @@ function Steps({ c }: { c: Content }) {
   );
 }
 
-export function LandingPage({ c }: { c: Content }) {
+export function LandingPageDark({ c }: { c: Content }) {
   const problemIcons = [Wallet, Clock, AlertTriangle];
   const solutionIcons = [ShieldCheck, Clock, Layers, Headphones];
   const year = 2026;
@@ -281,7 +287,7 @@ export function LandingPage({ c }: { c: Content }) {
           <div aria-hidden className="glow-red absolute -left-60 top-0 size-[640px] rounded-full" />
           <div className="relative mx-auto grid max-w-6xl gap-12 px-5 py-20 md:py-28 lg:grid-cols-[0.8fr_1.2fr]">
             <Reveal>
-              <span className="kicker">{c.wizard.kicker}</span>
+              <span className="kicker">{chapterKicker(c.wizard.kicker, "anmeldung")}</span>
               <h2 className="mt-3 text-4xl leading-[1.04] md:text-5xl">{c.wizard.title}</h2>
               <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{c.wizard.lead}</p>
               <div className="mt-8 grid grid-cols-3 gap-4 border-t pt-6">

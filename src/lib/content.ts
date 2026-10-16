@@ -11,6 +11,7 @@ const de = {
   locale: "de" as Locale,
   chapters: ["Ausgangslage", "Lösung", "Anmeldung", "Ablauf", "Verdienst", "Konfigurator", "Vertrauen", "Fragen"],
   chapterLabel: "Kapitel",
+  design: { label: "Design", light: "Hell", dark: "Dunkel" },
   dyno: { series: "Serie", tuned: "Getunt", caption: "Beispiel: 2.0 TDI, Stage 1", gain: "mehr Leistung" },
   teaser: { title: "In 2 Minuten Partner werden", text: "Unverbindlich anmelden, Freigabe meist am selben Werktag.", cta: "Zur Anmeldung" },
   compare: {
@@ -235,6 +236,7 @@ const en: Content = {
   locale: "en",
   chapters: ["Situation", "Solution", "Sign-up", "Process", "Earnings", "Configurator", "Trust", "FAQ"],
   chapterLabel: "Chapter",
+  design: { label: "Design", light: "Light", dark: "Dark" },
   dyno: { series: "Stock", tuned: "Tuned", caption: "Example: 2.0 TDI, Stage 1", gain: "more power" },
   teaser: { title: "Become a partner in 2 minutes", text: "Sign up with no obligation, approval usually the same working day.", cta: "Go to sign-up" },
   compare: {
