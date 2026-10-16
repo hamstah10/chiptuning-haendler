@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { LandingPage } from "@/components/landing/landing-page";
+import { LandingPage } from "@/components/landing/landing-switch";
 import { content } from "@/lib/content";
 import { landingHead } from "@/lib/seo";
 
