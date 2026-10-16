@@ -14,7 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      dealer_leads: {
+        Row: {
+          company: string | null
+          contact_name: string
+          created_at: string
+          details: Json
+          email: string | null
+          id: string
+          locale: string
+          phone: string | null
+          source: string
+        }
+        Insert: {
+          company?: string | null
+          contact_name: string
+          created_at?: string
+          details?: Json
+          email?: string | null
+          id?: string
+          locale?: string
+          phone?: string | null
+          source: string
+        }
+        Update: {
+          company?: string | null
+          contact_name?: string
+          created_at?: string
+          details?: Json
+          email?: string | null
+          id?: string
+          locale?: string
+          phone?: string | null
+          source?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
