@@ -485,6 +485,25 @@ export function LandingPageLight({ c }: { c: Content }) {
 
         <PinnedSteps c={c} />
 
+        <section className="border-b bg-[#0e0e0e]">
+          <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+            <Reveal>
+              <div className="mx-auto w-full max-w-sm md:max-w-md">
+                <div className="relative w-full overflow-hidden rounded-md" style={{ aspectRatio: "9/16" }}>
+                  <iframe
+                    src="/tuning-drive.html"
+                    title={c.locale === "de" ? "Tuning Drive Animation – Stock → Stage 1 → 2 → 3" : "Tuning Drive Animation – Stock → Stage 1 → 2 → 3"}
+                    className="absolute inset-0 h-full w-full border-0"
+                    loading="lazy"
+                    sandbox="allow-scripts"
+                  />
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+
         <Section id="verdienst" kicker={c.calculator.kicker} title={c.calculator.title}>
           <Reveal>
             <EarningsCalculator c={c} />
