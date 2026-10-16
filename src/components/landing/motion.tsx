@@ -32,8 +32,8 @@ export function CountUp({
 }: {
   to: number;
   locale: Locale;
-  prefix?: string;
-  suffix?: string;
+  prefix?: string | undefined;
+  suffix?: string | undefined;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });

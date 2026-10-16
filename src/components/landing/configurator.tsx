@@ -80,7 +80,7 @@ export function Configurator({ c }: { c: Content }) {
   const [brand, setBrand] = useState<string | null>(null);
   const [model, setModel] = useState<string | null>(null);
   const [engine, setEngine] = useState<Engine | null>(null);
-  const [stage, setStage] = useState(t.stages[0]);
+  const [stage, setStage] = useState<Content["configurator"]["stages"][number]>(t.stages[0] ?? { id: 1, n: "Stage 1", d: "", mult: 1, price: 0 });
   const [opts, setOpts] = useState<string[]>([]);
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");

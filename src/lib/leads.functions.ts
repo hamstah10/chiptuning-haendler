@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import type { TablesInsert } from "@/integrations/supabase/types";
 
 const detailsSchema = z
   .record(z.string().max(300))
@@ -35,7 +36,7 @@ export const submitLead = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const isEmail = data.source === "configurator" && data.contact.includes("@");
-    const row =
+    const row: TablesInsert<"dealer_leads"> =
       data.source === "wizard"
         ? {
             source: data.source,

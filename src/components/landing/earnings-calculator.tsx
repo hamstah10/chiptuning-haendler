@@ -10,7 +10,7 @@ export function EarningsCalculator({ c }: { c: Content }) {
   const [jobs, setJobs] = useState(10);
   const [price, setPrice] = useState(449);
   const [pkgId, setPkgId] = useState("pro");
-  const pkg = c.packages.find((p) => p.id === pkgId) ?? c.packages[0];
+  const pkg = c.packages.find((p) => p.id === pkgId) ?? { file: 0, monthly: 0 };
   const monthly = calcMonthlyEarnings(jobs, price, pkg.file, pkg.monthly);
 
   return (
