@@ -29,7 +29,7 @@ Ein fixierter "Händler werden"-Button bleibt beim Scrollen sichtbar.
 
 ## Was ich von dir brauche
 - **Wizard- und Konfigurator-Komponente**: bitte den Code hochladen oder einfügen
-- **Design-System aus Claude**: darauf habe ich keinen Zugriff – bitte Farben, Schriften und ggf. Beispiele hochladen oder einfügen
+- **Design**: Grundlage ist shadcn (Bausteine wie Buttons, Karten, Formulare, Akkordeon) mit eigenem Farbthema in Dunkel/Chiptuning-Optik
 - Echte Texte/Zahlen (Anzahl Händler, Fahrzeuge, Bearbeitungszeit), Kundenstimmen, Logo, E-Mail-Adresse für Leads. Bis dahin setze ich realistische Beispielinhalte ein und markiere sie.
 
 ## Technische Details
@@ -37,4 +37,4 @@ Ein fixierter "Händler werden"-Button bleibt beim Scrollen sichtbar.
 - Routen: `index.tsx` (DE), `en.tsx` (EN), gemeinsame Sektions-Komponenten mit Übersetzungsdateien
 - Animationen per Scroll-Einblendung (framer-motion), respektiert "reduzierte Bewegung"
 - Lovable Cloud: Tabelle `dealer_leads` mit Insert-Policy für Besucher, Server-Funktion zum Speichern + E-Mail-Versand (E-Mail-Domain wird eingerichtet)
-- Design-Tokens aus deinem Design-System in `src/styles.css`
+- shadcn/ui-Komponenten, Theme-Tokens in `src/styles.css`; Wizard und Konfigurator werden auf diese Tokens umgestellt
