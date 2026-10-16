@@ -49,7 +49,7 @@ function Logo() {
 function ThemeToggle({ c }: { c: Content }) {
   const [dark, setDark] = useState(false);
   useEffect(() => {
-    setDark(localStorage.getItem("tf-theme") === "dark");
+    setDark(localStorage.getItem("tf-theme-light-design") === "dark");
   }, []);
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
@@ -63,7 +63,7 @@ function ThemeToggle({ c }: { c: Content }) {
       onClick={() => {
         const next = !dark;
         setDark(next);
-        localStorage.setItem("tf-theme", next ? "dark" : "light");
+        localStorage.setItem("tf-theme-light-design", next ? "dark" : "light");
       }}
     >
       {dark ? <Sun /> : <Moon />}
@@ -437,7 +437,7 @@ function IconCard({ icon, title, text, index }: { icon: ReactNode; title: string
   );
 }
 
-export function LandingPage({ c }: { c: Content }) {
+export function LandingPageLight({ c }: { c: Content }) {
   const solutionIcons = [ShieldCheck, Clock, Layers, Headphones];
   const year = 2026;
 
