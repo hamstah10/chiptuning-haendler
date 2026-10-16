@@ -9,6 +9,17 @@ export interface Kpi {
 
 const de = {
   locale: "de" as Locale,
+  chapters: ["Ausgangslage", "Lösung", "Anmeldung", "Ablauf", "Verdienst", "Konfigurator", "Vertrauen", "Fragen"],
+  chapterLabel: "Kapitel",
+  dyno: { series: "Serie", tuned: "Getunt", caption: "Beispiel: 2.0 TDI, Stage 1", gain: "mehr Leistung" },
+  teaser: { title: "In 2 Minuten Partner werden", text: "Unverbindlich anmelden, Freigabe meist am selben Werktag.", cta: "Zur Anmeldung" },
+  compare: {
+    before: "Ohne Partner",
+    after: "Mit Tuningfiles-download.com",
+    beforeItems: ["Tuning-Anfragen ablehnen oder weiterempfehlen", "Teure eigene Kalibrierung mit Prüfstand", "Fahrzeug wartet tagelang auf Dateien", "Ungeprüfte Dateien gefährden den Ruf"],
+    afterItems: ["Jede Anfrage wird zu Umsatz in deiner Werkstatt", "Geprüfte Kennfelder ohne eigene Entwicklung", "Datei in 30 bis 60 Minuten zurück", "Persönlicher Support bei jedem Sonderfall"],
+  },
+  stepsHint: "Weiterscrollen, um alle Schritte zu sehen",
   nav: {
     story: "Die Geschichte",
     process: "Ablauf",
@@ -57,7 +68,7 @@ const de = {
     ],
   },
   steps: {
-    kicker: "Kapitel 03 · Der Ablauf",
+    kicker: "Kapitel 04 · Der Ablauf",
     title: "Vom Auslesen bis zur Übergabe in vier Schritten.",
     items: [
       { title: "Anmelden", text: "Betriebsdaten eintragen, Freigabe meist am selben Werktag." },
@@ -67,7 +78,7 @@ const de = {
     ],
   },
   calculator: {
-    kicker: "Kapitel 04 · Dein Verdienst",
+    kicker: "Kapitel 05 · Dein Verdienst",
     title: "Rechne nach, was in deiner Werkstatt drin ist.",
     jobs: "Aufträge pro Monat",
     price: "Endkundenpreis pro Tuning",
@@ -79,7 +90,7 @@ const de = {
     note: "Beispielrechnung: Endkundenpreis minus Dateipreis je Auftrag, abzüglich der Monatsgebühr des Pakets. Ohne Steuern und Arbeitszeit.",
   },
   configurator: {
-    kicker: "Kapitel 05 · Für deine Kunden",
+    kicker: "Kapitel 06 · Für deine Kunden",
     title: "Dein eigener Konfigurator. Kunden wählen, du bekommst die Anfrage.",
     text: "Im Professional-Paket bekommst du den Konfigurator für deine Website. Probier ihn direkt aus – genau so sehen ihn deine Kunden.",
     widgetTitle: "Chiptuning-Konfigurator",
@@ -119,7 +130,7 @@ const de = {
     fuel: { diesel: "Diesel", petrol: "Benzin" },
   },
   wizard: {
-    kicker: "Kapitel 06 · Anmeldung",
+    kicker: "Kapitel 03 · Anmeldung",
     title: "Jetzt Partner werden",
     lead: "Vier kurze Schritte, zwei Minuten. Unverbindlich – die Freigabe erfolgt nach Prüfung der Gewerbedaten, meist am selben Werktag.",
     kpis: [
@@ -222,6 +233,17 @@ export type Content = typeof de;
 
 const en: Content = {
   locale: "en",
+  chapters: ["Situation", "Solution", "Sign-up", "Process", "Earnings", "Configurator", "Trust", "FAQ"],
+  chapterLabel: "Chapter",
+  dyno: { series: "Stock", tuned: "Tuned", caption: "Example: 2.0 TDI, Stage 1", gain: "more power" },
+  teaser: { title: "Become a partner in 2 minutes", text: "Sign up with no obligation, approval usually the same working day.", cta: "Go to sign-up" },
+  compare: {
+    before: "Without a partner",
+    after: "With Tuningfiles-download.com",
+    beforeItems: ["Decline or refer tuning requests", "Costly in-house calibration with a dyno", "Car waits days for files", "Untested files put your reputation at risk"],
+    afterItems: ["Every request becomes revenue in your workshop", "Tested maps without in-house development", "File back in 30 to 60 minutes", "Personal support for every special case"],
+  },
+  stepsHint: "Keep scrolling to see every step",
   nav: {
     story: "The story",
     process: "Process",
@@ -270,7 +292,7 @@ const en: Content = {
     ],
   },
   steps: {
-    kicker: "Chapter 03 · The process",
+    kicker: "Chapter 04 · The process",
     title: "From reading to handover in four steps.",
     items: [
       { title: "Sign up", text: "Enter your business details, approval usually the same working day." },
@@ -280,7 +302,7 @@ const en: Content = {
     ],
   },
   calculator: {
-    kicker: "Chapter 04 · Your earnings",
+    kicker: "Chapter 05 · Your earnings",
     title: "Work out what's in it for your workshop.",
     jobs: "Jobs per month",
     price: "Customer price per tune",
@@ -292,7 +314,7 @@ const en: Content = {
     note: "Example: customer price minus file price per job, less the package's monthly fee. Excludes tax and labour.",
   },
   configurator: {
-    kicker: "Chapter 05 · For your customers",
+    kicker: "Chapter 06 · For your customers",
     title: "Your own configurator. Customers choose, you get the enquiry.",
     text: "The Professional package includes the configurator for your website. Try it now – this is exactly what your customers see.",
     widgetTitle: "Chiptuning configurator",
@@ -332,7 +354,7 @@ const en: Content = {
     fuel: { diesel: "Diesel", petrol: "Petrol" },
   },
   wizard: {
-    kicker: "Chapter 06 · Sign-up",
+    kicker: "Chapter 03 · Sign-up",
     title: "Become a partner now",
     lead: "Four short steps, two minutes. No obligation – approval follows a check of your business details, usually the same working day.",
     kpis: [
