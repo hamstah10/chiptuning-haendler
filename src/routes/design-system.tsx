@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   AlertTriangle,
@@ -55,6 +55,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/design-system")({
   head: () => ({
@@ -137,6 +150,14 @@ function Rule({ children }: { children: React.ReactNode }) {
 
 function DesignSystemPage() {
   const [dark, setDark] = useState(false);
+
+  // Toasts, Dialoge, Menüs und Tooltips werden vom Browser ans Ende des
+  // Dokuments gehängt – deshalb muss das Schema auf dem html-Element stehen,
+  // damit sie dasselbe Farbbild zeigen wie der Rest der Seite.
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+    return () => document.documentElement.classList.remove("dark");
+  }, [dark]);
 
   return (
     <div className={cn(dark && "dark")}>
