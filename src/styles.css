@@ -198,3 +198,31 @@
   background-size: 56px 56px;
   mask-image: radial-gradient(ellipse at 70% 30%, black, transparent 70%);
 }
+
+/*
+ * Toasts (sonner): der Ausgabebehälter wird ans Ende des Dokuments gehängt und
+ * bezieht seine Farben aus sonners eigenen, zur Laufzeit eingefügten Regeln.
+ * Deshalb stehen hier sonners Variablen auf den Design-Tokens – ein Toast folgt
+ * damit demselben Schema wie der Rest der Seite. Die Selektoren bleiben bewusst
+ * spezifisch genug, um sonners Laufzeit-CSS zu überschreiben.
+ */
+html .toaster[data-sonner-toaster] {
+  --normal-bg: var(--card);
+  --normal-border: var(--border);
+  --normal-text: var(--foreground);
+  --normal-bg-hover: var(--accent);
+  --normal-border-hover: var(--border-strong);
+}
+
+html .toaster[data-sonner-toaster] [data-description] {
+  color: var(--muted-foreground);
+}
+
+html .toaster[data-sonner-toaster] [data-button][data-action] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+html .toaster[data-sonner-toaster] [data-button][data-action]:hover {
+  background: var(--primary-hover);
+}
