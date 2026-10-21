@@ -28,10 +28,11 @@ import { CountUp, Reveal, ScrollProgress } from "./motion";
 import { Configurator } from "./configurator";
 import { PartnerWizard } from "./partner-wizard";
 import { EarningsCalculator } from "./earnings-calculator";
+import { StartPlan } from "./start-plan";
 import type { Content } from "@/lib/content";
 
-/** Section ids in chapter order (01–08). */
-const CHAPTER_IDS = ["problem", "loesung", "anmeldung", "ablauf", "verdienst", "konfigurator", "vertrauen", "faq"];
+/** Section ids in chapter order (01–09). */
+const CHAPTER_IDS = ["problem", "loesung", "anmeldung", "ablauf", "verdienst", "konfigurator", "startplan", "vertrauen", "faq"];
 
 function Logo() {
   return (
@@ -643,6 +644,12 @@ export function LandingPageLight({ c }: { c: Content }) {
         <Section id="konfigurator" kicker={c.configurator.kicker} title={c.configurator.title} intro={c.configurator.text} className="bg-sunken">
           <Reveal>
             <Configurator c={c} />
+          </Reveal>
+        </Section>
+
+        <Section id="startplan" kicker={c.startPlan.kicker} title={c.startPlan.title} intro={c.startPlan.intro}>
+          <Reveal>
+            <StartPlan c={c} />
           </Reveal>
         </Section>
 

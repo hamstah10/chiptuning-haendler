@@ -9,7 +9,7 @@ export interface Kpi {
 
 const de = {
   locale: "de" as Locale,
-  chapters: ["Ausgangslage", "Lösung", "Anmeldung", "Ablauf", "Verdienst", "Konfigurator", "Vertrauen", "Fragen"],
+  chapters: ["Ausgangslage", "Lösung", "Anmeldung", "Ablauf", "Verdienst", "Konfigurator", "Startplan", "Vertrauen", "Fragen"],
   chapterLabel: "Kapitel",
   design: { label: "Design", light: "Hell", dark: "Dunkel" },
   dyno: { series: "Serie", tuned: "Getunt", caption: "Beispiel: 2.0 TDI, Stage 1", gain: "mehr Leistung" },
@@ -140,6 +140,35 @@ const de = {
     ],
     fuel: { diesel: "Diesel", petrol: "Benzin" },
   },
+  startPlan: {
+    kicker: "Kapitel 07 · Dein Startplan",
+    title: "Dein persönlicher Fahrplan in den Chiptuning-Handel.",
+    intro: "Sag uns, wo du stehst und wohin du willst – die KI erstellt daraus einen konkreten Startplan mit ersten Schritten, realistischem Zeitrahmen und dem passenden Paket.",
+    fields: {
+      experience: "Erfahrung mit Chiptuning",
+      businessType: "Betriebsart",
+      weeklyHours: "Zeit pro Woche",
+      timeframe: "Geplanter Start",
+      goal: "Hauptziel",
+      note: "Sonst noch etwas? (optional)",
+      notePh: "z. B. Schwerpunkt Landtechnik, kein Prüfstand vorhanden …",
+    },
+    options: {
+      experience: ["Keine – ich starte neu", "Grundkenntnisse vorhanden", "Ich tune bereits selbst"],
+      businessType: ["Freie Werkstatt", "Markenbetrieb / Autohaus", "Tuningbetrieb", "Mobile Dienstleistung", "Existenzgründer"],
+      weeklyHours: ["Nebenbei (bis 5 Std.)", "Teilzeit (5 – 15 Std.)", "Vollzeit (über 15 Std.)"],
+      timeframe: ["Sofort", "In 1 – 3 Monaten", "In 3 – 6 Monaten"],
+      goal: ["Zusatzumsatz im Bestand", "Neues Standbein aufbauen", "Zum Vollzeit-Tuningbetrieb werden"],
+    },
+    submit: "Startplan erstellen",
+    generating: "Dein Plan wird erstellt …",
+    generatingHint: "Die KI stellt deinen Plan zusammen – das dauert wenige Sekunden.",
+    placeholder: "Fülle die Felder links aus – dein persönlicher Startplan erscheint hier.",
+    resultTitle: "Dein Startplan",
+    retry: "Neu erstellen",
+    error: "Der Plan konnte gerade nicht erstellt werden. Bitte versuche es erneut.",
+    disclaimer: "KI-generierter Vorschlag – unverbindlich und kostenlos.",
+  },
   wizard: {
     kicker: "Kapitel 03 · Anmeldung",
     title: "Jetzt Partner werden",
@@ -207,7 +236,7 @@ const de = {
     { id: "premium", n: "Premium", monthly: 349, file: 28, d: "Mehrere Standorte, SLA und fester Ansprechpartner." },
   ],
   trust: {
-    kicker: "Kapitel 07 · Vertrauen",
+    kicker: "Kapitel 08 · Vertrauen",
     title: "Betriebe, die schon mit uns arbeiten.",
     sample: "Beispielstimme",
     quotes: [
@@ -218,7 +247,7 @@ const de = {
     strip: ["Seit 2005 am Markt", "Geprüfte Kennfelder", "Support auf Deutsch", "Keine Vertragsbindung"],
   },
   faq: {
-    kicker: "Kapitel 08 · Häufige Fragen",
+    kicker: "Kapitel 09 · Häufige Fragen",
     title: "Was Werkstätten vor dem Start wissen wollen.",
     items: [
       { q: "Welche Hardware brauche ich?", a: "Ein gängiges Lese-/Schreibgerät wie Autotuner, KESS3, Flex oder CMD reicht. Wenn du noch keins hast, empfehlen wir dir bei der Anmeldung das passende." },
@@ -244,7 +273,7 @@ export type Content = typeof de;
 
 const en: Content = {
   locale: "en",
-  chapters: ["Situation", "Solution", "Sign-up", "Process", "Earnings", "Configurator", "Trust", "FAQ"],
+  chapters: ["Situation", "Solution", "Sign-up", "Process", "Earnings", "Configurator", "Start plan", "Trust", "FAQ"],
   chapterLabel: "Chapter",
   design: { label: "Design", light: "Light", dark: "Dark" },
   dyno: { series: "Stock", tuned: "Tuned", caption: "Example: 2.0 TDI, Stage 1", gain: "more power" },
@@ -375,6 +404,35 @@ const en: Content = {
     ],
     fuel: { diesel: "Diesel", petrol: "Petrol" },
   },
+  startPlan: {
+    kicker: "Chapter 07 · Your start plan",
+    title: "Your personal roadmap into the chiptuning trade.",
+    intro: "Tell us where you stand and where you want to go – the AI turns it into a concrete start plan with first steps, a realistic timeframe and the right package.",
+    fields: {
+      experience: "Chiptuning experience",
+      businessType: "Business type",
+      weeklyHours: "Time per week",
+      timeframe: "Planned start",
+      goal: "Main goal",
+      note: "Anything else? (optional)",
+      notePh: "e.g. focus on agricultural vehicles, no dyno available …",
+    },
+    options: {
+      experience: ["None – starting fresh", "Some basic knowledge", "I already tune myself"],
+      businessType: ["Independent workshop", "Franchise dealer", "Tuning business", "Mobile service", "Start-up"],
+      weeklyHours: ["On the side (up to 5 hrs)", "Part-time (5 – 15 hrs)", "Full-time (over 15 hrs)"],
+      timeframe: ["Immediately", "In 1 – 3 months", "In 3 – 6 months"],
+      goal: ["Extra revenue from existing customers", "Build a new line of business", "Become a full-time tuning business"],
+    },
+    submit: "Create start plan",
+    generating: "Creating your plan …",
+    generatingHint: "The AI is putting your plan together – this takes a few seconds.",
+    placeholder: "Fill in the fields on the left – your personal start plan will appear here.",
+    resultTitle: "Your start plan",
+    retry: "Create again",
+    error: "The plan could not be created right now. Please try again.",
+    disclaimer: "AI-generated suggestion – free and without obligation.",
+  },
   wizard: {
     kicker: "Chapter 03 · Sign-up",
     title: "Become a partner now",
@@ -442,7 +500,7 @@ const en: Content = {
     { id: "premium", n: "Premium", monthly: 349, file: 28, d: "Multiple locations, SLA and a dedicated contact." },
   ],
   trust: {
-    kicker: "Chapter 07 · Trust",
+    kicker: "Chapter 08 · Trust",
     title: "Workshops already working with us.",
     sample: "Sample quote",
     quotes: [
@@ -453,7 +511,7 @@ const en: Content = {
     strip: ["On the market since 2005", "Tested maps", "Personal support", "No contract lock-in"],
   },
   faq: {
-    kicker: "Chapter 08 · FAQ",
+    kicker: "Chapter 09 · FAQ",
     title: "What workshops want to know before starting.",
     items: [
       { q: "What hardware do I need?", a: "A common read/write tool such as Autotuner, KESS3, Flex or CMD is enough. If you don't have one yet, we'll recommend the right one when you sign up." },
