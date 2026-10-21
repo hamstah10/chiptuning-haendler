@@ -85,7 +85,10 @@ export const generateStartPlan = createServerFn({ method: "POST" })
     }
 
     try {
-      const { createResponsesCall } = await import("./ai/responses.server");
+      const [{ createResponsesCall }, { getRequest }] = await Promise.all([
+        import("./ai/responses.server"),
+        import("@tanstack/start-server-core"),
+      ]);
       const { result } = createResponsesCall(
         getRequest(),
         { apiKey, model: "openai/gpt-6-astra" },
