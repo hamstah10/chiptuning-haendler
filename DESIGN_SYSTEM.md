@@ -45,6 +45,10 @@ vertikalen Raum.
 | Input / Textarea / Label | Standard, `disabled`, Fehlerzustand | Immer sichtbares Label; Fehlermeldung direkt darunter in `destructive` |
 | Alert | `default`, `destructive` | Bestätigungen und Probleme am Ort des Geschehens; kurze Hinweise als Toast (sonner) |
 | Tabs | `TabsList`/`TabsTrigger`/`TabsContent` | Gleichwertige Inhalte einer Ebene, keine Schrittfolgen |
+| Select | `SelectTrigger`/`SelectValue`/`SelectContent`/`SelectItem` | Eine Auswahl aus fester Liste ab ca. vier Optionen; bei zwei bis drei Optionen Radio-Buttons |
+| Checkbox | Standard, `disabled` | Unabhängige Ja/Nein-Entscheidungen und Einwilligungen; rechtliche Zustimmungen nie vorauswählen; Label rechts daneben und klickbar |
+| Dialog | `DialogTrigger`/`Content`/`Header`/`Title`/`Description`/`Footer` | Nur für Entscheidungen mit vollem Fokus; Titel als kurze Frage, Beschreibung erklärt Folgen; zerstörerische Aktion rechts in `destructive` |
+| DropdownMenu | `Trigger`/`Content`/`Label`/`Item`/`Separator` | Sekundäre Aktionen an einem Datensatz bündeln; zerstörerische Einträge unten, abgetrennt, in `destructive`; nie für die Hauptaktion |
 
 Weitere verfügbare Bausteine: Accordion, Dialog, Sheet, Select, Checkbox, RadioGroup, Switch,
 Slider, Progress, Separator, Skeleton, Table, Tooltip, sonner (Toasts).
