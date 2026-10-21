@@ -537,7 +537,175 @@ function DesignSystemPage() {
             </Rule>
           </Section>
 
-          <Section id="regeln" kicker="14 – Regeln" title="Ton und Sprache">
+          <Section id="accordion" kicker="14 – Komponenten" title="Accordion">
+            <div className="max-w-2xl rounded-lg border bg-card px-5">
+              <Accordion type="single" collapsible defaultValue="lieferung">
+                <AccordionItem value="lieferung">
+                  <AccordionTrigger>Wie lange dauert die Lieferung?</AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    Die optimierte Datei liegt in der Regel innerhalb von 24 Stunden bereit. Bei
+                    Neuentwicklungen oder seltenen Steuergeräten nennen wir dir den Termin vorher.
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="garantie">
+                  <AccordionTrigger>Was passiert mit der Herstellergarantie?</AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    Bewahre die Originaldatei immer auf. So stellst du den Serienzustand in wenigen
+                    Minuten wieder her – etwa vor einer Hauptuntersuchung oder einer Reklamation.
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="dateien">
+                  <AccordionTrigger>Welche Dateien kann ich hochladen?</AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    Original-Auslesedaten im Format .bin, .ori oder .frf bis 20 MB. Bei Fragen zur
+                    Auslese hilft dir der Support weiter.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+            <Rule>
+              Accordions bündeln Fragen- und Antwortlisten, damit eine Seite kurz bleibt. Ein Eintrag
+              trägt genau eine Frage, die Antwort bleibt bei zwei bis vier Sätzen. Handlungen wie
+              „Paket wählen" gehören nicht in einen Accordion-Inhalt – der Text wird gelesen, nicht
+              geklickt.
+            </Rule>
+          </Section>
+
+          <Section id="tooltip" kicker="15 – Komponenten" title="Tooltip">
+            <TooltipProvider delayDuration={200}>
+              <div className="max-w-2xl space-y-5 rounded-lg border bg-card p-6">
+                <div className="flex flex-wrap items-center gap-3">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="icon" aria-label="Lieferzeit erklärt">
+                        <Info aria-hidden />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      Lieferzeit in Werktagen – ab Eingang deiner Originaldatei.
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline">Stage 1</Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">
+                      Reine Softwareoptimierung ohne Eingriff in die Hardware.
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline">Lieferstatus</Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      Eröffnet am 21.10.2026 – die Bearbeitung läuft.
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  <Tooltip>
+                    <TooltipTrigger className="underline decoration-dotted underline-offset-4">
+                      Prüfstand-erprobte Kennfelder
+                    </TooltipTrigger>
+                    <TooltipContent side="left">
+                      Jeder Datensatz wird vor der Freigabe auf dem Rollenprüfstand nachgemessen.
+                    </TooltipContent>
+                  </Tooltip>{" "}
+                  heißt: Wir liefern keine Werte aus einer Datenbank, sondern messen nach.
+                </p>
+              </div>
+            </TooltipProvider>
+            <Rule>
+              Tooltips erklären ein einzelnes Wort oder Icon in höchstens zwei Zeilen – ohne Aktionen,
+              Links oder Pflichtinfos. Sie erscheinen nach kurzer Verzögerung bei Hover und
+              Tastaturfokus und sind auf Mobilgeräten nicht verlässlich. Deaktivierte Elemente lösen
+              kein Tooltip aus; was der Leser sicher sehen muss, steht im Feld, in einem Alert oder
+              direkt im Text.
+            </Rule>
+          </Section>
+
+          <Section id="toast" kicker="16 – Komponenten" title="Toast">
+            <div className="flex flex-wrap gap-3 rounded-lg border bg-card p-6">
+              <Button
+                variant="outline"
+                onClick={() =>
+                  toast.success("Datei hochgeladen", {
+                    description: "Du erhältst die optimierte Datei bis zum 22.10.2026.",
+                  })
+                }
+              >
+                Erfolg melden
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() =>
+                  toast.error("Upload abgelehnt", {
+                    description: "Die Datei ist größer als 20 MB. Bitte komprimiere sie.",
+                  })
+                }
+              >
+                Fehler melden
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() =>
+                  toast.warning("Anfrage läuft ab", {
+                    description: "Ohne Bearbeitung schließen wir am 28.10.2026.",
+                  })
+                }
+              >
+                Warnung melden
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() =>
+                  toast.info("Neues Modell verfügbar", {
+                    description: "Für den 2.0 TFSI Gen. 3 liegt jetzt eine Datei vor.",
+                  })
+                }
+              >
+                Hinweis anzeigen
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() =>
+                  toast("Entwurf gespeichert", {
+                    description: "Du kannst ihn jederzeit weiterbearbeiten.",
+                    action: {
+                      label: "Rückgängig",
+                      onClick: () => toast.success("Entwurf verworfen"),
+                    },
+                  })
+                }
+              >
+                Mit Rücknahme
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  const toastId = toast.loading("Datei wird geprüft …");
+                  setTimeout(
+                    () =>
+                      toast.success("Prüfung bestanden", {
+                        id: toastId,
+                        description: "Die Datei ist bereit zur Optimierung.",
+                      }),
+                    1200,
+                  );
+                }}
+              >
+                Prüfung starten
+              </Button>
+            </div>
+            <Rule>
+              Ein Toast meldet das Ergebnis einer Aktion, die gerade passiert ist: kurzer Titel, eine
+              beschreibende Zeile, höchstens eine Rücknahme-Aktion. Er verschwindet von selbst und
+              verlangt keinen Klick. Bleibende Infos laufen über Alert, Entscheidungen über Dialog.
+              Der Toast-Ausgabebehälter hängt einmal im Wurzel-Layout und folgt dem aktiven Schema.
+            </Rule>
+          </Section>
+
+          <Section id="regeln" kicker="17 – Regeln" title="Ton und Sprache">
             <div className="rounded-lg border bg-card p-6">
               <ul className="list-inside list-disc space-y-2 text-sm text-muted-foreground">
                 <li>Deutsch mit „du", freundlich und professionell, Satzschreibung in Überschriften und Buttons.</li>
