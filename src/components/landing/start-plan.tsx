@@ -85,12 +85,13 @@ export function StartPlan({ c }: { c: Content }) {
   const t: PlanContent = c.startPlan;
   const run = useServerFn(generateStartPlan);
 
+  const first = (options: string[]) => options[0] ?? "";
   const [fields, setFields] = useState({
-    experience: t.options.experience[0],
-    businessType: t.options.businessType[0],
-    weeklyHours: t.options.weeklyHours[0],
-    timeframe: t.options.timeframe[0],
-    goal: t.options.goal[0],
+    experience: first(t.options.experience),
+    businessType: first(t.options.businessType),
+    weeklyHours: first(t.options.weeklyHours),
+    timeframe: first(t.options.timeframe),
+    goal: first(t.options.goal),
     note: "",
   });
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
