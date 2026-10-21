@@ -236,7 +236,7 @@ const de = {
     { id: "premium", n: "Premium", monthly: 349, file: 28, d: "Mehrere Standorte, SLA und fester Ansprechpartner." },
   ],
   trust: {
-    kicker: "Kapitel 07 · Vertrauen",
+    kicker: "Kapitel 08 · Vertrauen",
     title: "Betriebe, die schon mit uns arbeiten.",
     sample: "Beispielstimme",
     quotes: [
@@ -247,7 +247,7 @@ const de = {
     strip: ["Seit 2005 am Markt", "Geprüfte Kennfelder", "Support auf Deutsch", "Keine Vertragsbindung"],
   },
   faq: {
-    kicker: "Kapitel 08 · Häufige Fragen",
+    kicker: "Kapitel 09 · Häufige Fragen",
     title: "Was Werkstätten vor dem Start wissen wollen.",
     items: [
       { q: "Welche Hardware brauche ich?", a: "Ein gängiges Lese-/Schreibgerät wie Autotuner, KESS3, Flex oder CMD reicht. Wenn du noch keins hast, empfehlen wir dir bei der Anmeldung das passende." },
@@ -500,7 +500,7 @@ const en: Content = {
     { id: "premium", n: "Premium", monthly: 349, file: 28, d: "Multiple locations, SLA and a dedicated contact." },
   ],
   trust: {
-    kicker: "Chapter 07 · Trust",
+    kicker: "Chapter 08 · Trust",
     title: "Workshops already working with us.",
     sample: "Sample quote",
     quotes: [
@@ -511,7 +511,7 @@ const en: Content = {
     strip: ["On the market since 2005", "Tested maps", "Personal support", "No contract lock-in"],
   },
   faq: {
-    kicker: "Chapter 08 · FAQ",
+    kicker: "Chapter 09 · FAQ",
     title: "What workshops want to know before starting.",
     items: [
       { q: "What hardware do I need?", a: "A common read/write tool such as Autotuner, KESS3, Flex or CMD is enough. If you don't have one yet, we'll recommend the right one when you sign up." },
