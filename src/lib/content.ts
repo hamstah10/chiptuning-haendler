@@ -9,7 +9,7 @@ export interface Kpi {
 
 const de = {
   locale: "de" as Locale,
-  chapters: ["Ausgangslage", "Lösung", "Anmeldung", "Ablauf", "Verdienst", "Konfigurator", "Vertrauen", "Fragen"],
+  chapters: ["Ausgangslage", "Lösung", "Anmeldung", "Ablauf", "Verdienst", "Konfigurator", "Startplan", "Vertrauen", "Fragen"],
   chapterLabel: "Kapitel",
   design: { label: "Design", light: "Hell", dark: "Dunkel" },
   dyno: { series: "Serie", tuned: "Getunt", caption: "Beispiel: 2.0 TDI, Stage 1", gain: "mehr Leistung" },
