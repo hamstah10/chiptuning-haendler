@@ -394,7 +394,129 @@ function DesignSystemPage() {
             </Rule>
           </Section>
 
-          <Section id="regeln" kicker="10 – Regeln" title="Ton und Sprache">
+          <Section id="select" kicker="10 – Komponenten" title="Select">
+            <div className="grid max-w-md gap-5 rounded-lg border bg-card p-6">
+              <div className="space-y-2">
+                <Label htmlFor="ds-stage">Gewünschte Stufe</Label>
+                <Select>
+                  <SelectTrigger id="ds-stage">
+                    <SelectValue placeholder="Stufe wählen" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="stage1">Stage 1 – Softwareoptimierung</SelectItem>
+                    <SelectItem value="stage2">Stage 2 – Software plus Peripherie</SelectItem>
+                    <SelectItem value="stage3">Stage 3 – Maximales Setup</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="ds-fuel">Kraftstoff</Label>
+                <Select disabled>
+                  <SelectTrigger id="ds-fuel">
+                    <SelectValue placeholder="Diesel" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="diesel">Diesel</SelectItem>
+                    <SelectItem value="benzin">Benzin</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">Deaktiviertes Feld</p>
+              </div>
+            </div>
+            <Rule>
+              Select für eine Auswahl aus einer festen Liste ab etwa vier Optionen – bei zwei bis
+              drei Optionen sind Radio-Buttons besser sichtbar. Wie jedes Feld mit Label, der
+              Platzhalter benennt die Auswahl, nicht das Format.
+            </Rule>
+          </Section>
+
+          <Section id="checkbox" kicker="11 – Komponenten" title="Checkbox">
+            <div className="max-w-md space-y-4 rounded-lg border bg-card p-6">
+              <div className="flex items-start gap-3">
+                <Checkbox id="ds-agb" defaultChecked />
+                <div className="space-y-1">
+                  <Label htmlFor="ds-agb">Ich habe die AGB gelesen und akzeptiere sie.</Label>
+                  <p className="text-xs text-muted-foreground">Pflichtfeld vor dem Absenden</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Checkbox id="ds-news" />
+                <Label htmlFor="ds-news">
+                  Ich möchte über neue Fahrzeugmodelle und Preisänderungen informiert werden.
+                </Label>
+              </div>
+              <div className="flex items-start gap-3">
+                <Checkbox id="ds-disabled" disabled />
+                <Label htmlFor="ds-disabled" className="text-muted-foreground">
+                  Deaktivierte Option (noch nicht verfügbar)
+                </Label>
+              </div>
+            </div>
+            <Rule>
+              Checkboxen für unabhängige Ja/Nein-Entscheidungen und Einwilligungen – niemals
+              vorausgewählt, wenn es um eine rechtliche Zustimmung geht. Das Label steht rechts
+              daneben und ist selbst klickbar.
+            </Rule>
+          </Section>
+
+          <Section id="dialog" kicker="12 – Komponenten" title="Dialog">
+            <div className="rounded-lg border bg-card p-6">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">Beispiel-Dialog öffnen</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Datei wirklich löschen?</DialogTitle>
+                    <DialogDescription>
+                      Die hochgeladene Originaldatei wird entfernt und kann nicht
+                      wiederhergestellt werden. Bereits bestellte Optimierungen bleiben
+                      bestehen.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <Button variant="secondary">Abbrechen</Button>
+                    <Button variant="destructive">Datei löschen</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+            <Rule>
+              Dialoge nur für Entscheidungen, die den vollen Fokus brauchen – Bestätigungen,
+              kurze Formulare, kritische Schritte. Titel als kurze Frage oder Aussage, die
+              Beschreibung erklärt die Folgen. Die zerstörerische Aktion steht rechts und trägt
+              die destructive-Variante.
+            </Rule>
+          </Section>
+
+          <Section id="dropdown" kicker="13 – Komponenten" title="Dropdown-Menü">
+            <div className="rounded-lg border bg-card p-6">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline">Anfrage bearbeiten</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Anfrage vom 21.10.2026</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Details ansehen</DropdownMenuItem>
+                  <DropdownMenuItem>Datei erneut hochladen</DropdownMenuItem>
+                  <DropdownMenuItem>Status anzeigen</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="text-destructive">
+                    Anfrage zurückziehen
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <Rule>
+              Dropdown-Menüs bündeln sekundäre Aktionen an einem Datensatz, damit die Oberfläche
+              ruhig bleibt. Zerstörerische Einträge stehen ganz unten, abgetrennt und in
+              destructive. Für die Hauptaktion einer Seite ist ein Menü nie der richtige Ort –
+              dafür gibt es den primären Button.
+            </Rule>
+          </Section>
+
+          <Section id="regeln" kicker="14 – Regeln" title="Ton und Sprache">
             <div className="rounded-lg border bg-card p-6">
               <ul className="list-inside list-disc space-y-2 text-sm text-muted-foreground">
                 <li>Deutsch mit „du", freundlich und professionell, Satzschreibung in Überschriften und Buttons.</li>
