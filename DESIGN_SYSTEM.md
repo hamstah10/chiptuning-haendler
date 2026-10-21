@@ -49,9 +49,12 @@ vertikalen Raum.
 | Checkbox | Standard, `disabled` | Unabhängige Ja/Nein-Entscheidungen und Einwilligungen; rechtliche Zustimmungen nie vorauswählen; Label rechts daneben und klickbar |
 | Dialog | `DialogTrigger`/`Content`/`Header`/`Title`/`Description`/`Footer` | Nur für Entscheidungen mit vollem Fokus; Titel als kurze Frage, Beschreibung erklärt Folgen; zerstörerische Aktion rechts in `destructive` |
 | DropdownMenu | `Trigger`/`Content`/`Label`/`Item`/`Separator` | Sekundäre Aktionen an einem Datensatz bündeln; zerstörerische Einträge unten, abgetrennt, in `destructive`; nie für die Hauptaktion |
+| Accordion | `Item`/`Trigger`/`Content`, `type="single"` mit `collapsible` | Fragen- und Antwortlisten; ein Eintrag trägt genau eine Frage in zwei bis vier Sätzen; keine Aktionen im Inhalt |
+| Tooltip | `Provider`/`Trigger`/`Content`, Seiten `top`/`right`/`bottom`/`left` | Kurze Erklärung eines Wortes oder Icons in maximal zwei Zeilen; keine Aktionen, Links oder Pflichtinfos; auf Mobilgeräten nicht verlässlich |
+| Toast (sonner) | `toast`, `success`, `error`, `warning`, `info`, `loading`, `action` | Ergebnis einer gerade ausgeführten Aktion; kurzer Titel plus eine Beschreibung, höchstens eine Rücknahme-Aktion; `<Toaster />` hängt einmal im Wurzel-Layout |
 
-Weitere verfügbare Bausteine: Accordion, Dialog, Sheet, Select, Checkbox, RadioGroup, Switch,
-Slider, Progress, Separator, Skeleton, Table, Tooltip, sonner (Toasts).
+Weitere verfügbare Bausteine: Sheet, RadioGroup, Switch, Slider, Progress, Separator, Skeleton,
+Table.
 
 ## Sprache und Ton
 
