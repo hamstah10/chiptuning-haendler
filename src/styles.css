@@ -48,6 +48,29 @@
   --color-ring-offset-background: var(--background);
 }
 
+@theme {
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
 :root {
   color-scheme: light;
   --radius: 0.5rem;
@@ -174,4 +197,32 @@
     linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
   background-size: 56px 56px;
   mask-image: radial-gradient(ellipse at 70% 30%, black, transparent 70%);
+}
+
+/*
+ * Toasts (sonner): der Ausgabebehälter wird ans Ende des Dokuments gehängt und
+ * bezieht seine Farben aus sonners eigenen, zur Laufzeit eingefügten Regeln.
+ * Deshalb stehen hier sonners Variablen auf den Design-Tokens – ein Toast folgt
+ * damit demselben Schema wie der Rest der Seite. Die Selektoren bleiben bewusst
+ * spezifisch genug, um sonners Laufzeit-CSS zu überschreiben.
+ */
+html .toaster[data-sonner-toaster] {
+  --normal-bg: var(--card);
+  --normal-border: var(--border);
+  --normal-text: var(--foreground);
+  --normal-bg-hover: var(--accent);
+  --normal-border-hover: var(--border-strong);
+}
+
+html .toaster[data-sonner-toaster] [data-description] {
+  color: var(--muted-foreground);
+}
+
+html .toaster[data-sonner-toaster] [data-button][data-action] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+html .toaster[data-sonner-toaster] [data-button][data-action]:hover {
+  background: var(--primary-hover);
 }
