@@ -3,7 +3,7 @@ import { StartPlanPage } from "@/components/landing/start-plan-page";
 import { content } from "@/lib/content";
 import { startPlanHead } from "@/lib/seo";
 
-export const Route = createFileRoute("/en/startplan")({
+export const Route = createFileRoute("/en_/startplan")({
   head: () => startPlanHead("en"),
   component: StartPlanRouteEn,
 });
