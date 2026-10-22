@@ -9,6 +9,15 @@ export function formatNumber(value: number, locale: Locale, fractionDigits = 0):
   }).format(value);
 }
 
+/** Date as DD.MM.YYYY (de) or DD/MM/YYYY (en-GB). */
+export function formatDate(date: Date, locale: Locale): string {
+  return new Intl.DateTimeFormat(intlLocale(locale), {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date);
+}
+
 export function formatEuro(value: number, locale: Locale): string {
   return new Intl.NumberFormat(intlLocale(locale), {
     style: "currency",
