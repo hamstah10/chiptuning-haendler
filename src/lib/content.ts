@@ -176,6 +176,13 @@ const de = {
       resultTitle: "Anpassungen und nächste Schritte",
       error: "Die Anpassungen konnten gerade nicht erstellt werden. Bitte versuche es erneut.",
     },
+    save: {
+      button: "Als PDF speichern",
+      hint: "Öffnet den Druckdialog – dort „Als PDF speichern“ wählen. Dein Plan bleibt außerdem in diesem Browser gespeichert.",
+      restored: "Dein gespeicherter Plan wurde geladen.",
+      printTitle: "Dein persönlicher Startplan",
+      printDate: "Erstellt am",
+    },
     disclaimer: "KI-generierter Vorschlag – unverbindlich und kostenlos.",
   },
   wizard: {
@@ -448,6 +455,13 @@ const en: Content = {
       generating: "Creating adjustments …",
       resultTitle: "Adjustments and next steps",
       error: "The adjustments could not be created right now. Please try again.",
+    },
+    save: {
+      button: "Save as PDF",
+      hint: "Opens the print dialog – choose “Save as PDF” there. Your plan also stays saved in this browser.",
+      restored: "Your saved plan has been loaded.",
+      printTitle: "Your personal start plan",
+      printDate: "Created on",
     },
     disclaimer: "AI-generated suggestion – free and without obligation.",
   },

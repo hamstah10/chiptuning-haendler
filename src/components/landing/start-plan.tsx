@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Loader2, RotateCcw, SlidersHorizontal, Sparkles } from "lucide-react";
+import { ArrowRight, Loader2, Printer, RotateCcw, SlidersHorizontal, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { generateStartPlan, refineStartPlan, refineStartPlanSchema, startPlanSchema } from "@/lib/startplan.functions";
+import { formatDate } from "@/lib/format";
 import type { Content } from "@/lib/content";
+
+const STORAGE_KEY = "tuningfiles-startplan";
 
 type PlanContent = Content["startPlan"];
 
@@ -99,6 +102,39 @@ export function StartPlan({ c }: { c: Content }) {
   const [refineStatus, setRefineStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [refineResult, setRefineResult] = useState("");
   const [refineError, setRefineError] = useState("");
+  const [createdAt, setCreatedAt] = useState<Date | null>(null);
+  const [restored, setRestored] = useState(false);
+
+  // Restore a previously saved plan after hydration (browser-only storage).
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as { plan?: unknown; refineResult?: unknown; createdAt?: unknown };
+      if (typeof saved.plan !== "string" || !saved.plan.trim()) return;
+      setPlan(saved.plan);
+      if (typeof saved.refineResult === "string" && saved.refineResult.trim()) {
+        setRefineResult(saved.refineResult);
+        setRefineStatus("done");
+      }
+      setCreatedAt(typeof saved.createdAt === "string" ? new Date(saved.createdAt) : new Date());
+      setStatus("done");
+      setRestored(true);
+    } catch {
+      // Ignore broken or foreign storage content.
+    }
+  }, []);
+
+  const persist = (nextPlan: string, nextRefine: string, date: Date) => {
+    try {
+      window.localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ plan: nextPlan, refineResult: nextRefine, createdAt: date.toISOString() }),
+      );
+    } catch {
+      // Storage may be unavailable (private mode) – the plan still shows on screen.
+    }
+  };
 
   const set = (k: keyof typeof fields) => (v: string) => setFields((s) => ({ ...s, [k]: v }));
 
@@ -118,12 +154,16 @@ export function StartPlan({ c }: { c: Content }) {
     try {
       const res = await generateStartPlan({ data: input });
       if (res.ok) {
+        const now = new Date();
         setPlan(res.plan);
         setStatus("done");
         setRefineText("");
         setRefineStatus("idle");
         setRefineResult("");
         setRefineError("");
+        setCreatedAt(now);
+        setRestored(false);
+        persist(res.plan, "", now);
       } else {
         setErrorText(res.error);
         setStatus("error");
@@ -144,6 +184,7 @@ export function StartPlan({ c }: { c: Content }) {
       if (res.ok) {
         setRefineResult(res.plan);
         setRefineStatus("done");
+        persist(plan, res.plan, createdAt ?? new Date());
       } else {
         setRefineError(res.error);
         setRefineStatus("error");
@@ -162,6 +203,9 @@ export function StartPlan({ c }: { c: Content }) {
     setRefineStatus("idle");
     setRefineResult("");
     setRefineError("");
+    setCreatedAt(null);
+    setRestored(false);
+    window.localStorage.removeItem(STORAGE_KEY);
   };
 
   return (
@@ -224,60 +268,74 @@ export function StartPlan({ c }: { c: Content }) {
       <div className="rounded-md border bg-card p-5 md:p-7">
         <AnimatePresence mode="wait">
           {status === "done" ? (
-            <motion.div key="plan" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
-              <div className="mb-5 flex items-center gap-2.5 border-b pb-4">
+            <motion.div key="plan" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="startplan-print">
+              <div className="mb-5 flex flex-wrap items-center gap-2.5 border-b pb-4 print:hidden">
                 <span className="flex size-8 items-center justify-center rounded-sm bg-primary text-primary-foreground">
                   <Sparkles className="size-4" />
                 </span>
                 <span className="label-caps text-sm text-strong">{t.resultTitle}</span>
+                <Button variant="outline" size="sm" onClick={() => window.print()} className="label-caps ml-auto rounded-sm">
+                  <Printer />
+                  {t.save.button}
+                </Button>
+              </div>
+              <div className="mb-5 hidden border-b pb-4 print:block">
+                <p className="font-display text-xl font-bold uppercase">{t.save.printTitle}</p>
+                <p className="mt-1 text-sm">
+                  {t.save.printDate} {formatDate(createdAt ?? new Date(), c.locale)} · Tuningfiles-download.com
+                </p>
               </div>
               <PlanMarkdown text={plan} />
+              <p className="mt-4 text-xs text-faint print:hidden">{t.save.hint}</p>
+              {restored && <p className="mt-2 text-xs text-primary print:hidden">{t.save.restored}</p>}
 
-              <div className="mt-7 grid gap-4 rounded-sm border bg-sunken p-4 md:p-5">
-                <div className="flex items-center gap-2.5">
+              <div className="mt-7 grid gap-4 rounded-sm border bg-sunken p-4 md:p-5 print:mt-6 print:border-none print:p-0">
+                <div className="flex items-center gap-2.5 print:hidden">
                   <span className="flex size-8 items-center justify-center rounded-sm border bg-card text-primary">
                     <SlidersHorizontal className="size-4" />
                   </span>
                   <span className="label-caps text-sm text-strong">{t.refine.title}</span>
                 </div>
-                <div className="grid gap-1.5">
-                  <Label htmlFor="sp-refine" className="text-xs text-muted-foreground">
-                    {t.refine.label}
-                  </Label>
-                  <Textarea
-                    id="sp-refine"
-                    placeholder={t.refine.ph}
-                    value={refineText}
-                    maxLength={1000}
-                    rows={3}
-                    onChange={(e) => setRefineText(e.target.value)}
-                    className="rounded-sm bg-card"
-                  />
-                </div>
-                {refineStatus === "error" && (
-                  <p role="alert" className="text-sm text-destructive">
-                    {refineError || t.refine.error}
-                  </p>
-                )}
-                <div>
-                  <Button
-                    onClick={refine}
-                    variant="outline"
-                    disabled={refineStatus === "sending" || refineText.trim().length < 5}
-                    className="label-caps rounded-sm"
-                  >
-                    {refineStatus === "sending" ? (
-                      <>
-                        <Loader2 className="animate-spin" />
-                        {t.refine.generating}
-                      </>
-                    ) : (
-                      <>
-                        {t.refine.submit}
-                        <ArrowRight />
-                      </>
-                    )}
-                  </Button>
+                <div className="grid gap-4 print:hidden">
+                  <div className="grid gap-1.5">
+                    <Label htmlFor="sp-refine" className="text-xs text-muted-foreground">
+                      {t.refine.label}
+                    </Label>
+                    <Textarea
+                      id="sp-refine"
+                      placeholder={t.refine.ph}
+                      value={refineText}
+                      maxLength={1000}
+                      rows={3}
+                      onChange={(e) => setRefineText(e.target.value)}
+                      className="rounded-sm bg-card"
+                    />
+                  </div>
+                  {refineStatus === "error" && (
+                    <p role="alert" className="text-sm text-destructive">
+                      {refineError || t.refine.error}
+                    </p>
+                  )}
+                  <div>
+                    <Button
+                      onClick={refine}
+                      variant="outline"
+                      disabled={refineStatus === "sending" || refineText.trim().length < 5}
+                      className="label-caps rounded-sm"
+                    >
+                      {refineStatus === "sending" ? (
+                        <>
+                          <Loader2 className="animate-spin" />
+                          {t.refine.generating}
+                        </>
+                      ) : (
+                        <>
+                          {t.refine.submit}
+                          <ArrowRight />
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
                 {refineStatus === "done" && (
                   <motion.div

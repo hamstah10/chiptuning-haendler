@@ -1,9 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { calcMonthlyEarnings, formatNumber } from "./format";
+import { calcMonthlyEarnings, formatDate, formatNumber } from "./format";
 
 describe("formatNumber", () => {
   it("uses German separators (1.234,56)", () => {
     expect(formatNumber(1234.56, "de", 2)).toBe("1.234,56");
+  });
+});
+
+describe("formatDate", () => {
+  it("uses German date format (DD.MM.YYYY)", () => {
+    expect(formatDate(new Date(2026, 9, 22), "de")).toBe("22.10.2026");
   });
 });
 
