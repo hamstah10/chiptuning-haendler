@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as EnRouteImport } from './routes/en'
+import { Route as StartplanRouteImport } from './routes/startplan'
+import { Route as EnStartplanRouteImport } from './routes/en.startplan'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +30,53 @@ const EnRoute = EnRouteImport.update({
   path: '/en',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StartplanRoute = StartplanRouteImport.update({
+  id: '/startplan',
+  path: '/startplan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnStartplanRoute = EnStartplanRouteImport.update({
+  id: '/startplan',
+  path: '/startplan',
+  getParentRoute: () => EnRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/design-system': typeof DesignSystemRoute
-  '/en': typeof EnRoute
+  '/en': typeof EnRouteWithChildren
+  '/startplan': typeof StartplanRoute
+  '/en/startplan': typeof EnStartplanRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/design-system': typeof DesignSystemRoute
-  '/en': typeof EnRoute
+  '/en': typeof EnRouteWithChildren
+  '/startplan': typeof StartplanRoute
+  '/en/startplan': typeof EnStartplanRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/design-system': typeof DesignSystemRoute
-  '/en': typeof EnRoute
+  '/en': typeof EnRouteWithChildren
+  '/startplan': typeof StartplanRoute
+  '/en/startplan': typeof EnStartplanRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/design-system' | '/en'
+  fullPaths: '/' | '/design-system' | '/en' | '/startplan' | '/en/startplan'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/design-system' | '/en'
-  id: '__root__' | '/' | '/design-system' | '/en'
+  to: '/' | '/design-system' | '/en' | '/startplan' | '/en/startplan'
+  id:
+    '__root__' | '/' | '/design-system' | '/en' | '/startplan' | '/en/startplan'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DesignSystemRoute: typeof DesignSystemRoute
-  EnRoute: typeof EnRoute
+  EnRoute: typeof EnRouteWithChildren
+  StartplanRoute: typeof StartplanRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,13 +102,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/startplan': {
+      id: '/startplan'
+      path: '/startplan'
+      fullPath: '/startplan'
+      preLoaderRoute: typeof StartplanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/startplan': {
+      id: '/en/startplan'
+      path: '/startplan'
+      fullPath: '/en/startplan'
+      preLoaderRoute: typeof EnStartplanRouteImport
+      parentRoute: typeof EnRoute
+    }
   }
 }
+
+interface EnRouteChildren {
+  EnStartplanRoute: typeof EnStartplanRoute
+}
+
+const EnRouteChildren: EnRouteChildren = {
+  EnStartplanRoute: EnStartplanRoute,
+}
+
+const EnRouteWithChildren = EnRoute._addFileChildren(EnRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DesignSystemRoute: DesignSystemRoute,
-  EnRoute: EnRoute,
+  EnRoute: EnRouteWithChildren,
+  StartplanRoute: StartplanRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
