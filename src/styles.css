@@ -226,3 +226,51 @@ html .toaster[data-sonner-toaster] [data-button][data-action] {
 html .toaster[data-sonner-toaster] [data-button][data-action]:hover {
   background: var(--primary-hover);
 }
+
+/*
+ * Druckausgabe des Startplans: Nur das Ergebnis bleibt sichtbar, immer in
+ * hellem, tintenschonendem Layout – unabhängig vom gewählten Farbschema.
+ */
+@page {
+  size: A4;
+  margin: 14mm;
+}
+
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .startplan-print,
+  .startplan-print * {
+    visibility: visible;
+  }
+
+  .startplan-print {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #161616 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .startplan-print * {
+    background: transparent !important;
+    color: #161616 !important;
+    border-color: #d4d4d4 !important;
+    box-shadow: none !important;
+  }
+
+  .startplan-print .bg-primary {
+    background: #bd1e23 !important;
+  }
+}
