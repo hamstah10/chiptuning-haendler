@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Loader2, RotateCcw, SlidersHorizontal, Sparkles } from "lucide-react";
+import { ArrowRight, Loader2, Printer, RotateCcw, SlidersHorizontal, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { generateStartPlan, refineStartPlan, refineStartPlanSchema, startPlanSchema } from "@/lib/startplan.functions";
+import { formatDate } from "@/lib/format";
 import type { Content } from "@/lib/content";
+
+const STORAGE_KEY = "tuningfiles-startplan";
 
 type PlanContent = Content["startPlan"];
 
@@ -99,6 +102,39 @@ export function StartPlan({ c }: { c: Content }) {
   const [refineStatus, setRefineStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [refineResult, setRefineResult] = useState("");
   const [refineError, setRefineError] = useState("");
+  const [createdAt, setCreatedAt] = useState<Date | null>(null);
+  const [restored, setRestored] = useState(false);
+
+  // Restore a previously saved plan after hydration (browser-only storage).
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as { plan?: unknown; refineResult?: unknown; createdAt?: unknown };
+      if (typeof saved.plan !== "string" || !saved.plan.trim()) return;
+      setPlan(saved.plan);
+      if (typeof saved.refineResult === "string" && saved.refineResult.trim()) {
+        setRefineResult(saved.refineResult);
+        setRefineStatus("done");
+      }
+      setCreatedAt(typeof saved.createdAt === "string" ? new Date(saved.createdAt) : new Date());
+      setStatus("done");
+      setRestored(true);
+    } catch {
+      // Ignore broken or foreign storage content.
+    }
+  }, []);
+
+  const persist = (nextPlan: string, nextRefine: string, date: Date) => {
+    try {
+      window.localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ plan: nextPlan, refineResult: nextRefine, createdAt: date.toISOString() }),
+      );
+    } catch {
+      // Storage may be unavailable (private mode) – the plan still shows on screen.
+    }
+  };
 
   const set = (k: keyof typeof fields) => (v: string) => setFields((s) => ({ ...s, [k]: v }));
 
@@ -118,12 +154,16 @@ export function StartPlan({ c }: { c: Content }) {
     try {
       const res = await generateStartPlan({ data: input });
       if (res.ok) {
+        const now = new Date();
         setPlan(res.plan);
         setStatus("done");
         setRefineText("");
         setRefineStatus("idle");
         setRefineResult("");
         setRefineError("");
+        setCreatedAt(now);
+        setRestored(false);
+        persist(res.plan, "", now);
       } else {
         setErrorText(res.error);
         setStatus("error");
@@ -144,6 +184,7 @@ export function StartPlan({ c }: { c: Content }) {
       if (res.ok) {
         setRefineResult(res.plan);
         setRefineStatus("done");
+        persist(plan, res.plan, createdAt ?? new Date());
       } else {
         setRefineError(res.error);
         setRefineStatus("error");
@@ -162,6 +203,9 @@ export function StartPlan({ c }: { c: Content }) {
     setRefineStatus("idle");
     setRefineResult("");
     setRefineError("");
+    setCreatedAt(null);
+    setRestored(false);
+    window.localStorage.removeItem(STORAGE_KEY);
   };
 
   return (
