@@ -85,12 +85,8 @@ export const generateStartPlan = createServerFn({ method: "POST" })
     }
 
     try {
-      const [{ createResponsesCall }, { getRequest }] = await Promise.all([
-        import("./ai/responses.server"),
-        import("@tanstack/start-server-core"),
-      ]);
+      const { createResponsesCall } = await import("./ai/responses.server");
       const { result } = createResponsesCall(
-        getRequest(),
         { apiKey, model: "openai/gpt-6-astra" },
         [{ role: "user", content: buildUserMessage(data) }],
         data.locale === "de" ? SYSTEM_DE : SYSTEM_EN,
@@ -113,6 +109,95 @@ export const generateStartPlan = createServerFn({ method: "POST" })
           data.locale === "de"
             ? "Der Plan konnte gerade nicht erstellt werden. Bitte versuche es in einem Moment erneut."
             : "The plan could not be created right now. Please try again in a moment.",
+      };
+    }
+  });
+
+export const refineStartPlanSchema = z.object({
+  locale: z.enum(["de", "en"]),
+  plan: z.string().trim().min(20).max(6000),
+  description: z.string().trim().min(5).max(1000),
+});
+
+export type RefineStartPlanInput = z.infer<typeof refineStartPlanSchema>;
+
+const REFINE_DE = `Du bist der Partnerberater von Tuningfiles-download.com, einem professionellen Chiptuning-Dateiservice (seit 2005, über 8.400 Fahrzeuge in der Datenbank, 62 Marken inkl. Landtechnik und Marine).
+
+Deine Aufgabe: Ein angehender Chiptuning-Händler hat bereits einen Startplan erhalten und beschreibt nun, was sich geändert hat oder worauf er sich konzentrieren will. Schlage konkrete Anpassungen am Plan und die nächsten Schritte vor.
+
+Fakten, auf die du dich beziehen darfst:
+- Geprüfte Kennfelder werden in 30 bis 60 Minuten geliefert.
+- Drei Pakete: Starter (0 € Grundgebühr, 39 € pro Datei), Professional (149 €/Monat, 32 € pro Datei, inkl. Konfigurator für die eigene Website), Premium (349 €/Monat, 28 € pro Datei, mehrere Standorte, fester Ansprechpartner).
+- Keine Vertragsbindung, Professional und Premium monatlich kündbar.
+- Support auf Deutsch, Begleitung des ersten Auslesens per Fernwartung möglich.
+- Gängige Lese-/Schreibgeräte: Autotuner, Alientech KESS3, MagicMotorsport Flex, CMD Flash.
+
+Regeln für die Antwort:
+- Antworte auf Deutsch, in der Du-Form, freundlich und professionell, Überschriften in Satzschreibweise.
+- Struktur: Markdown mit ## Das ändert sich (2 bis 4 konkrete Anpassungen als Aufzählung) und ## Deine nächsten Schritte (3 bis 5 Schritte als Aufzählung, in sinnvoller Reihenfolge). Danach ein kurzer abschließender Absatz.
+- Beziehe dich erkennbar auf den bestehenden Plan und die neue Beschreibung. Keine Erfolgsgarantien, keine erfundenen Zahlen, keine Rechts- oder Steuerberatung.
+- Maximal 250 Wörter. Kein HTML, nur Markdown.`;
+
+const REFINE_EN = `You are the partner advisor of Tuningfiles-download.com, a professional chiptuning file service (established 2005, over 8,400 vehicles in the database, 62 brands including agricultural and marine).
+
+Your task: A prospective chiptuning dealer has already received a start plan and now describes what has changed or what they want to focus on. Suggest concrete adjustments to the plan and the next steps.
+
+Facts you may refer to:
+- Tested maps are delivered in 30 to 60 minutes.
+- Three packages: Starter (€0 base fee, €39 per file), Professional (€149/month, €32 per file, incl. configurator for the dealer's website), Premium (€349/month, €28 per file, multiple locations, dedicated contact).
+- No contract lock-in; Professional and Premium can be cancelled monthly.
+- Personal support, remote guidance for the first ECU read available.
+- Common read/write tools: Autotuner, Alientech KESS3, MagicMotorsport Flex, CMD Flash.
+
+Rules for the answer:
+- Answer in English, friendly and professional, headings in sentence case.
+- Structure: Markdown with ## What changes (2 to 4 concrete adjustments as bullet points) and ## Your next steps (3 to 5 steps as bullet points, in a sensible order). Then a short closing paragraph.
+- Refer clearly to the existing plan and the new description. No success guarantees, no invented figures, no legal or tax advice.
+- Maximum 250 words. No HTML, Markdown only.`;
+
+export const refineStartPlan = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => refineStartPlanSchema.parse(data))
+  .handler(async ({ data }): Promise<StartPlanResult> => {
+    const apiKey = process.env["LOVABLE_API_KEY"];
+    if (!apiKey) {
+      return {
+        ok: false,
+        error:
+          data.locale === "de"
+            ? "Der Plan-Service ist gerade nicht konfiguriert. Bitte versuche es später erneut."
+            : "The plan service is not configured right now. Please try again later.",
+      };
+    }
+
+    try {
+      const { createResponsesCall } = await import("./ai/responses.server");
+      const userMessage =
+        data.locale === "de"
+          ? `Mein bisheriger Startplan:\n\n${data.plan}\n\nDas hat sich geändert / darauf will ich mich konzentrieren:\n${data.description}`
+          : `My current start plan:\n\n${data.plan}\n\nWhat has changed / what I want to focus on:\n${data.description}`;
+      const { result } = createResponsesCall(
+        { apiKey, model: "openai/gpt-6-astra" },
+        [{ role: "user", content: userMessage }],
+        data.locale === "de" ? REFINE_DE : REFINE_EN,
+      );
+      const plan = (await result.text).trim();
+      if (!plan) {
+        return {
+          ok: false,
+          error:
+            data.locale === "de"
+              ? "Die Anpassungen konnten nicht erstellt werden. Bitte versuche es erneut."
+              : "The adjustments could not be created. Please try again.",
+        };
+      }
+      return { ok: true, plan };
+    } catch {
+      return {
+        ok: false,
+        error:
+          data.locale === "de"
+            ? "Die Anpassungen konnten gerade nicht erstellt werden. Bitte versuche es in einem Moment erneut."
+            : "The adjustments could not be created right now. Please try again in a moment.",
       };
     }
   });

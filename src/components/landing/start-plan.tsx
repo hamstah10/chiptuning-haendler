@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Loader2, RotateCcw, Sparkles } from "lucide-react";
+import { ArrowRight, Loader2, RotateCcw, SlidersHorizontal, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { generateStartPlan, startPlanSchema } from "@/lib/startplan.functions";
+import { generateStartPlan, refineStartPlan, refineStartPlanSchema, startPlanSchema } from "@/lib/startplan.functions";
 import type { Content } from "@/lib/content";
 
 type PlanContent = Content["startPlan"];
@@ -83,7 +82,6 @@ function PlanSelect({
 
 export function StartPlan({ c }: { c: Content }) {
   const t: PlanContent = c.startPlan;
-  const run = useServerFn(generateStartPlan);
 
   const first = (options: string[]) => options[0] ?? "";
   const [fields, setFields] = useState({
@@ -97,6 +95,10 @@ export function StartPlan({ c }: { c: Content }) {
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [plan, setPlan] = useState("");
   const [errorText, setErrorText] = useState("");
+  const [refineText, setRefineText] = useState("");
+  const [refineStatus, setRefineStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
+  const [refineResult, setRefineResult] = useState("");
+  const [refineError, setRefineError] = useState("");
 
   const set = (k: keyof typeof fields) => (v: string) => setFields((s) => ({ ...s, [k]: v }));
 
@@ -114,10 +116,14 @@ export function StartPlan({ c }: { c: Content }) {
     setStatus("sending");
     setErrorText("");
     try {
-      const res = await run({ data: input });
+      const res = await generateStartPlan({ data: input });
       if (res.ok) {
         setPlan(res.plan);
         setStatus("done");
+        setRefineText("");
+        setRefineStatus("idle");
+        setRefineResult("");
+        setRefineError("");
       } else {
         setErrorText(res.error);
         setStatus("error");
@@ -128,10 +134,34 @@ export function StartPlan({ c }: { c: Content }) {
     }
   };
 
+  const refine = async () => {
+    const input = { locale: c.locale, plan, description: refineText.trim() };
+    if (!refineStartPlanSchema.safeParse(input).success) return;
+    setRefineStatus("sending");
+    setRefineError("");
+    try {
+      const res = await refineStartPlan({ data: input });
+      if (res.ok) {
+        setRefineResult(res.plan);
+        setRefineStatus("done");
+      } else {
+        setRefineError(res.error);
+        setRefineStatus("error");
+      }
+    } catch {
+      setRefineError(t.refine.error);
+      setRefineStatus("error");
+    }
+  };
+
   const reset = () => {
     setStatus("idle");
     setPlan("");
     setErrorText("");
+    setRefineText("");
+    setRefineStatus("idle");
+    setRefineResult("");
+    setRefineError("");
   };
 
   return (
@@ -202,6 +232,65 @@ export function StartPlan({ c }: { c: Content }) {
                 <span className="label-caps text-sm text-strong">{t.resultTitle}</span>
               </div>
               <PlanMarkdown text={plan} />
+
+              <div className="mt-7 grid gap-4 rounded-sm border bg-sunken p-4 md:p-5">
+                <div className="flex items-center gap-2.5">
+                  <span className="flex size-8 items-center justify-center rounded-sm border bg-card text-primary">
+                    <SlidersHorizontal className="size-4" />
+                  </span>
+                  <span className="label-caps text-sm text-strong">{t.refine.title}</span>
+                </div>
+                <div className="grid gap-1.5">
+                  <Label htmlFor="sp-refine" className="text-xs text-muted-foreground">
+                    {t.refine.label}
+                  </Label>
+                  <Textarea
+                    id="sp-refine"
+                    placeholder={t.refine.ph}
+                    value={refineText}
+                    maxLength={1000}
+                    rows={3}
+                    onChange={(e) => setRefineText(e.target.value)}
+                    className="rounded-sm bg-card"
+                  />
+                </div>
+                {refineStatus === "error" && (
+                  <p role="alert" className="text-sm text-destructive">
+                    {refineError || t.refine.error}
+                  </p>
+                )}
+                <div>
+                  <Button
+                    onClick={refine}
+                    variant="outline"
+                    disabled={refineStatus === "sending" || refineText.trim().length < 5}
+                    className="label-caps rounded-sm"
+                  >
+                    {refineStatus === "sending" ? (
+                      <>
+                        <Loader2 className="animate-spin" />
+                        {t.refine.generating}
+                      </>
+                    ) : (
+                      <>
+                        {t.refine.submit}
+                        <ArrowRight />
+                      </>
+                    )}
+                  </Button>
+                </div>
+                {refineStatus === "done" && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="grid gap-4 border-t pt-4"
+                  >
+                    <span className="label-caps text-xs text-primary">{t.refine.resultTitle}</span>
+                    <PlanMarkdown text={refineResult} />
+                  </motion.div>
+                )}
+              </div>
             </motion.div>
           ) : (
             <motion.div key="placeholder" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex h-full min-h-64 flex-col items-center justify-center gap-4 text-center">
