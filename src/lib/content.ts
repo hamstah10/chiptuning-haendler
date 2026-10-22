@@ -167,6 +167,15 @@ const de = {
     resultTitle: "Dein Startplan",
     retry: "Neu erstellen",
     error: "Der Plan konnte gerade nicht erstellt werden. Bitte versuche es erneut.",
+    refine: {
+      title: "Plan anpassen",
+      label: "Was hat sich geändert – oder worauf willst du dich konzentrieren?",
+      ph: "z. B. Ich habe doch mehr Zeit als gedacht und möchte schneller starten …",
+      submit: "Anpassungen vorschlagen",
+      generating: "Anpassungen werden erstellt …",
+      resultTitle: "Anpassungen und nächste Schritte",
+      error: "Die Anpassungen konnten gerade nicht erstellt werden. Bitte versuche es erneut.",
+    },
     disclaimer: "KI-generierter Vorschlag – unverbindlich und kostenlos.",
   },
   wizard: {
@@ -431,6 +440,15 @@ const en: Content = {
     resultTitle: "Your start plan",
     retry: "Create again",
     error: "The plan could not be created right now. Please try again.",
+    refine: {
+      title: "Adjust your plan",
+      label: "What has changed – or what do you want to focus on?",
+      ph: "e.g. I actually have more time than expected and want to start sooner …",
+      submit: "Suggest adjustments",
+      generating: "Creating adjustments …",
+      resultTitle: "Adjustments and next steps",
+      error: "The adjustments could not be created right now. Please try again.",
+    },
     disclaimer: "AI-generated suggestion – free and without obligation.",
   },
   wizard: {

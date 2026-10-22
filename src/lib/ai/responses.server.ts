@@ -10,12 +10,12 @@ const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1";
  * Server-only: reads the key from the caller, never import from client code.
  */
 export function createResponsesCall(
-  request: Request,
   config: { apiKey: string; model: string },
   messages: ModelMessage[],
   instructions?: string,
+  request?: Request,
 ) {
-  const runIdFetch = createLovableAiGatewayRunIdFetch(getLovableAiGatewayRunId(request));
+  const runIdFetch = createLovableAiGatewayRunIdFetch(request ? getLovableAiGatewayRunId(request) : undefined);
   const provider = createOpenAI({
     baseURL: GATEWAY_URL,
     apiKey: config.apiKey,
@@ -26,7 +26,7 @@ export function createResponsesCall(
     model: provider.responses(config.model),
     ...(instructions ? { instructions } : {}),
     messages,
-    abortSignal: request.signal,
+    ...(request ? { abortSignal: request.signal } : {}),
     providerOptions: {
       openai: {
         store: false,
