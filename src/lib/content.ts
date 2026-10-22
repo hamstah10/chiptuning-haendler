@@ -142,6 +142,7 @@ const de = {
   },
   startPlan: {
     kicker: "Kapitel 07 · Dein Startplan",
+    pageKicker: "Startplan-Generator",
     title: "Dein persönlicher Fahrplan in den Chiptuning-Handel.",
     intro: "Sag uns, wo du stehst und wohin du willst – die KI erstellt daraus einen konkreten Startplan mit ersten Schritten, realistischem Zeitrahmen und dem passenden Paket.",
     fields: {
@@ -422,6 +423,7 @@ const en: Content = {
   },
   startPlan: {
     kicker: "Chapter 07 · Your start plan",
+    pageKicker: "Start plan generator",
     title: "Your personal roadmap into the chiptuning trade.",
     intro: "Tell us where you stand and where you want to go – the AI turns it into a concrete start plan with first steps, a realistic timeframe and the right package.",
     fields: {
