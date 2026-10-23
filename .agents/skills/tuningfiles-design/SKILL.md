@@ -15,7 +15,7 @@ Read `assets/theme-tokens.css` before implementing colors or typography. Merge i
 
 - Industrial automotive precision: neutral surfaces, technical headings, fine borders, generous chapter spacing and one tuning-red accent.
 - Brand accent: #bd1e23; dark background: #161616; dark cards: #1c1c1c; dark body text: #ededed. Use the bundled oklch tokens in implementation; these hex values identify the brand, not additional component-level colors.
-- Use Saira for headings (H1/H2 italic), chapter numbers and labels; Saira Condensed for body copy, controls and technical readouts. Load fonts through document-head links, never remote CSS imports.
+- Use Saira Condensed for headings (H1/H2 slanted), chapter numbers, labels and technical readouts; Saira for body copy and controls. Load fonts through document-head links, never remote CSS imports.
 - Light mode uses near-white neutral backgrounds, white cards, dark headings and gray supporting text. Dark mode changes surface and text roles, not the brand accent.
 - Keep controls crisp: approximately 4px corners for buttons and fields; at most 8px for cards. Do not use pill-shaped primary controls.
 - Avoid gradients, decorative glow/orbs, purple accents, serif fonts and soft lifestyle styling. Some older source effects do not represent the intended reusable design.

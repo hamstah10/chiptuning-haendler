@@ -11,8 +11,8 @@
  */
 
 @theme inline {
-  --font-sans: "Saira Condensed", "Segoe UI", system-ui, sans-serif;
-  --font-display: "Saira", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Saira", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Saira Condensed", "Segoe UI", system-ui, sans-serif;
   --font-mono: "Saira Condensed", ui-monospace, Menlo, monospace;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

@@ -23,10 +23,11 @@ Tuning-Rot bleibt in beiden Schemata identisch; nur Flächen- und Textrollen än
 
 ## Typografie
 
-- **Saira** (`font-display`): große Überschriften (H1/H2) in Kursiv, Kapitelnummern und Labels.
-  H1–H3 sind im Basis-Stylesheet fett und in Großbuchstaben.
-- **Saira Condensed** (`font-sans`, `font-mono`): Fließtext, Bedienelemente und technische
-  Anzeigen (PS/Nm).
+- **Saira Condensed** (`font-display`, `font-mono`): große Überschriften (H1/H2) in Kursiv,
+  Kapitelnummern, Labels und technische Anzeigen (PS/Nm). H1–H3 sind im Basis-Stylesheet fett und
+  in Großbuchstaben. Saira Condensed hat keine echte Kursiv-Schrift, die Schrägstellung erzeugt
+  der Browser.
+- **Saira** (`font-sans`): Fließtext und Bedienelemente.
 - Utilities: `kicker` (kleiner roter Kapitel-Einstieg), `label-caps` (Buttons/Markierungen).
 
 ## Radien und Abstände
