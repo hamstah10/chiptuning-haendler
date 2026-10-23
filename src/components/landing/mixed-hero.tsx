@@ -77,7 +77,7 @@ export function MixedHero({ c }: { c: Content }) {
         </div>
       </div>
       <div className="light border-b bg-card text-foreground">
-        <div className="mx-auto grid max-w-6xl grid-cols-2 md:grid-cols-4">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 md:grid-cols-4 md:pl-20">
           {c.hero.kpis.map((k) => (
             <div key={k.label} className="border-r border-border px-5 py-5 last:border-r-0 md:py-7">
               <div className="font-display text-3xl font-bold text-strong">

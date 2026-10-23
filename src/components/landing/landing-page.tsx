@@ -94,7 +94,7 @@ export function ThemeToggle({ c }: { c: Content }) {
 function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-5">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-5 md:pl-20">
         <a href="#top" className="min-w-0 shrink" aria-label="Tuningfiles-download.com">
           <Logo />
         </a>
@@ -157,55 +157,58 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   }, []);
 
   // Some parts of the mixed composition sit on a dark surface.
-  const active = CHAPTER_IDS.indexOf(activeId);
+  const active = CHAPTER_IDS.indexOf(activeId === "top" ? CHAPTER_IDS[0] ?? "" : activeId);
+
   const onDark = mixed && (MIXED_DARK_CHAPTERS.has(activeId) || activeId === "top");
 
   return (
     <nav
       aria-label={c.chapterLabel}
       className={cn(
-        "fixed inset-y-0 left-0 z-40 hidden w-16 flex-col items-center justify-center transition-opacity duration-300 md:flex",
-        onDark && "dark",
+        "fixed left-2 top-1/2 z-40 hidden -translate-y-1/2 transition-opacity duration-300 md:block",
         onDrive && "pointer-events-none opacity-0",
       )}
     >
-      <ol className="grid gap-1">
+      <ol
+        className={cn(
+          "grid gap-1 rounded-md border bg-card/95 p-1.5 shadow-xl backdrop-blur-sm",
+          onDark && "dark",
+        )}
+      >
+
+
         {CHAPTER_IDS.map((id, i) => {
           const on = i === active;
           return (
             <li key={id}>
               <a
                 href={`#${id}`}
-                className="group flex items-center gap-2.5 py-1"
+                title={c.chapters[i]}
+                className="group relative flex items-center justify-center gap-1.5 py-1"
                 aria-current={on ? "step" : undefined}
               >
-                <span
-                  className={cn(
-                    "h-px transition-all duration-300",
-                    on ? "w-8 bg-primary" : "w-3 bg-border-strong group-hover:w-5",
-                  )}
-                />
+
+                <span className="flex w-6 justify-start">
+                  <span
+                    className={cn(
+                      "h-px transition-all duration-300",
+                      on ? "w-6 bg-primary" : "w-2 bg-border-strong group-hover:w-4",
+                    )}
+                  />
+                </span>
+
                 <span
                   className={cn(
                     "font-mono text-xs transition-colors",
-                    on ? "text-primary" : "text-faint group-hover:text-strong",
+                    on ? "text-strong" : "text-faint group-hover:text-strong",
                   )}
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span
-                  className={cn(
-                    "label-caps hidden text-[10px] transition-all duration-300 xl:inline",
-                    on
-                      ? "translate-x-0 text-strong opacity-100"
-                      : "-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100",
-                  )}
-                >
-                  {c.chapters[i]}
-                </span>
               </a>
             </li>
           );
+
         })}
       </ol>
     </nav>
