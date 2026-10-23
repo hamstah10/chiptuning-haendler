@@ -23,9 +23,10 @@ Tuning-Rot bleibt in beiden Schemata identisch; nur Flächen- und Textrollen än
 
 ## Typografie
 
-- **Chakra Petch** (`font-display`, `font-mono`): Überschriften, Kapitelnummern, technische
-  Anzeigen (PS/Nm). H1–H3 sind im Basis-Stylesheet fett und in Großbuchstaben.
-- **Mulish** (`font-sans`): Fließtext und Bedienelemente.
+- **Saira** (`font-display`): große Überschriften (H1/H2) in Kursiv, Kapitelnummern und Labels.
+  H1–H3 sind im Basis-Stylesheet fett und in Großbuchstaben.
+- **Saira Condensed** (`font-sans`, `font-mono`): Fließtext, Bedienelemente und technische
+  Anzeigen (PS/Nm).
 - Utilities: `kicker` (kleiner roter Kapitel-Einstieg), `label-caps` (Buttons/Markierungen).
 
 ## Radien und Abstände
