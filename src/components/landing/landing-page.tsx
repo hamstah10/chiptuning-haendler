@@ -138,7 +138,7 @@ function ChapterRail({ c }: { c: Content }) {
   );
 }
 
-function Section({ id, kicker, title, children, intro, className }: { id: string; kicker: string; title: string; intro?: string; children: ReactNode; className?: string }) {
+function Section({ id, kicker, title, children, intro, className }: { id: string; kicker: string; title: string; intro?: string; children: ReactNode; className?: string | undefined }) {
   return (
     <section id={id} className={cn("scroll-mt-16 border-b", className)}>
       <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
@@ -641,7 +641,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
 
       <a
         href="#anmeldung"
-        className="label-caps fixed bottom-4 right-4 z-40 inline-flex items-center gap-2 rounded-sm bg-primary px-4 py-3 text-xs text-primary-foreground shadow-2xl transition-colors hover:bg-primary-hover sm:hidden"
+        className={cn("label-caps fixed bottom-4 right-4 z-40 inline-flex items-center gap-2 rounded-sm bg-primary px-4 py-3 text-xs text-primary-foreground shadow-2xl transition-colors hover:bg-primary-hover sm:hidden", mixed && "hidden")}
       >
         {c.nav.cta}
         <ArrowRight className="size-4" />
