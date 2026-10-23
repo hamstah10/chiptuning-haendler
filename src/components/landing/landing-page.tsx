@@ -11,7 +11,6 @@ import {
   Headphones,
   Languages,
   Layers,
-  Menu,
   Moon,
   Quote,
   ShieldCheck,
@@ -21,12 +20,6 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Accordion,
   AccordionContent,
@@ -59,6 +52,14 @@ const CHAPTER_IDS = [
   "vertrauen",
   "faq",
 ];
+
+/** Chapters that sit on a dark surface in the mixed composition. */
+const MIXED_DARK_CHAPTERS = new Set([
+  "loesung",
+  "ablauf",
+  "tool-berater",
+  "vertrauen",
+]);
 
 
 export { Logo } from "./logo";
@@ -107,24 +108,6 @@ function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
               </Button>
             ))}
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" aria-label={c.chapterLabel}>
-                <Menu />
-                <span className="hidden sm:inline">{c.chapterLabel}</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              {CHAPTER_IDS.map((id, i) => (
-                <DropdownMenuItem key={id} asChild>
-                  <a href={`#${id}`} className="py-2.5">
-                    <span className="font-mono text-primary">{String(i + 1).padStart(2, "0")}</span>
-                    {c.chapters[i]}
-                  </a>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
           <Button asChild variant="ghost" size="sm" className="label-caps rounded-sm text-xs">
             <Link to={c.locale === "de" ? "/en" : "/"} hrefLang={c.locale === "de" ? "en" : "de"}>
               <Languages />
@@ -145,6 +128,87 @@ function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
 }
 
 
+function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
+  const [active, setActive] = useState(-1);
+  const [onDrive, setOnDrive] = useState(false);
+
+  useEffect(() => {
+    const els = [...CHAPTER_IDS, "drive"]
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          if (e.target.id === "drive") {
+            setOnDrive(true);
+            return;
+          }
+          setOnDrive(false);
+          setActive(CHAPTER_IDS.indexOf(e.target.id));
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" },
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  // Some chapters of the mixed composition sit on a dark surface.
+  const onDark = mixed && MIXED_DARK_CHAPTERS.has(CHAPTER_IDS[active] ?? "");
+
+  return (
+    <nav
+      aria-label={c.chapterLabel}
+      className={cn(
+        "fixed inset-y-0 left-0 z-40 hidden w-16 flex-col items-center justify-center transition-opacity duration-300 md:flex",
+        onDark && "dark",
+        onDrive && "pointer-events-none opacity-0",
+      )}
+    >
+      <ol className="grid gap-1">
+        {CHAPTER_IDS.map((id, i) => {
+          const on = i === active;
+          return (
+            <li key={id}>
+              <a
+                href={`#${id}`}
+                className="group flex items-center gap-2.5 py-1"
+                aria-current={on ? "step" : undefined}
+              >
+                <span
+                  className={cn(
+                    "h-px transition-all duration-300",
+                    on ? "w-8 bg-primary" : "w-3 bg-border-strong group-hover:w-5",
+                  )}
+                />
+                <span
+                  className={cn(
+                    "font-mono text-xs transition-colors",
+                    on ? "text-primary" : "text-faint group-hover:text-strong",
+                  )}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span
+                  className={cn(
+                    "label-caps hidden text-[10px] transition-all duration-300 xl:inline",
+                    on
+                      ? "translate-x-0 text-strong opacity-100"
+                      : "-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100",
+                  )}
+                >
+                  {c.chapters[i]}
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+}
+
 function Section({
   id,
   kicker,
@@ -162,7 +226,7 @@ function Section({
 }) {
   return (
     <section id={id} className={cn("scroll-mt-16 border-b", className)}>
-      <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+      <div className="mx-auto max-w-6xl px-5 py-20 md:py-28 md:pl-20">
         <Reveal>
           <span className="kicker">{kicker}</span>
           <h2 className="mt-3 max-w-3xl text-3xl leading-[1.08] md:text-5xl">{title}</h2>
@@ -302,7 +366,7 @@ function Hero({ c }: { c: Content }) {
   return (
     <section id="top" className="relative overflow-hidden border-b">
       <div aria-hidden className="grid-lines absolute inset-0 opacity-70" />
-      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-14 md:pt-20 lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-14 md:pt-20 md:pl-20 lg:grid-cols-[1.05fr_0.95fr]">
         <div>
           <motion.span
             initial={{ opacity: 0, y: 10 }}
@@ -514,7 +578,7 @@ function PinnedSteps({ c }: { c: Content }) {
   if (reduce) {
     return (
       <section ref={ref} id="ablauf" className="scroll-mt-16 border-b bg-sunken">
-        <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+        <div className="mx-auto max-w-6xl px-5 py-20 md:py-28 md:pl-20">
           {header}
           {grid}
         </div>
@@ -530,7 +594,7 @@ function PinnedSteps({ c }: { c: Content }) {
       </div>
       <div className="relative hidden h-[300vh] md:block">
         <div className="sticky top-16 flex h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden">
-          <div className="mx-auto w-full max-w-6xl px-5">
+          <div className="mx-auto w-full max-w-6xl px-5 pl-20">
             {header}
             <div className="mt-6 flex items-center gap-4">
               <div className="h-0.5 flex-1 overflow-hidden bg-border">
@@ -542,7 +606,7 @@ function PinnedSteps({ c }: { c: Content }) {
           <motion.div
             ref={stripRef}
             style={{ x }}
-            className="mt-10 flex gap-6 pl-[max(1.25rem,calc((100vw-72rem)/2+1.25rem))]"
+            className="mt-10 flex gap-6 pl-[max(5rem,calc((100vw-72rem)/2+5rem))]"
           >
             {c.steps.items.map((s, i) => (
               <div key={s.title} className="h-60 w-[min(20rem,70vw)] shrink-0">
@@ -648,6 +712,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
       <div className={mixed ? "light mixed-landing bg-background text-foreground" : undefined}>
         <ScrollProgress />
         <Header c={c} mixed={mixed} />
+        <ChapterRail c={c} mixed={mixed} />
         <main>
           {mixed ? <MixedHero c={c} /> : <Hero c={c} />}
 
@@ -684,7 +749,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
           </Section>
 
           <section id="anmeldung" className="scroll-mt-16 border-b bg-card">
-            <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:py-28 lg:grid-cols-[0.8fr_1.2fr]">
+            <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:py-28 md:pl-20 lg:grid-cols-[0.8fr_1.2fr]">
               <Reveal>
                 <span className="kicker">{c.wizard.kicker}</span>
                 <h2 className="mt-3 text-4xl leading-[1.04] md:text-5xl">{c.wizard.title}</h2>
@@ -820,7 +885,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
           </Section>
 
           <section className="bg-strong text-background">
-            <div className="mx-auto max-w-4xl px-5 py-24 text-center md:py-32">
+            <div className="mx-auto max-w-4xl px-5 py-24 text-center md:py-32 md:pl-20">
               <Reveal>
                 <h2 className="text-4xl leading-[1.04] text-background md:text-6xl">
                   {c.final.title}
@@ -838,7 +903,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
         </main>
 
         <footer className="border-t bg-sunken">
-          <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-10 md:flex-row md:items-center md:justify-between">
+          <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-10 md:flex-row md:items-center md:justify-between md:pl-20">
             <div>
               <Logo />
               <p className="mt-3 text-sm text-muted-foreground">{c.footer.claim}</p>
