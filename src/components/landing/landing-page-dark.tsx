@@ -26,6 +26,7 @@ import { CountUp, Reveal, ScrollProgress } from "./motion";
 import { Configurator } from "./configurator";
 import { PartnerWizard } from "./partner-wizard";
 import { EarningsCalculator } from "./earnings-calculator";
+import { FileServiceTeaser } from "./file-service-teaser";
 import { Logo } from "./logo";
 import { ToolAdvisor } from "./tool-advisor";
 import { StartPlan } from "./start-plan";
