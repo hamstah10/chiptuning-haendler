@@ -9,7 +9,6 @@ import {
   Clock,
   Cpu,
   Download,
-  Gauge,
   Headphones,
   Languages,
   Layers,
@@ -27,20 +26,10 @@ import { CountUp, Reveal, ScrollProgress } from "./motion";
 import { Configurator } from "./configurator";
 import { PartnerWizard } from "./partner-wizard";
 import { EarningsCalculator } from "./earnings-calculator";
+import { Logo } from "./logo";
 import type { Content } from "@/lib/content";
 
-function Logo() {
-  return (
-    <span className="flex items-center gap-2.5">
-      <span className="flex size-8 items-center justify-center rounded-sm bg-primary">
-        <Gauge className="size-4 text-primary-foreground" />
-      </span>
-      <span className="label-caps whitespace-nowrap text-[15px] text-strong">
-        Tuningfiles<span className="text-primary">-download</span>
-      </span>
-    </span>
-  );
-}
+// Brand logo is shared with the light design.
 
 function ThemeToggle({ c }: { c: Content }) {
   const [light, setLight] = useState(false);

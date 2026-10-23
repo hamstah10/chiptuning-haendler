@@ -8,7 +8,6 @@ import {
   Clock,
   Cpu,
   Download,
-  Gauge,
   Headphones,
   Languages,
   Layers,
@@ -29,23 +28,13 @@ import { Configurator } from "./configurator";
 import { PartnerWizard } from "./partner-wizard";
 import { EarningsCalculator } from "./earnings-calculator";
 import { StartPlan } from "./start-plan";
+import { Logo } from "./logo";
 import type { Content } from "@/lib/content";
 
 /** Section ids in chapter order (01–09). */
 const CHAPTER_IDS = ["problem", "loesung", "anmeldung", "ablauf", "verdienst", "konfigurator", "startplan", "vertrauen", "faq"];
 
-export function Logo() {
-  return (
-    <span className="flex items-center gap-2.5">
-      <span className="flex size-8 items-center justify-center rounded-sm bg-primary">
-        <Gauge className="size-4 text-primary-foreground" />
-      </span>
-      <span className="label-caps whitespace-nowrap text-[15px] text-strong">
-        Tuningfiles<span className="text-primary">-download</span>
-      </span>
-    </span>
-  );
-}
+export { Logo } from "./logo";
 
 export function ThemeToggle({ c }: { c: Content }) {
   const [dark, setDark] = useState(false);
