@@ -11,6 +11,7 @@ import {
   Headphones,
   Languages,
   Layers,
+  Menu,
   Moon,
   Quote,
   ShieldCheck,
@@ -20,6 +21,12 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Accordion,
   AccordionContent,
@@ -85,6 +92,62 @@ export function ThemeToggle({ c }: { c: Content }) {
     >
       {dark ? <Sun /> : <Moon />}
     </Button>
+  );
+}
+
+function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
+  return (
+    <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-5">
+        <a href="#top" className="min-w-0 shrink" aria-label="Tuningfiles-download.com">
+          <Logo />
+        </a>
+        <nav aria-label={c.chapterLabel} className="flex shrink-0 items-center gap-1 sm:gap-2">
+          <div className="hidden items-center lg:flex">
+            {[
+              { id: "ablauf", label: c.nav.process },
+              { id: "verdienst", label: c.nav.calculator },
+              { id: "startplan", label: c.chapters[6] },
+            ].map((item) => (
+              <Button key={item.id} asChild variant="ghost" size="sm">
+                <a href={`#${item.id}`}>{item.label}</a>
+              </Button>
+            ))}
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" aria-label={c.chapterLabel}>
+                <Menu />
+                <span className="hidden sm:inline">{c.chapterLabel}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              {CHAPTER_IDS.map((id, i) => (
+                <DropdownMenuItem key={id} asChild>
+                  <a href={`#${id}`} className="py-2.5">
+                    <span className="font-mono text-primary">{String(i + 1).padStart(2, "0")}</span>
+                    {c.chapters[i]}
+                  </a>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button asChild variant="ghost" size="sm" className="label-caps rounded-sm text-xs">
+            <Link to={c.locale === "de" ? "/en" : "/"} hrefLang={c.locale === "de" ? "en" : "de"}>
+              <Languages />
+              {c.nav.switchLang}
+            </Link>
+          </Button>
+          {!mixed && <ThemeToggle c={c} />}
+          <Button asChild className="label-caps hidden rounded-sm sm:inline-flex">
+            <a href="#anmeldung">
+              {c.nav.cta}
+              <ArrowRight />
+            </a>
+          </Button>
+        </nav>
+      </div>
+    </header>
   );
 }
 
@@ -185,7 +248,7 @@ function Section({
   className?: string | undefined;
 }) {
   return (
-    <section id={id} className={cn("scroll-mt-4 border-b", className)}>
+    <section id={id} className={cn("scroll-mt-16 border-b", className)}>
       <div className="mx-auto max-w-6xl px-5 py-20 md:py-28 md:pl-20">
         <Reveal>
           <span className="kicker">{kicker}</span>
@@ -526,7 +589,7 @@ function PinnedSteps({ c }: { c: Content }) {
 
   if (reduce) {
     return (
-      <section ref={ref} id="ablauf" className="scroll-mt-4 border-b bg-sunken">
+      <section ref={ref} id="ablauf" className="scroll-mt-16 border-b bg-sunken">
         <div className="mx-auto max-w-6xl px-5 py-20 md:py-28 md:pl-20">
           {header}
           {grid}
@@ -536,13 +599,13 @@ function PinnedSteps({ c }: { c: Content }) {
   }
 
   return (
-    <section ref={ref} id="ablauf" className="scroll-mt-4 border-b bg-sunken">
+    <section ref={ref} id="ablauf" className="scroll-mt-16 border-b bg-sunken">
       <div className="mx-auto max-w-6xl px-5 py-20 md:hidden">
         {header}
         {grid}
       </div>
       <div className="relative hidden h-[300vh] md:block">
-        <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
+        <div className="sticky top-16 flex h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden">
           <div className="mx-auto w-full max-w-6xl px-5 pl-20">
             {header}
             <div className="mt-6 flex items-center gap-4">
@@ -659,21 +722,8 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
     <MotionConfig reducedMotion="user">
       <div className={mixed ? "light mixed-landing bg-background text-foreground" : undefined}>
         <ScrollProgress />
+        <Header c={c} mixed={mixed} />
         <ChapterRail c={c} mixed={mixed} />
-        <div className="fixed bottom-20 left-4 z-40 flex flex-col gap-1.5 rounded-md border bg-card/90 p-1 shadow-xl backdrop-blur-md">
-          <Button
-            asChild
-            variant="ghost"
-            size="icon"
-            className="rounded-sm"
-            aria-label={c.nav.switchLang}
-          >
-            <Link to={c.locale === "de" ? "/en" : "/"} hrefLang={c.locale === "de" ? "en" : "de"}>
-              <Languages />
-            </Link>
-          </Button>
-          {!mixed && <ThemeToggle c={c} />}
-        </div>
         <main>
           {mixed ? <MixedHero c={c} /> : <Hero c={c} />}
 
@@ -709,7 +759,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
             </div>
           </Section>
 
-          <section id="anmeldung" className="scroll-mt-4 border-b bg-card">
+          <section id="anmeldung" className="scroll-mt-16 border-b bg-card">
             <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:py-28 md:pl-20 lg:grid-cols-[0.8fr_1.2fr]">
               <Reveal>
                 <span className="kicker">{c.wizard.kicker}</span>
