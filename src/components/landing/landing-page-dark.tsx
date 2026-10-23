@@ -26,6 +26,7 @@ import { CountUp, Reveal, ScrollProgress } from "./motion";
 import { Configurator } from "./configurator";
 import { PartnerWizard } from "./partner-wizard";
 import { EarningsCalculator } from "./earnings-calculator";
+import { FileServiceTeaser } from "./file-service-teaser";
 import { Logo } from "./logo";
 import { ToolAdvisor } from "./tool-advisor";
 import { StartPlan } from "./start-plan";
@@ -267,6 +268,12 @@ export function LandingPageDark({ c }: { c: Content }) {
         </Section>
 
         <TuningDrive c={c} />
+
+        <Section id="portal-demo" kicker={c.portal.kicker} title={c.portal.title} intro={c.portal.intro}>
+          <Reveal>
+            <FileServiceTeaser c={c} />
+          </Reveal>
+        </Section>
 
 
         <Section id="verdienst" kicker={c.calculator.kicker} title={c.calculator.title}>

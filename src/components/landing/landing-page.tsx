@@ -32,6 +32,7 @@ import { CountUp, Reveal, ScrollProgress } from "./motion";
 import { Configurator } from "./configurator";
 import { PartnerWizard } from "./partner-wizard";
 import { EarningsCalculator } from "./earnings-calculator";
+import { FileServiceTeaser } from "./file-service-teaser";
 import { StartPlan } from "./start-plan";
 import { ToolAdvisor } from "./tool-advisor";
 import { VehicleCheck } from "./vehicle-check";
@@ -748,6 +749,12 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
           </div>
 
           <TuningDrive c={c} />
+
+          <Section id="portal-demo" kicker={c.portal.kicker} title={c.portal.title} intro={c.portal.intro}>
+            <Reveal>
+              <FileServiceTeaser c={c} />
+            </Reveal>
+          </Section>
 
           <Section id="verdienst" kicker={c.calculator.kicker} title={c.calculator.title}>
             <Reveal>
