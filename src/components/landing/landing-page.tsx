@@ -510,8 +510,10 @@ function StepCard({ c, i }: { c: Content; i: number }) {
 }
 
 function PinnedSteps({ c }: { c: Content }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
+  const ref = useRef<HTMLElement>(null);
+  const preference = useReducedMotion();
+  const [reduce, setReduce] = useState(false);
+  useEffect(() => { setReduce(preference === true); }, [preference]);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const x = useTransform(scrollYProgress, [0.05, 0.95], ["0%", "-62%"]);
   const bar = useTransform(scrollYProgress, [0.05, 0.95], [0, 1]);
@@ -535,7 +537,7 @@ function PinnedSteps({ c }: { c: Content }) {
 
   if (reduce) {
     return (
-      <section id="ablauf" className="scroll-mt-16 border-b bg-sunken">
+      <section ref={ref} id="ablauf" className="scroll-mt-16 border-b bg-sunken">
         <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
           {header}
           {grid}
@@ -545,12 +547,12 @@ function PinnedSteps({ c }: { c: Content }) {
   }
 
   return (
-    <section id="ablauf" className="scroll-mt-16 border-b bg-sunken">
+    <section ref={ref} id="ablauf" className="scroll-mt-16 border-b bg-sunken">
       <div className="mx-auto max-w-6xl px-5 py-20 md:hidden">
         {header}
         {grid}
       </div>
-      <div ref={ref} className="relative hidden h-[300vh] md:block">
+      <div className="relative hidden h-[300vh] md:block">
         <div className="sticky top-16 flex h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden">
           <div className="mx-auto w-full max-w-6xl px-5">
             {header}

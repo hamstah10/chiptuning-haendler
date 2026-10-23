@@ -79,6 +79,8 @@ export const Route = createFileRoute("/design-system")({
           "Das TuningFiles-Designsystem: Farb-Tokens, Typografie, Radien und Kernkomponenten mit Nutzungsregeln – live in Hell und Dunkel.",
       },
       { name: "robots", content: "noindex, nofollow" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { property: "og:title", content: "Designsystem – Tuningfiles-download.com" },
       {
         property: "og:description",

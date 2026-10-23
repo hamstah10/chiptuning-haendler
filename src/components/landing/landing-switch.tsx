@@ -9,9 +9,9 @@ import { LandingPageDark } from "./landing-page-dark";
 type Design = "light" | "dark" | "mixed";
 const STORAGE_KEY = "tf-design";
 
-/** Lets visitors pick between the light storytelling design and the dark original. */
+/** All compositions share the same content and retain the visitor's choice. */
 export function LandingPage({ c }: { c: Content }) {
-  const [design, setDesign] = useState<Design>("light");
+  const [design, setDesign] = useState<Design>("mixed");
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
