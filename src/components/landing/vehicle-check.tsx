@@ -14,7 +14,7 @@ function Field({ label, value, items, onChange, disabled, placeholder }: { label
   return (
     <label className="grid gap-2">
       <span className="label-caps text-xs text-strong">{label}</span>
-      <Select value={value} onValueChange={onChange} disabled={disabled}>
+      <Select value={value} onValueChange={onChange} disabled={disabled ?? false}>
         <SelectTrigger aria-label={label}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
