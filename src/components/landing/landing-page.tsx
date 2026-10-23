@@ -11,7 +11,6 @@ import {
   Headphones,
   Languages,
   Layers,
-  Menu,
   Moon,
   Quote,
   ShieldCheck,
@@ -21,12 +20,6 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Accordion,
   AccordionContent,
@@ -60,6 +53,14 @@ const CHAPTER_IDS = [
   "faq",
 ];
 
+/** Chapters that sit on a dark surface in the mixed composition. */
+const MIXED_DARK_CHAPTERS = new Set([
+  "loesung",
+  "ablauf",
+  "tool-berater",
+  "vertrauen",
+]);
+
 export { Logo } from "./logo";
 
 export function ThemeToggle({ c }: { c: Content }) {
@@ -87,73 +88,24 @@ export function ThemeToggle({ c }: { c: Content }) {
   );
 }
 
-function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
-  return (
-    <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-5">
-        <a href="#top" className="min-w-0 shrink" aria-label="Tuningfiles-download.com">
-          <Logo />
-        </a>
-        <nav aria-label={c.chapterLabel} className="flex shrink-0 items-center gap-1 sm:gap-2">
-          <div className="hidden items-center lg:flex">
-            {[
-              { id: "ablauf", label: c.nav.process },
-              { id: "verdienst", label: c.nav.calculator },
-              { id: "startplan", label: c.chapters[6] },
-            ].map((item) => (
-              <Button key={item.id} asChild variant="ghost" size="sm">
-                <a href={`#${item.id}`}>{item.label}</a>
-              </Button>
-            ))}
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" aria-label={c.chapterLabel}>
-                <Menu />
-                <span className="hidden sm:inline">{c.chapterLabel}</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              {CHAPTER_IDS.map((id, i) => (
-                <DropdownMenuItem key={id} asChild>
-                  <a href={`#${id}`} className="py-2.5">
-                    <span className="font-mono text-primary">{String(i + 1).padStart(2, "0")}</span>
-                    {c.chapters[i]}
-                  </a>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Button asChild variant="ghost" size="sm" className="label-caps rounded-sm text-xs">
-            <Link to={c.locale === "de" ? "/en" : "/"} hrefLang={c.locale === "de" ? "en" : "de"}>
-              <Languages />
-              {c.nav.switchLang}
-            </Link>
-          </Button>
-          {!mixed && <ThemeToggle c={c} />}
-          <Button asChild className="label-caps hidden rounded-sm sm:inline-flex">
-            <a href="#anmeldung">
-              {c.nav.cta}
-              <ArrowRight />
-            </a>
-          </Button>
-        </nav>
-      </div>
-    </header>
-  );
-}
-
-function ChapterRail({ c }: { c: Content }) {
+function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   const [active, setActive] = useState(-1);
+  const [onDrive, setOnDrive] = useState(false);
 
   useEffect(() => {
-    const els = CHAPTER_IDS.map((id) => document.getElementById(id)).filter(
-      (el): el is HTMLElement => el !== null,
-    );
+    const els = [...CHAPTER_IDS, "drive"]
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) setActive(CHAPTER_IDS.indexOf(e.target.id));
+          if (!e.isIntersecting) return;
+          if (e.target.id === "drive") {
+            setOnDrive(true);
+            return;
+          }
+          setOnDrive(false);
+          setActive(CHAPTER_IDS.indexOf(e.target.id));
         });
       },
       { rootMargin: "-45% 0px -50% 0px" },
@@ -162,10 +114,17 @@ function ChapterRail({ c }: { c: Content }) {
     return () => observer.disconnect();
   }, []);
 
+  // Some chapters of the mixed composition sit on a dark surface.
+  const onDark = mixed && MIXED_DARK_CHAPTERS.has(CHAPTER_IDS[active] ?? "");
+
   return (
     <nav
       aria-label={c.chapterLabel}
-      className="fixed left-5 top-1/2 z-40 hidden -translate-y-1/2 xl:block"
+      className={cn(
+        "fixed inset-y-0 left-0 z-40 hidden w-16 flex-col items-center justify-center transition-opacity duration-300 md:flex",
+        onDark && "dark",
+        onDrive && "pointer-events-none opacity-0",
+      )}
     >
       <ol className="grid gap-1">
         {CHAPTER_IDS.map((id, i) => {
@@ -193,7 +152,7 @@ function ChapterRail({ c }: { c: Content }) {
                 </span>
                 <span
                   className={cn(
-                    "label-caps hidden text-[10px] transition-all duration-300 2xl:inline",
+                    "label-caps hidden text-[10px] transition-all duration-300 xl:inline",
                     on
                       ? "translate-x-0 text-strong opacity-100"
                       : "-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100",
@@ -226,8 +185,8 @@ function Section({
   className?: string | undefined;
 }) {
   return (
-    <section id={id} className={cn("scroll-mt-16 border-b", className)}>
-      <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+    <section id={id} className={cn("scroll-mt-4 border-b", className)}>
+      <div className="mx-auto max-w-6xl px-5 py-20 md:py-28 md:pl-20">
         <Reveal>
           <span className="kicker">{kicker}</span>
           <h2 className="mt-3 max-w-3xl text-3xl leading-[1.08] md:text-5xl">{title}</h2>
@@ -367,7 +326,7 @@ function Hero({ c }: { c: Content }) {
   return (
     <section id="top" className="relative overflow-hidden border-b">
       <div aria-hidden className="grid-lines absolute inset-0 opacity-70" />
-      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-14 md:pt-20 lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-14 md:pt-20 md:pl-20 lg:grid-cols-[1.05fr_0.95fr]">
         <div>
           <motion.span
             initial={{ opacity: 0, y: 10 }}
@@ -567,8 +526,8 @@ function PinnedSteps({ c }: { c: Content }) {
 
   if (reduce) {
     return (
-      <section ref={ref} id="ablauf" className="scroll-mt-16 border-b bg-sunken">
-        <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+      <section ref={ref} id="ablauf" className="scroll-mt-4 border-b bg-sunken">
+        <div className="mx-auto max-w-6xl px-5 py-20 md:py-28 md:pl-20">
           {header}
           {grid}
         </div>
@@ -577,14 +536,14 @@ function PinnedSteps({ c }: { c: Content }) {
   }
 
   return (
-    <section ref={ref} id="ablauf" className="scroll-mt-16 border-b bg-sunken">
+    <section ref={ref} id="ablauf" className="scroll-mt-4 border-b bg-sunken">
       <div className="mx-auto max-w-6xl px-5 py-20 md:hidden">
         {header}
         {grid}
       </div>
       <div className="relative hidden h-[300vh] md:block">
-        <div className="sticky top-16 flex h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden">
-          <div className="mx-auto w-full max-w-6xl px-5">
+        <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
+          <div className="mx-auto w-full max-w-6xl px-5 pl-20">
             {header}
             <div className="mt-6 flex items-center gap-4">
               <div className="h-0.5 flex-1 overflow-hidden bg-border">
@@ -595,7 +554,7 @@ function PinnedSteps({ c }: { c: Content }) {
           </div>
           <motion.div
             style={{ x }}
-            className="mt-10 flex gap-6 pl-[max(1.25rem,calc((100vw-72rem)/2+1.25rem))]"
+            className="mt-10 flex gap-6 pl-[max(5rem,calc((100vw-72rem)/2+5rem))]"
           >
             {c.steps.items.map((s, i) => (
               <div key={s.title} className="h-80 w-[min(26rem,70vw)] shrink-0">
@@ -637,7 +596,7 @@ function TuningDrive({ c }: { c: Content }) {
   const reducedMotion = useReducedMotion();
 
   return (
-    <section className="dark overflow-hidden border-b bg-media-surface text-foreground">
+    <section id="drive" className="dark overflow-hidden border-b bg-media-surface text-foreground">
       <div className="mx-auto grid max-w-6xl items-stretch gap-0 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:gap-10 lg:gap-14">
         <div className="mx-auto aspect-[9/16] w-full max-w-[440px] overflow-hidden md:max-w-none">
           <iframe
@@ -700,8 +659,21 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
     <MotionConfig reducedMotion="user">
       <div className={mixed ? "light mixed-landing bg-background text-foreground" : undefined}>
         <ScrollProgress />
-        <Header c={c} mixed={mixed} />
-        {!mixed && <ChapterRail c={c} />}
+        <ChapterRail c={c} mixed={mixed} />
+        <div className="fixed bottom-20 left-4 z-40 flex flex-col gap-1.5 rounded-md border bg-card/90 p-1 shadow-xl backdrop-blur-md">
+          <Button
+            asChild
+            variant="ghost"
+            size="icon"
+            className="rounded-sm"
+            aria-label={c.nav.switchLang}
+          >
+            <Link to={c.locale === "de" ? "/en" : "/"} hrefLang={c.locale === "de" ? "en" : "de"}>
+              <Languages />
+            </Link>
+          </Button>
+          {!mixed && <ThemeToggle c={c} />}
+        </div>
         <main>
           {mixed ? <MixedHero c={c} /> : <Hero c={c} />}
 
@@ -737,8 +709,8 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
             </div>
           </Section>
 
-          <section id="anmeldung" className="scroll-mt-16 border-b bg-card">
-            <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:py-28 lg:grid-cols-[0.8fr_1.2fr]">
+          <section id="anmeldung" className="scroll-mt-4 border-b bg-card">
+            <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:py-28 md:pl-20 lg:grid-cols-[0.8fr_1.2fr]">
               <Reveal>
                 <span className="kicker">{c.wizard.kicker}</span>
                 <h2 className="mt-3 text-4xl leading-[1.04] md:text-5xl">{c.wizard.title}</h2>
@@ -874,7 +846,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
           </Section>
 
           <section className="bg-strong text-background">
-            <div className="mx-auto max-w-4xl px-5 py-24 text-center md:py-32">
+            <div className="mx-auto max-w-4xl px-5 py-24 text-center md:py-32 md:pl-20">
               <Reveal>
                 <h2 className="text-4xl leading-[1.04] text-background md:text-6xl">
                   {c.final.title}
@@ -892,7 +864,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
         </main>
 
         <footer className="border-t bg-sunken">
-          <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-10 md:flex-row md:items-center md:justify-between">
+          <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-10 md:flex-row md:items-center md:justify-between md:pl-20">
             <div>
               <Logo />
               <p className="mt-3 text-sm text-muted-foreground">{c.footer.claim}</p>
