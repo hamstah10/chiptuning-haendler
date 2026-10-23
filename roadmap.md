@@ -10,5 +10,6 @@
 - [x] Keep the left chapter rail in the light and mixed compositions.
 - [x] Remove the "Kapitel" dropdown from the top navigation bar.
 - [x] Chapter 04 "Der Ablauf": reduce the step card size so it matches the other chapters.
-- [ ] Align the top navigation bar, the content and the left chapter rail to one shared left edge.
+- [x] Align the top navigation bar, the content and the left chapter rail to one shared left edge.
+
 
