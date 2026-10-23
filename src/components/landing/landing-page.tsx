@@ -11,6 +11,7 @@ import {
   Headphones,
   Languages,
   Layers,
+  Menu,
   Moon,
   Quote,
   ShieldCheck,
@@ -20,6 +21,12 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Accordion,
   AccordionContent,
@@ -83,11 +90,40 @@ export function ThemeToggle({ c }: { c: Content }) {
 function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5">
-        <a href="#top" aria-label="Tuningfiles-download.com">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-5">
+        <a href="#top" className="min-w-0 shrink" aria-label="Tuningfiles-download.com">
           <Logo />
         </a>
-        <div className="flex items-center gap-2">
+        <nav aria-label={c.chapterLabel} className="flex shrink-0 items-center gap-1 sm:gap-2">
+          <div className="hidden items-center lg:flex">
+            {[
+              { id: "ablauf", label: c.nav.process },
+              { id: "verdienst", label: c.nav.calculator },
+              { id: "startplan", label: c.chapters[6] },
+            ].map((item) => (
+              <Button key={item.id} asChild variant="ghost" size="sm">
+                <a href={`#${item.id}`}>{item.label}</a>
+              </Button>
+            ))}
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" aria-label={c.chapterLabel}>
+                <Menu />
+                <span className="hidden sm:inline">{c.chapterLabel}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              {CHAPTER_IDS.map((id, i) => (
+                <DropdownMenuItem key={id} asChild>
+                  <a href={`#${id}`} className="py-2.5">
+                    <span className="font-mono text-primary">{String(i + 1).padStart(2, "0")}</span>
+                    {c.chapters[i]}
+                  </a>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button asChild variant="ghost" size="sm" className="label-caps rounded-sm text-xs">
             <Link to={c.locale === "de" ? "/en" : "/"} hrefLang={c.locale === "de" ? "en" : "de"}>
               <Languages />
@@ -101,7 +137,7 @@ function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
               <ArrowRight />
             </a>
           </Button>
-        </div>
+        </nav>
       </div>
     </header>
   );
