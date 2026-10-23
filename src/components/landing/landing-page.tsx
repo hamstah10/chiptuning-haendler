@@ -221,6 +221,9 @@ function Hero({ c }: { c: Content }) {
       <div aria-hidden className="grid-lines absolute inset-0 opacity-70" />
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-14 md:pt-20 lg:grid-cols-[1.05fr_0.95fr]">
         <div>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="mb-6">
+            <Logo />
+          </motion.div>
           <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="kicker block">
             {c.hero.kicker}
           </motion.span>
