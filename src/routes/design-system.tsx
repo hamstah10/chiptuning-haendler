@@ -214,15 +214,15 @@ function DesignSystemPage() {
           <Section id="typografie" kicker="02 – Tokens" title="Typografie">
             <div className="space-y-6 rounded-lg border bg-card p-6">
               <div>
-                <p className="kicker">Kicker – Saira, Kapitälchen</p>
-                <h1 className="mt-2 text-4xl">Überschrift 1 – Saira kursiv</h1>
+                <p className="kicker">Kicker – Saira Condensed, Kapitälchen</p>
+                <h1 className="mt-2 text-4xl">Überschrift 1 – Saira Condensed kursiv</h1>
                 <h2 className="mt-3 text-2xl">Überschrift 2 – Mehr Leistung für deine Werkstatt</h2>
                 <h3 className="mt-3 text-xl">Überschrift 3 – Stage 1 bis Stage 3</h3>
               </div>
               <Separator />
               <div className="space-y-3">
                 <p>
-                  Fließtext – Saira Condensed. Mit Tuningfiles-download.com bietest du deinen Kunden
+                  Fließtext – Saira. Mit Tuningfiles-download.com bietest du deinen Kunden
                   professionelles Chiptuning an, ohne selbst Software entwickeln zu müssen. Du
                   lädst die Originaldatei hoch, wir liefern die optimierte Datei zurück.
                 </p>
@@ -237,9 +237,9 @@ function DesignSystemPage() {
               </div>
             </div>
             <Rule>
-              Saira kursiv nur für große Überschriften; Saira Condensed für alles Lesbare,
-              Kapitelnummern und technische Anzeigen. Überschriften stehen in Großbuchstaben mit
-              fetter Schrift – das
+              Saira Condensed nur für große Überschriften, Kapitelnummern und technische Anzeigen;
+              Saira für alles Lesbare. Überschriften stehen in Großbuchstaben, fett und schräg –
+              das
               kommt aus dem Basis-Stylesheet, nicht aus einzelnen Klassen.
             </Rule>
           </Section>
