@@ -164,12 +164,17 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
     <nav
       aria-label={c.chapterLabel}
       className={cn(
-        "fixed inset-y-0 left-0 z-40 hidden w-16 flex-col items-center justify-center transition-opacity duration-300 md:flex",
-        onDark && "dark",
+        "fixed left-3 top-1/2 z-40 hidden -translate-y-1/2 transition-opacity duration-300 md:block",
         onDrive && "pointer-events-none opacity-0",
       )}
     >
-      <ol className="grid gap-1">
+      <ol
+        className={cn(
+          "grid gap-1 rounded-md border bg-card/95 p-2 shadow-xl backdrop-blur-sm",
+          onDark && "dark",
+        )}
+      >
+
         {CHAPTER_IDS.map((id, i) => {
           const on = i === active;
           return (
