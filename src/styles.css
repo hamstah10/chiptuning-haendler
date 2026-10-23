@@ -24,6 +24,7 @@
   --color-faint: var(--faint);
   --color-sunken: var(--sunken);
   --color-raised: var(--raised);
+  --color-media-surface: var(--media-surface);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -73,6 +74,7 @@
 
 :root {
   color-scheme: light;
+  --media-surface: oklch(0.163 0 0);
   --radius: 0.5rem;
   --primary: oklch(0.52 0.19 26);
   --primary-hover: oklch(0.57 0.21 27);

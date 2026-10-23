@@ -437,11 +437,9 @@ function TuningDrive({ c }: { c: Content }) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   return (
-    <section className="border-b bg-sunken">
-      <div className="mx-auto max-w-6xl px-5 py-16 md:py-20">
-        <span className="kicker">{c.tuningDrive.kicker}</span>
-        <h2 className="mt-3 max-w-3xl text-3xl leading-[1.08] text-strong md:text-5xl">{c.tuningDrive.title}</h2>
-        <div className="mx-auto mt-10 w-full max-w-[320px] overflow-hidden rounded-md aspect-[9/16]">
+    <section className="dark border-b bg-media-surface text-foreground">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-[280px_minmax(0,1fr)] md:py-20 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-14">
+        <div className="mx-auto w-full max-w-[320px] overflow-hidden rounded-md aspect-[9/16]">
           <iframe
             ref={iframeRef}
             src="/tuningfiles-animation.html"
@@ -459,6 +457,22 @@ function TuningDrive({ c }: { c: Content }) {
               doc.head.appendChild(stylesheet);
             }}
           />
+        </div>
+        <div className="min-w-0">
+          <span className="kicker">{c.tuningDrive.kicker}</span>
+          <h2 className="mt-3 text-3xl leading-[1.08] text-strong lg:text-5xl">{c.tuningDrive.title}</h2>
+          <div className="mt-8 grid gap-4">
+            {c.tuningDrive.stages.map((stage) => (
+              <div key={stage.label} className="rounded-md border bg-card p-5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="font-display text-xs font-bold uppercase text-primary">{stage.label}</span>
+                  <span className="font-mono text-xs text-faint">{stage.ps} · {stage.nm}</span>
+                </div>
+                <h3 className="mt-2 text-lg font-bold text-strong">{stage.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{stage.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
