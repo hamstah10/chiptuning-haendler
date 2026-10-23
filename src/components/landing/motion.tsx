@@ -1,4 +1,4 @@
-import { animate, motion, useInView, useScroll, useSpring } from "motion/react";
+import { animate, motion, useInView, useReducedMotion, useScroll, useSpring } from "motion/react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { formatNumber, type Locale } from "@/lib/format";
 
@@ -11,13 +11,18 @@ export function Reveal({
   delay?: number;
   className?: string;
 }) {
+  const reducedMotion = useReducedMotion();
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 28 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: "0px 0px -32px 0px" }}
+      transition={{
+        duration: reducedMotion ? 0 : 0.85,
+        delay: reducedMotion ? 0 : delay,
+        ease: [0.22, 1, 0.36, 1],
+      }}
     >
       {children}
     </motion.div>
