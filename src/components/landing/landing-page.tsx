@@ -546,14 +546,14 @@ function StepCard({ c, i }: { c: Content; i: number }) {
   if (!s) return null;
   const Icon = STEP_ICONS[i] ?? Cpu;
   return (
-    <div className="flex h-full flex-col rounded-md border bg-card p-7">
+    <div className="flex h-full flex-col rounded-md border bg-card p-5">
       <div className="flex items-center justify-between">
-        <span className="font-display text-6xl font-bold text-primary">0{i + 1}</span>
-        <span className="flex size-12 items-center justify-center rounded-sm border bg-sunken text-primary">
-          <Icon className="size-5" />
+        <span className="font-display text-4xl font-bold text-primary">0{i + 1}</span>
+        <span className="flex size-9 items-center justify-center rounded-sm border bg-sunken text-primary">
+          <Icon className="size-4" />
         </span>
       </div>
-      <h3 className="mt-auto pt-10 text-2xl">{s.title}</h3>
+      <h3 className="mt-auto pt-6 text-lg">{s.title}</h3>
       <p className="mt-2 leading-relaxed text-muted-foreground">{s.text}</p>
     </div>
   );
@@ -561,13 +561,24 @@ function StepCard({ c, i }: { c: Content; i: number }) {
 
 function PinnedSteps({ c }: { c: Content }) {
   const ref = useRef<HTMLElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
   const preference = useReducedMotion();
   const [reduce, setReduce] = useState(false);
+  const [travel, setTravel] = useState(0);
   useEffect(() => {
     setReduce(preference === true);
   }, [preference]);
+  useEffect(() => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    const measure = () => setTravel(Math.max(0, strip.scrollWidth - window.innerWidth));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(strip);
+    return () => observer.disconnect();
+  }, [reduce]);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const x = useTransform(scrollYProgress, [0.05, 0.95], ["0%", "-62%"]);
+  const x = useTransform(scrollYProgress, [0.05, 0.95], [0, -travel]);
   const bar = useTransform(scrollYProgress, [0.05, 0.95], [0, 1]);
 
   const header = (
@@ -616,11 +627,12 @@ function PinnedSteps({ c }: { c: Content }) {
             </div>
           </div>
           <motion.div
+            ref={stripRef}
             style={{ x }}
             className="mt-10 flex gap-6 pl-[max(5rem,calc((100vw-72rem)/2+5rem))]"
           >
             {c.steps.items.map((s, i) => (
-              <div key={s.title} className="h-80 w-[min(26rem,70vw)] shrink-0">
+              <div key={s.title} className="h-60 w-[min(20rem,70vw)] shrink-0">
                 <StepCard c={c} i={i} />
               </div>
             ))}
