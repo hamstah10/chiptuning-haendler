@@ -434,34 +434,23 @@ function IconCard({ icon, title, text, index }: { icon: ReactNode; title: string
 }
 
 function TuningDrive({ c }: { c: Content }) {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
   const reducedMotion = useReducedMotion();
 
   return (
-    <section className="dark border-b bg-media-surface text-foreground">
+    <section className="dark overflow-hidden border-b bg-media-surface text-foreground">
       <div className="mx-auto grid max-w-6xl items-stretch gap-0 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:gap-10 lg:gap-14">
         <div className="mx-auto aspect-[9/16] w-full max-w-[440px] overflow-hidden md:max-w-none">
           <iframe
-            ref={iframeRef}
-            src="/tuningfiles-animation.html"
+            src="/tuningfiles-animation-view.html"
             title="TuningFiles – Tuning Drive"
             className="h-full w-full border-0"
             loading="lazy"
             allow="autoplay"
-            onLoad={() => {
-              const doc = iframeRef.current?.contentDocument;
-              if (!doc || doc.querySelector('link[data-animation-layout]')) return;
-              const stylesheet = doc.createElement("link");
-              stylesheet.rel = "stylesheet";
-              stylesheet.href = "/animation-embed.css";
-              stylesheet.dataset['animationLayout'] = "true";
-              doc.head.appendChild(stylesheet);
-            }}
           />
         </div>
         <motion.div
           className="min-w-0 self-center px-5 py-12 md:pl-0 md:pr-5 md:py-16"
-          initial={reducedMotion ? false : { opacity: 0, x: 24 }}
+          initial={false}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.6 }}
@@ -472,11 +461,11 @@ function TuningDrive({ c }: { c: Content }) {
             {c.tuningDrive.stages.slice(0, 3).map((stage, index) => (
               <motion.div
                 key={stage.label}
-                className="rounded-md border border-border bg-card p-5 transition-colors hover:border-primary"
-                initial={reducedMotion ? false : { opacity: 0, x: 28 }}
+                className="tuning-stage rounded-md border border-border bg-card p-5 transition-colors hover:border-primary"
+                initial={false}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.5, delay: index * 0.15 }}
+                transition={{ duration: reducedMotion ? 0 : 0.5, delay: index * 0.15 }}
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="font-display text-xs font-bold uppercase text-primary">{stage.label}</span>
