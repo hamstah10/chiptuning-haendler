@@ -9,7 +9,6 @@ import {
   Clock,
   Cpu,
   Download,
-  Gauge,
   Headphones,
   Languages,
   Layers,
