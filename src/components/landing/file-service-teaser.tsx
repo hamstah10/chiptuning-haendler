@@ -22,7 +22,7 @@ export function FileServiceTeaser({ c }: { c: Content }) {
   const chosen = p.options.filter((o) => selected.includes(o.id));
   const credits = chosen.reduce((sum, o) => sum + o.credits, 0);
   const minutes = chosen.reduce((sum, o) => sum + o.minutes, 0);
-  const v = p.vehicles[vehicle];
+  const v = p.vehicles[vehicle] ?? p.vehicles[0]!;
   const outName = v.file.replace("stock", selected.join("_") || "mod");
 
   useEffect(() => {
