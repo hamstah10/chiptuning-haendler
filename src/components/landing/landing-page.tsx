@@ -463,7 +463,7 @@ function TuningDrive({ c }: { c: Content }) {
           <h2 className="mt-3 text-3xl leading-[1.08] text-strong lg:text-5xl">{c.tuningDrive.title}</h2>
           <div className="mt-8 grid gap-4">
             {c.tuningDrive.stages.map((stage) => (
-              <div key={stage.label} className="rounded-md border bg-card p-5">
+              <div key={stage.label} className="rounded-md border border-border bg-card p-5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="font-display text-xs font-bold uppercase text-primary">{stage.label}</span>
                   <span className="font-mono text-xs text-faint">{stage.ps} · {stage.nm}</span>
