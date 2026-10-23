@@ -513,7 +513,9 @@ function PinnedSteps({ c }: { c: Content }) {
   const ref = useRef<HTMLElement>(null);
   const preference = useReducedMotion();
   const [reduce, setReduce] = useState(false);
-  useEffect(() => { setReduce(preference === true); }, [preference]);
+  useEffect(() => {
+    setReduce(preference === true);
+  }, [preference]);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const x = useTransform(scrollYProgress, [0.05, 0.95], ["0%", "-62%"]);
   const bar = useTransform(scrollYProgress, [0.05, 0.95], [0, 1]);
