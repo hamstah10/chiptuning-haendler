@@ -30,6 +30,8 @@ import { Logo } from "./logo";
 import { ToolAdvisor } from "./tool-advisor";
 import { StartPlan } from "./start-plan";
 import { VehicleCheck } from "./vehicle-check";
+import { TuningDrive } from "./tuning-drive";
+
 import { LegalLinks } from "./legal-links";
 import type { Content } from "@/lib/content";
 
@@ -263,6 +265,9 @@ export function LandingPageDark({ c }: { c: Content }) {
         <Section id="ablauf" kicker={c.steps.kicker} title={c.steps.title}>
           <Steps c={c} />
         </Section>
+
+        <TuningDrive c={c} />
+
 
         <Section id="verdienst" kicker={c.calculator.kicker} title={c.calculator.title}>
           <Reveal>
