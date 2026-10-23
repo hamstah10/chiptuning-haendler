@@ -132,6 +132,9 @@ function Hero({ c }: { c: Content }) {
       </motion.div>
 
       <div className="relative mx-auto max-w-6xl px-5 pb-16 pt-20 md:pt-28">
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="mb-6">
+          <Logo />
+        </motion.div>
         <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="kicker block">
           {c.hero.kicker}
         </motion.span>
