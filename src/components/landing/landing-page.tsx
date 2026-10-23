@@ -94,7 +94,7 @@ export function ThemeToggle({ c }: { c: Content }) {
 function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-5">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-5 md:pl-20">
         <a href="#top" className="min-w-0 shrink" aria-label="Tuningfiles-download.com">
           <Logo />
         </a>
