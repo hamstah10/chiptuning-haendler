@@ -27,6 +27,7 @@ import { CountUp, Reveal, ScrollProgress } from "./motion";
 import { Configurator } from "./configurator";
 import { PartnerWizard } from "./partner-wizard";
 import { EarningsCalculator } from "./earnings-calculator";
+import { Logo } from "./logo";
 import type { Content } from "@/lib/content";
 
 // Brand logo is shared with the light design.
