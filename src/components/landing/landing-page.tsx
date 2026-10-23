@@ -56,13 +56,7 @@ const CHAPTER_IDS = [
 ];
 
 /** Chapters that sit on a dark surface in the mixed composition. */
-const MIXED_DARK_CHAPTERS = new Set([
-  "loesung",
-  "ablauf",
-  "tool-berater",
-  "vertrauen",
-]);
-
+const MIXED_DARK_CHAPTERS = new Set(["loesung", "ablauf", "tool-berater", "vertrauen"]);
 
 export { Logo } from "./logo";
 
@@ -129,7 +123,6 @@ function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   );
 }
 
-
 function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   const [activeId, setActiveId] = useState("");
   const [onDrive, setOnDrive] = useState(false);
@@ -177,7 +170,7 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   }, []);
 
   // Some parts of the mixed composition sit on a dark surface.
-  const active = CHAPTER_IDS.indexOf(activeId === "top" ? CHAPTER_IDS[0] ?? "" : activeId);
+  const active = CHAPTER_IDS.indexOf(activeId === "top" ? (CHAPTER_IDS[0] ?? "") : activeId);
 
   const onDark = mixed && (MIXED_DARK_CHAPTERS.has(activeId) || activeId === "top");
 
@@ -195,8 +188,6 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
           onDark && "dark",
         )}
       >
-
-
         {CHAPTER_IDS.map((id, i) => {
           const on = i === active;
           return (
@@ -207,7 +198,6 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
                 className="group relative flex items-center justify-center gap-1.5 py-1"
                 aria-current={on ? "step" : undefined}
               >
-
                 <span className="relative flex w-6 justify-start">
                   <span
                     className={cn(
@@ -220,7 +210,11 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
                       layoutId="active-chapter-line"
                       aria-hidden="true"
                       className="absolute inset-y-0 left-0 h-px w-6 bg-primary"
-                      transition={reducedMotion ? { duration: 0 } : { type: "spring", stiffness: 180, damping: 26 }}
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : { type: "spring", stiffness: 180, damping: 26 }
+                      }
                     />
                   )}
                 </span>
@@ -236,7 +230,6 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
               </a>
             </li>
           );
-
         })}
       </ol>
     </nav>
@@ -677,7 +670,6 @@ function IconCard({
     </Reveal>
   );
 }
-
 
 export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   const solutionIcons = [ShieldCheck, Clock, Layers, Headphones];
