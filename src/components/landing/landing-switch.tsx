@@ -26,7 +26,11 @@ export function LandingPage({ c }: { c: Content }) {
 
   return (
     <>
-      {design === "dark" ? <LandingPageDark key="dark" c={c} /> : <LandingPageLight key={design} c={c} mixed={design === "mixed"} />}
+      {design === "dark" ? (
+        <LandingPageDark key="dark" c={c} />
+      ) : (
+        <LandingPageLight key={design} c={c} mixed={design === "mixed"} />
+      )}
       <div
         role="radiogroup"
         aria-label={c.design.label}
@@ -44,7 +48,9 @@ export function LandingPage({ c }: { c: Content }) {
             onClick={() => choose(d)}
             className={cn(
               "label-caps rounded-sm px-2.5 py-1.5 text-xs transition-colors",
-              design === d ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-strong",
+              design === d
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:text-strong",
             )}
           >
             {c.design[d]}
