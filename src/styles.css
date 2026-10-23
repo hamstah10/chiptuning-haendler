@@ -11,8 +11,8 @@
  */
 
 @theme inline {
-  --font-sans: "Saira Condensed", "Segoe UI", system-ui, sans-serif;
-  --font-display: "Saira", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Saira", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Saira Condensed", "Segoe UI", system-ui, sans-serif;
   --font-mono: "Saira Condensed", ui-monospace, Menlo, monospace;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -166,11 +166,12 @@
     letter-spacing: -0.01em;
   }
 
-  /* Big headlines run in Saira italic — the slant is the tuning look. */
+  /* Big headlines run in condensed Saira, slanted — the tuning look.
+     Saira Condensed ships no italic face, so the browser synthesises the slant. */
   h1,
   h2 {
     font-style: italic;
-    letter-spacing: 0.005em;
+    letter-spacing: 0.01em;
   }
 
   @media (prefers-reduced-motion: reduce) {
