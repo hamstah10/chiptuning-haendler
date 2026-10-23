@@ -32,6 +32,7 @@ import { ToolAdvisor } from "./tool-advisor";
 import { VehicleCheck } from "./vehicle-check";
 import { LegalLinks } from "./legal-links";
 import { Logo } from "./logo";
+import { MixedHero } from "./mixed-hero";
 import type { Content } from "@/lib/content";
 
 /** Section ids in chapter order (01–09). */
@@ -64,7 +65,7 @@ export function ThemeToggle({ c }: { c: Content }) {
   );
 }
 
-function Header({ c }: { c: Content }) {
+function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5">
@@ -78,7 +79,7 @@ function Header({ c }: { c: Content }) {
               {c.nav.switchLang}
             </Link>
           </Button>
-          <ThemeToggle c={c} />
+          {!mixed && <ThemeToggle c={c} />}
           <Button asChild className="label-caps hidden rounded-sm sm:inline-flex">
             <a href="#anmeldung">
               {c.nav.cta}
@@ -482,23 +483,28 @@ function TuningDrive({ c }: { c: Content }) {
   );
 }
 
-export function LandingPageLight({ c }: { c: Content }) {
+export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   const solutionIcons = [ShieldCheck, Clock, Layers, Headphones];
   const year = 2026;
 
+  useEffect(() => {
+    if (mixed) document.documentElement.classList.remove("dark");
+  }, [mixed]);
+
   return (
     <MotionConfig reducedMotion="user">
+      <div className={mixed ? "light mixed-landing bg-background text-foreground" : undefined}>
       <ScrollProgress />
-      <Header c={c} />
-      <ChapterRail c={c} />
+      <Header c={c} mixed={mixed} />
+      {!mixed && <ChapterRail c={c} />}
       <main>
-        <Hero c={c} />
+        {mixed ? <MixedHero c={c} /> : <Hero c={c} />}
 
         <Section id="problem" kicker={c.problem.kicker} title={c.problem.title} intro={c.problem.text}>
           <Compare c={c} />
         </Section>
 
-        <Section id="loesung" kicker={c.solution.kicker} title={c.solution.title} intro={c.solution.text}>
+        <Section id="loesung" kicker={c.solution.kicker} title={c.solution.title} intro={c.solution.text} className={mixed ? "dark bg-background text-foreground" : undefined}>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {c.solution.features.map((p, i) => {
               const Icon = solutionIcons[i] ?? ShieldCheck;
@@ -528,7 +534,7 @@ export function LandingPageLight({ c }: { c: Content }) {
           </div>
         </section>
 
-        <PinnedSteps c={c} />
+        <div className={mixed ? "dark bg-background text-foreground" : undefined}><PinnedSteps c={c} /></div>
 
         <TuningDrive c={c} />
 
@@ -546,7 +552,7 @@ export function LandingPageLight({ c }: { c: Content }) {
           </Reveal>
         </Section>
 
-        <Section id="tool-berater" kicker={c.advisor.kicker} title={c.advisor.title} intro={c.advisor.intro}>
+        <Section id="tool-berater" kicker={c.advisor.kicker} title={c.advisor.title} intro={c.advisor.intro} className={mixed ? "dark bg-background text-foreground" : undefined}>
           <Reveal>
             <ToolAdvisor c={c} />
           </Reveal>
@@ -564,7 +570,7 @@ export function LandingPageLight({ c }: { c: Content }) {
           </Reveal>
         </Section>
 
-        <Section id="vertrauen" kicker={c.trust.kicker} title={c.trust.title}>
+        <Section id="vertrauen" kicker={c.trust.kicker} title={c.trust.title} className={mixed ? "dark bg-background text-foreground" : undefined}>
           <div className="grid gap-5 md:grid-cols-3">
             {c.trust.quotes.map((q, i) => (
               <Reveal key={q.a} delay={0.1 * i} className="h-full">
@@ -640,6 +646,7 @@ export function LandingPageLight({ c }: { c: Content }) {
         {c.nav.cta}
         <ArrowRight className="size-4" />
       </a>
+      </div>
     </MotionConfig>
   );
 }
