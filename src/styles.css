@@ -11,9 +11,9 @@
  */
 
 @theme inline {
-  --font-sans: "Mulish", "Segoe UI", system-ui, sans-serif;
-  --font-display: "Chakra Petch", "Segoe UI", system-ui, sans-serif;
-  --font-mono: "Chakra Petch", ui-monospace, Menlo, monospace;
+  --font-sans: "Saira Condensed", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Saira", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Saira Condensed", ui-monospace, Menlo, monospace;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -164,6 +164,13 @@
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: -0.01em;
+  }
+
+  /* Big headlines run in Saira italic — the slant is the tuning look. */
+  h1,
+  h2 {
+    font-style: italic;
+    letter-spacing: 0.005em;
   }
 
   @media (prefers-reduced-motion: reduce) {
