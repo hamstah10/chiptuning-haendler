@@ -28,6 +28,7 @@ import { PartnerWizard } from "./partner-wizard";
 import { EarningsCalculator } from "./earnings-calculator";
 import { Logo } from "./logo";
 import { ToolAdvisor } from "./tool-advisor";
+import { StartPlan } from "./start-plan";
 import { VehicleCheck } from "./vehicle-check";
 import { LegalLinks } from "./legal-links";
 import type { Content } from "@/lib/content";
@@ -101,7 +102,7 @@ function Header({ c }: { c: Content }) {
 }
 
 /** Kickers carry the chapter number of the light design; renumber them for this design's order. */
-const DARK_ORDER = ["problem", "loesung", "ablauf", "verdienst", "konfigurator", "anmeldung", "vertrauen", "faq"];
+const DARK_ORDER = ["problem", "loesung", "ablauf", "verdienst", "konfigurator", "startplan", "anmeldung", "vertrauen", "faq"];
 function chapterKicker(kicker: string, id: string) {
   return kicker.replace(/\d{2}/, String(DARK_ORDER.indexOf(id) + 1).padStart(2, "0"));
 }
@@ -287,6 +288,12 @@ export function LandingPageDark({ c }: { c: Content }) {
         <Section id="konfigurator" kicker={c.configurator.kicker} title={c.configurator.title} intro={c.configurator.text}>
           <Reveal>
             <Configurator c={c} />
+          </Reveal>
+        </Section>
+
+        <Section id="startplan" kicker={c.startPlan.kicker} title={c.startPlan.title} intro={c.startPlan.intro}>
+          <Reveal>
+            <StartPlan c={c} />
           </Reveal>
         </Section>
 
