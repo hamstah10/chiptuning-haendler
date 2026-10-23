@@ -22,7 +22,7 @@ export function MixedHero({ c }: { c: Content }) {
           transition={{ duration: 3.5, ease: "easeOut" }}
         />
         <div className="mixed-hero-shade absolute inset-0 -z-10" aria-hidden />
-        <div className="relative mx-auto flex h-full max-w-6xl flex-col justify-center px-5 py-12 md:py-16">
+        <div className="relative mx-auto flex h-full max-w-6xl flex-col justify-center px-5 py-12 md:py-16 md:pl-20">
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
