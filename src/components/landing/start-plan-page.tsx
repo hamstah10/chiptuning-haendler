@@ -4,6 +4,7 @@ import { ArrowRight, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo, ThemeToggle } from "./landing-page";
 import { StartPlan } from "./start-plan";
+import { LegalLinks } from "./legal-links";
 import type { Content } from "@/lib/content";
 
 /** Standalone start plan page: slim header, generator, footer – reachable via its own URL. */
@@ -56,7 +57,10 @@ export function StartPlanPage({ c }: { c: Content }) {
             <Logo />
             <p className="mt-3 text-sm text-muted-foreground">{c.footer.claim}</p>
           </div>
-          <p className="text-xs text-faint">© {year} Tuningfiles-download.com · {c.footer.rights}</p>
+          <div className="flex flex-col gap-2 md:items-end">
+            <LegalLinks locale={c.locale} />
+            <p className="text-xs text-faint">© {year} Tuningfiles-download.com · {c.footer.rights}</p>
+          </div>
         </div>
       </footer>
     </MotionConfig>
