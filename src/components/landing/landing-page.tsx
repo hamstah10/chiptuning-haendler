@@ -176,7 +176,7 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
             <li key={id}>
               <a
                 href={`#${id}`}
-                className="group flex items-center gap-2.5 py-1"
+                className="group relative flex items-center justify-center gap-2.5 py-1"
                 aria-current={on ? "step" : undefined}
               >
                 <span
@@ -195,10 +195,8 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
                 </span>
                 <span
                   className={cn(
-                    "label-caps hidden text-[10px] transition-all duration-300 xl:inline",
-                    on
-                      ? "translate-x-0 text-strong opacity-100"
-                      : "-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100",
+                    "label-caps pointer-events-none absolute left-full top-1/2 ml-2 -translate-y-1/2 whitespace-nowrap rounded-sm border bg-card/95 px-2 py-1 text-[10px] opacity-0 shadow-md transition-opacity duration-200 group-hover:opacity-100",
+                    on ? "text-strong" : "text-muted-foreground",
                   )}
                 >
                   {c.chapters[i]}
@@ -206,6 +204,7 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
               </a>
             </li>
           );
+
         })}
       </ol>
     </nav>
