@@ -10,14 +10,23 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DatenschutzRouteImport } from './routes/datenschutz'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as EnRouteImport } from './routes/en'
+import { Route as ImpressumRouteImport } from './routes/impressum'
 import { Route as StartplanRouteImport } from './routes/startplan'
+import { Route as EnImprintRouteImport } from './routes/en_.imprint'
+import { Route as EnPrivacyRouteImport } from './routes/en_.privacy'
 import { Route as EnStartplanRouteImport } from './routes/en_.startplan'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DatenschutzRoute = DatenschutzRouteImport.update({
+  id: '/datenschutz',
+  path: '/datenschutz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DesignSystemRoute = DesignSystemRouteImport.update({
@@ -30,9 +39,24 @@ const EnRoute = EnRouteImport.update({
   path: '/en',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ImpressumRoute = ImpressumRouteImport.update({
+  id: '/impressum',
+  path: '/impressum',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StartplanRoute = StartplanRouteImport.update({
   id: '/startplan',
   path: '/startplan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnImprintRoute = EnImprintRouteImport.update({
+  id: '/en_/imprint',
+  path: '/en/imprint',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnPrivacyRoute = EnPrivacyRouteImport.update({
+  id: '/en_/privacy',
+  path: '/en/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnStartplanRoute = EnStartplanRouteImport.update({
@@ -43,45 +67,83 @@ const EnStartplanRoute = EnStartplanRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/datenschutz': typeof DatenschutzRoute
   '/design-system': typeof DesignSystemRoute
   '/en': typeof EnRoute
+  '/impressum': typeof ImpressumRoute
   '/startplan': typeof StartplanRoute
+  '/en/imprint': typeof EnImprintRoute
+  '/en/privacy': typeof EnPrivacyRoute
   '/en/startplan': typeof EnStartplanRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/datenschutz': typeof DatenschutzRoute
   '/design-system': typeof DesignSystemRoute
   '/en': typeof EnRoute
+  '/impressum': typeof ImpressumRoute
   '/startplan': typeof StartplanRoute
+  '/en/imprint': typeof EnImprintRoute
+  '/en/privacy': typeof EnPrivacyRoute
   '/en/startplan': typeof EnStartplanRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/datenschutz': typeof DatenschutzRoute
   '/design-system': typeof DesignSystemRoute
   '/en': typeof EnRoute
+  '/impressum': typeof ImpressumRoute
   '/startplan': typeof StartplanRoute
+  '/en_/imprint': typeof EnImprintRoute
+  '/en_/privacy': typeof EnPrivacyRoute
   '/en_/startplan': typeof EnStartplanRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/design-system' | '/en' | '/startplan' | '/en/startplan'
+  fullPaths:
+    | '/'
+    | '/datenschutz'
+    | '/design-system'
+    | '/en'
+    | '/impressum'
+    | '/startplan'
+    | '/en/imprint'
+    | '/en/privacy'
+    | '/en/startplan'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/design-system' | '/en' | '/startplan' | '/en/startplan'
+  to:
+    | '/'
+    | '/datenschutz'
+    | '/design-system'
+    | '/en'
+    | '/impressum'
+    | '/startplan'
+    | '/en/imprint'
+    | '/en/privacy'
+    | '/en/startplan'
   id:
     | '__root__'
     | '/'
+    | '/datenschutz'
     | '/design-system'
     | '/en'
+    | '/impressum'
     | '/startplan'
+    | '/en_/imprint'
+    | '/en_/privacy'
     | '/en_/startplan'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DatenschutzRoute: typeof DatenschutzRoute
   DesignSystemRoute: typeof DesignSystemRoute
   EnRoute: typeof EnRoute
+  ImpressumRoute: typeof ImpressumRoute
   StartplanRoute: typeof StartplanRoute
+  EnImprintRoute: typeof EnImprintRoute
+  EnPrivacyRoute: typeof EnPrivacyRoute
   EnStartplanRoute: typeof EnStartplanRoute
 }
 
@@ -92,6 +154,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/datenschutz': {
+      id: '/datenschutz'
+      path: '/datenschutz'
+      fullPath: '/datenschutz'
+      preLoaderRoute: typeof DatenschutzRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/design-system': {
@@ -108,11 +177,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/impressum': {
+      id: '/impressum'
+      path: '/impressum'
+      fullPath: '/impressum'
+      preLoaderRoute: typeof ImpressumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/startplan': {
       id: '/startplan'
       path: '/startplan'
       fullPath: '/startplan'
       preLoaderRoute: typeof StartplanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en_/imprint': {
+      id: '/en_/imprint'
+      path: '/en/imprint'
+      fullPath: '/en/imprint'
+      preLoaderRoute: typeof EnImprintRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en_/privacy': {
+      id: '/en_/privacy'
+      path: '/en/privacy'
+      fullPath: '/en/privacy'
+      preLoaderRoute: typeof EnPrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en_/startplan': {
@@ -127,9 +217,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DatenschutzRoute: DatenschutzRoute,
   DesignSystemRoute: DesignSystemRoute,
   EnRoute: EnRoute,
+  ImpressumRoute: ImpressumRoute,
   StartplanRoute: StartplanRoute,
+  EnImprintRoute: EnImprintRoute,
+  EnPrivacyRoute: EnPrivacyRoute,
   EnStartplanRoute: EnStartplanRoute,
 }
 export const routeTree = rootRouteImport
