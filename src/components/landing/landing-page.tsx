@@ -164,16 +164,17 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
     <nav
       aria-label={c.chapterLabel}
       className={cn(
-        "fixed left-3 top-1/2 z-40 hidden -translate-y-1/2 transition-opacity duration-300 md:block",
+        "fixed left-2 top-1/2 z-40 hidden -translate-y-1/2 transition-opacity duration-300 md:block",
         onDrive && "pointer-events-none opacity-0",
       )}
     >
       <ol
         className={cn(
-          "grid gap-1 rounded-md border bg-card/95 p-2 shadow-xl backdrop-blur-sm",
+          "grid gap-1 rounded-md border bg-card/95 p-1.5 shadow-xl backdrop-blur-sm",
           onDark && "dark",
         )}
       >
+
 
         {CHAPTER_IDS.map((id, i) => {
           const on = i === active;
@@ -181,15 +182,18 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
             <li key={id}>
               <a
                 href={`#${id}`}
-                className="group relative flex items-center justify-center gap-2.5 py-1"
+                className="group relative flex items-center justify-center gap-1.5 py-1"
                 aria-current={on ? "step" : undefined}
               >
-                <span
-                  className={cn(
-                    "h-px transition-all duration-300",
-                    on ? "w-8 bg-primary" : "w-3 bg-border-strong group-hover:w-5",
-                  )}
-                />
+                <span className="flex w-6 justify-start">
+                  <span
+                    className={cn(
+                      "h-px transition-all duration-300",
+                      on ? "w-6 bg-primary" : "w-2 bg-border-strong group-hover:w-4",
+                    )}
+                  />
+                </span>
+
                 <span
                   className={cn(
                     "font-mono text-xs transition-colors",
