@@ -157,7 +157,7 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   }, []);
 
   // Some parts of the mixed composition sit on a dark surface.
-  const active = CHAPTER_IDS.indexOf(activeId === "top" ? CHAPTER_IDS[0] : activeId);
+  const active = CHAPTER_IDS.indexOf(activeId === "top" ? CHAPTER_IDS[0] ?? "" : activeId);
 
   const onDark = mixed && (MIXED_DARK_CHAPTERS.has(activeId) || activeId === "top");
 
