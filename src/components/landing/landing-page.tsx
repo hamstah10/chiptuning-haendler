@@ -749,6 +749,12 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
 
           <TuningDrive c={c} />
 
+          <Section id="portal-demo" kicker={c.portal.kicker} title={c.portal.title} intro={c.portal.intro}>
+            <Reveal>
+              <FileServiceTeaser c={c} />
+            </Reveal>
+          </Section>
+
           <Section id="verdienst" kicker={c.calculator.kicker} title={c.calculator.title}>
             <Reveal>
               <EarningsCalculator c={c} />
