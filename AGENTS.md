@@ -17,3 +17,4 @@
 - Two landing designs (light storytelling + dark original) share the same content and components; `landing-switch.tsx` picks one and remembers the choice in the browser. Why: visitors and the owner can compare both without separate routes.
 - Layers the browser renders outside the page tree (toasts, dialogs, menus, tooltips) must read the theme from `.dark` on `<html>` and get their colors from the token mapping in `src/styles.css`. Why: they live at document level, so a theme class on a wrapper element never reaches them.
 - Legal page copy and provider data (imprint, privacy) live in `src/lib/legal.ts`, separate from landing copy. Why: legal texts change on their own schedule and must use the official business data only.
+- Tuning Drive uses the uploaded HTML wrapper and its external embed unchanged; do not access the external frame DOM or send invented seek messages. Why: the embed supports settings and readiness messages, but no scroll playback API.

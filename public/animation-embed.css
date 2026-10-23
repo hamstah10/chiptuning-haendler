@@ -1,0 +1,16 @@
+/* Layout only; the uploaded animation and its settings remain unchanged. */
+:root {
+  --animation-background: oklch(0.163 0 0);
+}
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--animation-background);
+}
+#tuningfiles-drive {
+  max-width: none !important;
+  height: 100% !important;
+}
