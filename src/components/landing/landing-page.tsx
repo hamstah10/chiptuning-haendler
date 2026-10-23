@@ -129,11 +129,11 @@ function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
 
 
 function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
-  const [active, setActive] = useState(-1);
+  const [activeId, setActiveId] = useState("");
   const [onDrive, setOnDrive] = useState(false);
 
   useEffect(() => {
-    const els = [...CHAPTER_IDS, "drive"]
+    const els = [...CHAPTER_IDS, "drive", "top"]
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
     const observer = new IntersectionObserver(
@@ -145,7 +145,7 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
             return;
           }
           setOnDrive(false);
-          setActive(CHAPTER_IDS.indexOf(e.target.id));
+          setActiveId(e.target.id);
         });
       },
       { rootMargin: "-45% 0px -50% 0px" },
@@ -154,8 +154,9 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
     return () => observer.disconnect();
   }, []);
 
-  // Some chapters of the mixed composition sit on a dark surface.
-  const onDark = mixed && MIXED_DARK_CHAPTERS.has(CHAPTER_IDS[active] ?? "");
+  // Some parts of the mixed composition sit on a dark surface.
+  const active = CHAPTER_IDS.indexOf(activeId);
+  const onDark = mixed && (MIXED_DARK_CHAPTERS.has(activeId) || activeId === "top");
 
   return (
     <nav
