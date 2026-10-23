@@ -11,5 +11,6 @@
 - [x] Remove the "Kapitel" dropdown from the top navigation bar.
 - [x] Chapter 04 "Der Ablauf": reduce the step card size so it matches the other chapters.
 - [x] Align the top navigation bar, the content and the left chapter rail to one shared left edge.
+- [ ] Soften chapter entrances and animate stable chapter navigation; verify scrolling and reduced motion.
 
 

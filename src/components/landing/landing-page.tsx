@@ -133,27 +133,36 @@ function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
 function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   const [activeId, setActiveId] = useState("");
   const [onDrive, setOnDrive] = useState(false);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     const els = [...CHAPTER_IDS, "drive", "top"]
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (!e.isIntersecting) return;
-          if (e.target.id === "drive") {
-            setOnDrive(true);
-            return;
-          }
-          setOnDrive(false);
-          setActiveId(e.target.id);
-        });
-      },
-      { rootMargin: "-45% 0px -50% 0px" },
-    );
-    els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    const updateChapter = () => {
+      const focusLine = 64 + (window.innerHeight - 64) * 0.45;
+      const current = els.find((el) => {
+        const bounds = el.getBoundingClientRect();
+        return bounds.top <= focusLine && bounds.bottom > focusLine;
+      });
+      setOnDrive(current?.id === "drive");
+      if (current && current.id !== "drive") setActiveId(current.id);
+    };
+    const observer = new IntersectionObserver(updateChapter, {
+      rootMargin: "-45% 0px -50% 0px",
+    });
+    const resizeObserver = new ResizeObserver(updateChapter);
+    els.forEach((el) => {
+      observer.observe(el);
+      resizeObserver.observe(el);
+    });
+    updateChapter();
+    window.addEventListener("resize", updateChapter);
+    return () => {
+      observer.disconnect();
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", updateChapter);
+    };
   }, []);
 
   // Some parts of the mixed composition sit on a dark surface.
@@ -171,7 +180,7 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
     >
       <ol
         className={cn(
-          "grid gap-1 rounded-md border bg-card/95 p-1.5 shadow-xl backdrop-blur-sm",
+          "grid gap-1 rounded-md border bg-card/95 p-1.5 shadow-xl backdrop-blur-sm transition-colors duration-500 motion-reduce:transition-none",
           onDark && "dark",
         )}
       >
@@ -188,18 +197,26 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
                 aria-current={on ? "step" : undefined}
               >
 
-                <span className="flex w-6 justify-start">
+                <span className="relative flex w-6 justify-start">
                   <span
                     className={cn(
                       "h-px transition-all duration-300",
-                      on ? "w-6 bg-primary" : "w-2 bg-border-strong group-hover:w-4",
+                      on ? "w-2 bg-border-strong" : "w-2 bg-border-strong group-hover:w-4",
                     )}
                   />
+                  {on && (
+                    <motion.span
+                      layoutId="active-chapter-line"
+                      aria-hidden="true"
+                      className="absolute inset-y-0 left-0 h-px w-6 bg-primary"
+                      transition={reducedMotion ? { duration: 0 } : { type: "spring", stiffness: 180, damping: 26 }}
+                    />
+                  )}
                 </span>
 
                 <span
                   className={cn(
-                    "font-mono text-xs transition-colors",
+                    "font-mono text-xs transition-colors duration-500 motion-reduce:transition-none",
                     on ? "text-strong" : "text-faint group-hover:text-strong",
                   )}
                 >
