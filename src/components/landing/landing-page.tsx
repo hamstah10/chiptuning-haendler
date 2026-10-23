@@ -60,6 +60,7 @@ const CHAPTER_IDS = [
   "faq",
 ];
 
+
 export { Logo } from "./logo";
 
 export function ThemeToggle({ c }: { c: Content }) {
@@ -143,72 +144,6 @@ function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   );
 }
 
-function ChapterRail({ c }: { c: Content }) {
-  const [active, setActive] = useState(-1);
-
-  useEffect(() => {
-    const els = CHAPTER_IDS.map((id) => document.getElementById(id)).filter(
-      (el): el is HTMLElement => el !== null,
-    );
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActive(CHAPTER_IDS.indexOf(e.target.id));
-        });
-      },
-      { rootMargin: "-45% 0px -50% 0px" },
-    );
-    els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <nav
-      aria-label={c.chapterLabel}
-      className="fixed left-5 top-1/2 z-40 hidden -translate-y-1/2 xl:block"
-    >
-      <ol className="grid gap-1">
-        {CHAPTER_IDS.map((id, i) => {
-          const on = i === active;
-          return (
-            <li key={id}>
-              <a
-                href={`#${id}`}
-                className="group flex items-center gap-2.5 py-1"
-                aria-current={on ? "step" : undefined}
-              >
-                <span
-                  className={cn(
-                    "h-px transition-all duration-300",
-                    on ? "w-8 bg-primary" : "w-3 bg-border-strong group-hover:w-5",
-                  )}
-                />
-                <span
-                  className={cn(
-                    "font-mono text-xs transition-colors",
-                    on ? "text-primary" : "text-faint group-hover:text-strong",
-                  )}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span
-                  className={cn(
-                    "label-caps hidden text-[10px] transition-all duration-300 2xl:inline",
-                    on
-                      ? "translate-x-0 text-strong opacity-100"
-                      : "-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100",
-                  )}
-                >
-                  {c.chapters[i]}
-                </span>
-              </a>
-            </li>
-          );
-        })}
-      </ol>
-    </nav>
-  );
-}
 
 function Section({
   id,
@@ -524,14 +459,14 @@ function StepCard({ c, i }: { c: Content; i: number }) {
   if (!s) return null;
   const Icon = STEP_ICONS[i] ?? Cpu;
   return (
-    <div className="flex h-full flex-col rounded-md border bg-card p-7">
+    <div className="flex h-full flex-col rounded-md border bg-card p-5">
       <div className="flex items-center justify-between">
-        <span className="font-display text-6xl font-bold text-primary">0{i + 1}</span>
-        <span className="flex size-12 items-center justify-center rounded-sm border bg-sunken text-primary">
-          <Icon className="size-5" />
+        <span className="font-display text-4xl font-bold text-primary">0{i + 1}</span>
+        <span className="flex size-9 items-center justify-center rounded-sm border bg-sunken text-primary">
+          <Icon className="size-4" />
         </span>
       </div>
-      <h3 className="mt-auto pt-10 text-2xl">{s.title}</h3>
+      <h3 className="mt-auto pt-6 text-lg">{s.title}</h3>
       <p className="mt-2 leading-relaxed text-muted-foreground">{s.text}</p>
     </div>
   );
@@ -539,13 +474,24 @@ function StepCard({ c, i }: { c: Content; i: number }) {
 
 function PinnedSteps({ c }: { c: Content }) {
   const ref = useRef<HTMLElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
   const preference = useReducedMotion();
   const [reduce, setReduce] = useState(false);
+  const [travel, setTravel] = useState(0);
   useEffect(() => {
     setReduce(preference === true);
   }, [preference]);
+  useEffect(() => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    const measure = () => setTravel(Math.max(0, strip.scrollWidth - window.innerWidth));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(strip);
+    return () => observer.disconnect();
+  }, [reduce]);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const x = useTransform(scrollYProgress, [0.05, 0.95], ["0%", "-62%"]);
+  const x = useTransform(scrollYProgress, [0.05, 0.95], [0, -travel]);
   const bar = useTransform(scrollYProgress, [0.05, 0.95], [0, 1]);
 
   const header = (
@@ -594,11 +540,12 @@ function PinnedSteps({ c }: { c: Content }) {
             </div>
           </div>
           <motion.div
+            ref={stripRef}
             style={{ x }}
             className="mt-10 flex gap-6 pl-[max(1.25rem,calc((100vw-72rem)/2+1.25rem))]"
           >
             {c.steps.items.map((s, i) => (
-              <div key={s.title} className="h-80 w-[min(26rem,70vw)] shrink-0">
+              <div key={s.title} className="h-60 w-[min(20rem,70vw)] shrink-0">
                 <StepCard c={c} i={i} />
               </div>
             ))}
@@ -637,7 +584,7 @@ function TuningDrive({ c }: { c: Content }) {
   const reducedMotion = useReducedMotion();
 
   return (
-    <section className="dark overflow-hidden border-b bg-media-surface text-foreground">
+    <section id="drive" className="dark overflow-hidden border-b bg-media-surface text-foreground">
       <div className="mx-auto grid max-w-6xl items-stretch gap-0 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:gap-10 lg:gap-14">
         <div className="mx-auto aspect-[9/16] w-full max-w-[440px] overflow-hidden md:max-w-none">
           <iframe
@@ -701,7 +648,6 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
       <div className={mixed ? "light mixed-landing bg-background text-foreground" : undefined}>
         <ScrollProgress />
         <Header c={c} mixed={mixed} />
-        {!mixed && <ChapterRail c={c} />}
         <main>
           {mixed ? <MixedHero c={c} /> : <Hero c={c} />}
 
