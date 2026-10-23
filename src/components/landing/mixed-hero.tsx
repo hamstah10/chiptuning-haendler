@@ -3,7 +3,6 @@ import { ArrowDown, ArrowRight, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Content } from "@/lib/content";
 import workshopImage from "@/assets/mixed-hero-workshop.jpg";
-import { Logo } from "./logo";
 import { CountUp } from "./motion";
 
 export function MixedHero({ c }: { c: Content }) {
@@ -24,14 +23,6 @@ export function MixedHero({ c }: { c: Content }) {
         />
         <div className="mixed-hero-shade absolute inset-0 -z-10" aria-hidden />
         <div className="relative mx-auto flex h-full max-w-6xl flex-col justify-center px-5 py-12 md:py-16">
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-8"
-          >
-            <Logo />
-          </motion.div>
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
