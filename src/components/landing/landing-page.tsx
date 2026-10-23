@@ -434,144 +434,31 @@ function IconCard({ icon, title, text, index }: { icon: ReactNode; title: string
 }
 
 function TuningDrive({ c }: { c: Content }) {
-  const ref = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const stages = c.tuningDrive.stages;
-
-  /* map scroll 0→1 to active stage index 0→3 */
-  const [active, setActive] = useState(0);
-  useEffect(() => {
-    const unsub = scrollYProgress.on("change", (v) => {
-      const idx = Math.min(stages.length - 1, Math.floor(v * stages.length));
-      setActive(idx);
-    });
-    return unsub;
-  }, [scrollYProgress, stages.length]);
-
-  /* Sync the animation playhead to scroll progress. The Stage player inside
-     tuning-drive.html pauses its own clock and renders an exact frame when a
-     `data-om-seek-to-time-frame` event lands on its exportable svg. */
-  useEffect(() => {
-    const iframe = iframeRef.current;
-    if (!iframe) return;
-    let svg: SVGSVGElement | null = null;
-    let duration = 12;
-    let poll: number | undefined;
-
-    const findStage = () => {
-      const doc = iframe.contentDocument;
-      const found = doc?.querySelector<SVGSVGElement>("svg[data-om-exportable-video-with-duration-secs]");
-      if (found) {
-        svg = found;
-        duration = parseFloat(found.getAttribute("data-om-exportable-video-with-duration-secs") ?? "") || 12;
-        return true;
-      }
-      return false;
-    };
-
-    const seek = (progress: number) => {
-      if (!svg) return;
-      const time = Math.min(duration - 0.05, Math.max(0, progress * duration));
-      svg.dispatchEvent(
-        new CustomEvent("data-om-seek-to-time-frame", { detail: { time, sync: true } }),
-      );
-    };
-
-    const onLoad = () => {
-      if (findStage()) {
-        seek(scrollYProgress.get());
-        return;
-      }
-      /* The bundle unpacks asynchronously — poll until the stage svg exists. */
-      poll = window.setInterval(() => {
-        if (findStage()) {
-          window.clearInterval(poll);
-          poll = undefined;
-          seek(scrollYProgress.get());
-        }
-      }, 250);
-    };
-
-    const unsub = scrollYProgress.on("change", seek);
-    iframe.addEventListener("load", onLoad);
-    if (iframe.contentDocument?.readyState === "complete") onLoad();
-
-    return () => {
-      unsub();
-      iframe.removeEventListener("load", onLoad);
-      if (poll !== undefined) window.clearInterval(poll);
-    };
-  }, [scrollYProgress]);
 
   return (
-    <section ref={ref} className="relative border-b" style={{ background: "#0e0e0e", height: `${(stages.length + 1) * 100}vh` }}>
-      <div className="sticky top-0 h-screen overflow-hidden">
-        <div className="mx-auto flex h-full max-w-6xl items-center gap-8 px-5 lg:gap-14">
-          {/* Animation – left / center on mobile */}
-          <div className="relative mx-auto w-full max-w-[280px] shrink-0 lg:mx-0 lg:max-w-[320px]">
-            <div className="overflow-hidden rounded-md" style={{ aspectRatio: "9/16" }}>
-              <iframe
-                ref={iframeRef}
-                src="/tuning-drive.html"
-                title="Tuning Drive Animation – Stock → Stage 1 → 2 → 3"
-                className="h-full w-full border-0"
-                loading="lazy"
-              />
-            </div>
-          </div>
-
-          {/* Stage info – right side, hidden on small screens (animation alone) */}
-          <div className="hidden flex-1 lg:block">
-            <span className="kicker" style={{ color: "#bd1e23" }}>{c.tuningDrive.kicker}</span>
-            <h2 className="mt-3 text-3xl leading-[1.08] text-[#ededed] md:text-5xl">{c.tuningDrive.title}</h2>
-
-            <div className="mt-10 grid gap-4">
-              {stages.map((s, i) => {
-                const on = i === active;
-                return (
-                  <motion.div
-                    key={s.label}
-                    animate={{ opacity: on ? 1 : 0.3, scale: on ? 1 : 0.97 }}
-                    transition={{ duration: 0.35 }}
-                    className={cn(
-                      "rounded-md border p-5 transition-colors",
-                      on ? "border-[#bd1e23] bg-[#1c1c1c]" : "border-[#2a2a2a] bg-[#141414]",
-                    )}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="label-caps text-xs" style={{ color: on ? "#bd1e23" : "#666" }}>{s.label}</span>
-                      <span className="font-mono text-xs" style={{ color: "#666" }}>{s.ps} · {s.nm}</span>
-                    </div>
-                    <h3 className="mt-2 text-lg font-bold" style={{ color: "#ededed" }}>{s.title}</h3>
-                    {on && (
-                      <motion.p
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="mt-1 text-sm leading-relaxed"
-                        style={{ color: "#999" }}
-                      >
-                        {s.text}
-                      </motion.p>
-                    )}
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile stage indicator */}
-        <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 lg:hidden">
-          {stages.map((s, i) => (
-            <span
-              key={s.label}
-              className={cn("rounded-full px-3 py-1 font-mono text-[10px] uppercase transition-colors", i === active ? "bg-[#bd1e23] text-[#ededed]" : "bg-[#1c1c1c] text-[#666]")}
-            >
-              {s.label}
-            </span>
-          ))}
+    <section className="border-b bg-sunken">
+      <div className="mx-auto max-w-6xl px-5 py-16 md:py-20">
+        <span className="kicker">{c.tuningDrive.kicker}</span>
+        <h2 className="mt-3 max-w-3xl text-3xl leading-[1.08] text-strong md:text-5xl">{c.tuningDrive.title}</h2>
+        <div className="mx-auto mt-10 w-full max-w-[320px] overflow-hidden rounded-md aspect-[9/16]">
+          <iframe
+            ref={iframeRef}
+            src="/tuningfiles-animation.html"
+            title="TuningFiles – Tuning Drive"
+            className="h-full w-full border-0"
+            loading="lazy"
+            allow="autoplay"
+            onLoad={() => {
+              const doc = iframeRef.current?.contentDocument;
+              if (!doc || doc.querySelector('link[data-animation-layout]')) return;
+              const stylesheet = doc.createElement("link");
+              stylesheet.rel = "stylesheet";
+              stylesheet.href = "/animation-embed.css";
+              stylesheet.dataset['animationLayout'] = "true";
+              doc.head.appendChild(stylesheet);
+            }}
+          />
         </div>
       </div>
     </section>
