@@ -17,6 +17,47 @@ const meta: Record<Locale, { title: string; description: string; path: string; o
   },
 };
 
+const startPlanMeta: Record<Locale, { title: string; description: string; path: string; ogLocale: string }> = {
+  de: {
+    title: "Startplan: Chiptuning-Händler werden – Tuningfiles-download.com",
+    description:
+      "Dein persönlicher Fahrplan in den Chiptuning-Handel: Die KI erstellt aus deinen Angaben einen konkreten Startplan mit ersten Schritten, realistischem Zeitrahmen und passendem Paket. Kostenlos und unverbindlich.",
+    path: "/startplan",
+    ogLocale: "de_DE",
+  },
+  en: {
+    title: "Start plan: become a chiptuning dealer – Tuningfiles-download.com",
+    description:
+      "Your personal roadmap into the chiptuning trade: the AI turns your details into a concrete start plan with first steps, a realistic timeframe and the right package. Free and without obligation.",
+    path: "/en/startplan",
+    ogLocale: "en_GB",
+  },
+};
+
+export function startPlanHead(locale: Locale) {
+  const m = startPlanMeta[locale];
+  return {
+    meta: [
+      { title: m.title },
+      { name: "description", content: m.description },
+      { property: "og:title", content: m.title },
+      { property: "og:description", content: m.description },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: m.path },
+      { property: "og:locale", content: m.ogLocale },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: m.title },
+      { name: "twitter:description", content: m.description },
+    ],
+    links: [
+      { rel: "canonical", href: m.path },
+      { rel: "alternate", hrefLang: "de", href: "/startplan" },
+      { rel: "alternate", hrefLang: "en", href: "/en/startplan" },
+      { rel: "alternate", hrefLang: "x-default", href: "/startplan" },
+    ],
+  };
+}
+
 export function landingHead(locale: Locale) {
   const m = meta[locale];
   return {

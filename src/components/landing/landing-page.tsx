@@ -34,7 +34,7 @@ import type { Content } from "@/lib/content";
 /** Section ids in chapter order (01–09). */
 const CHAPTER_IDS = ["problem", "loesung", "anmeldung", "ablauf", "verdienst", "konfigurator", "startplan", "vertrauen", "faq"];
 
-function Logo() {
+export function Logo() {
   return (
     <span className="flex items-center gap-2.5">
       <span className="flex size-8 items-center justify-center rounded-sm bg-primary">
@@ -47,7 +47,7 @@ function Logo() {
   );
 }
 
-function ThemeToggle({ c }: { c: Content }) {
+export function ThemeToggle({ c }: { c: Content }) {
   const [dark, setDark] = useState(false);
   useEffect(() => {
     setDark(localStorage.getItem("tf-theme-light-design") === "dark");
