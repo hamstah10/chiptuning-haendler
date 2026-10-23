@@ -4,3 +4,5 @@
 - [x] Verify the animation on the page.
 - [x] Restore the dark animation band and stage contents on the right without scroll binding.
 - [x] Enlarge animation flush with band edges, remove Stage 3 on the right, and animate remaining content.
+- [x] Add a third mixed light/dark composition with an animated hero and retain all existing tools.
+- [x] Verify composition switching, mobile layout, and reduced motion.
