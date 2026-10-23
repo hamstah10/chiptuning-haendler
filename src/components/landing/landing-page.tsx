@@ -28,6 +28,8 @@ import { Configurator } from "./configurator";
 import { PartnerWizard } from "./partner-wizard";
 import { EarningsCalculator } from "./earnings-calculator";
 import { StartPlan } from "./start-plan";
+import { ToolAdvisor } from "./tool-advisor";
+import { VehicleCheck } from "./vehicle-check";
 import { Logo } from "./logo";
 import type { Content } from "@/lib/content";
 
@@ -630,6 +632,18 @@ export function LandingPageLight({ c }: { c: Content }) {
         <Section id="verdienst" kicker={c.calculator.kicker} title={c.calculator.title}>
           <Reveal>
             <EarningsCalculator c={c} />
+          </Reveal>
+        </Section>
+
+        <Section id="fahrzeug-check" kicker={c.vehicleCheck.kicker} title={c.vehicleCheck.title} intro={c.vehicleCheck.intro} className="bg-sunken">
+          <Reveal>
+            <VehicleCheck c={c} />
+          </Reveal>
+        </Section>
+
+        <Section id="tool-berater" kicker={c.advisor.kicker} title={c.advisor.title} intro={c.advisor.intro}>
+          <Reveal>
+            <ToolAdvisor c={c} />
           </Reveal>
         </Section>
 
