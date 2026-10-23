@@ -30,6 +30,7 @@ import { EarningsCalculator } from "./earnings-calculator";
 import { StartPlan } from "./start-plan";
 import { ToolAdvisor } from "./tool-advisor";
 import { VehicleCheck } from "./vehicle-check";
+import { LegalLinks } from "./legal-links";
 import { Logo } from "./logo";
 import type { Content } from "@/lib/content";
 
@@ -719,9 +720,12 @@ export function LandingPageLight({ c }: { c: Content }) {
             <Logo />
             <p className="mt-3 text-sm text-muted-foreground">{c.footer.claim}</p>
           </div>
-          <p className="text-xs text-faint">
-            © {year} Tuningfiles-download.com · {c.footer.rights}
-          </p>
+          <div className="flex flex-col gap-2 md:items-end">
+            <LegalLinks locale={c.locale} />
+            <p className="text-xs text-faint">
+              © {year} Tuningfiles-download.com · {c.footer.rights}
+            </p>
+          </div>
         </div>
       </footer>
 
