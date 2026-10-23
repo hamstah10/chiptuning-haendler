@@ -152,16 +152,27 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
       rootMargin: "-45% 0px -50% 0px",
     });
     const resizeObserver = new ResizeObserver(updateChapter);
+    const onScroll = () => {
+      if (frame !== null) return;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        updateChapter();
+      });
+    };
+    let frame: number | null = null;
     els.forEach((el) => {
       observer.observe(el);
       resizeObserver.observe(el);
     });
     updateChapter();
     window.addEventListener("resize", updateChapter);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       observer.disconnect();
       resizeObserver.disconnect();
       window.removeEventListener("resize", updateChapter);
+      window.removeEventListener("scroll", onScroll);
+      if (frame !== null) cancelAnimationFrame(frame);
     };
   }, []);
 
@@ -201,7 +212,7 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
                   <span
                     className={cn(
                       "h-px transition-all duration-300",
-                      on ? "w-2 bg-border-strong" : "w-2 bg-border-strong group-hover:w-4",
+                      "w-2 bg-border-strong group-hover:w-4",
                     )}
                   />
                   {on && (
