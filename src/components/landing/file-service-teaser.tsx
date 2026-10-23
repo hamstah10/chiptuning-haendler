@@ -139,7 +139,7 @@ export function FileServiceTeaser({ c }: { c: Content }) {
                   <div className="rounded-md border p-4">
                     <div className="font-mono text-[11px] uppercase text-faint">{p.credits}</div>
                     <div className="font-display text-2xl font-bold text-primary">
-                      {formatNumber(credits, c.locale)}
+                      {formatNumber(credits, c.locale, credits % 1 ? 1 : 0)}
                     </div>
                   </div>
                   <div className="rounded-md border p-4">
