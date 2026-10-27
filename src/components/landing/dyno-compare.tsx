@@ -80,7 +80,6 @@ export function DynoCompare({ c }: { c: Content }) {
   const mapX = (rpm: number) => PAD_L + ((rpm - RPM_MIN) / (RPM_MAX - RPM_MIN)) * (W - PAD_L - PAD_R);
   const mapYPs = (v: number) => PAD_T + (1 - v / yMaxPs) * (H - PAD_T - PAD_B);
   const mapYNm = (v: number) => PAD_T + (1 - v / yMaxNm) * (H - PAD_T - PAD_B);
-  const rpmAt = (x: number) => RPM_MIN + x * (RPM_MAX - RPM_MIN);
 
   const paths = useMemo(
     () =>
@@ -247,9 +246,4 @@ export function DynoCompare({ c }: { c: Content }) {
       <p className="border-t px-5 py-3 text-[11.5px] leading-normal text-faint md:px-7">{t.disclaimer}</p>
     </div>
   );
-}
-
-/** Peak-power rpm sits near the end of the plateau for these example engines. */
-function psPeakRpm(_nm: number): number {
-  return 4000;
 }
