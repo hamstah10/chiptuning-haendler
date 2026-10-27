@@ -26,13 +26,19 @@ export function formatEuro(value: number, locale: Locale): string {
   }).format(value);
 }
 
-/** Monthly gross profit: (customer price - file price) per job, minus the package's monthly fee. */
+/** Labour cost of one job: working time in minutes times the hourly rate. */
+export function calcLaborCostPerJob(minutesPerJob: number, hourlyRate: number): number {
+  return (Math.max(0, minutesPerJob) / 60) * Math.max(0, hourlyRate);
+}
+
+/** Monthly gross profit: (customer price - file price - labour cost) per job, minus the package's monthly fee. */
 export function calcMonthlyEarnings(
   jobsPerMonth: number,
   customerPrice: number,
   filePrice: number,
   monthlyFee: number,
+  laborCostPerJob = 0,
 ): number {
-  const perJob = Math.max(0, customerPrice - filePrice);
+  const perJob = Math.max(0, customerPrice - filePrice - laborCostPerJob);
   return Math.max(0, jobsPerMonth * perJob - monthlyFee);
 }
