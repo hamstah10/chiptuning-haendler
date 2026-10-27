@@ -22,9 +22,9 @@ const STORAGE_KEY = "tf-section-review";
 const VISIBLE_KEY = "tf-section-review-visible";
 
 const DECISIONS: { value: Decision; label: string; active: string; dot: string }[] = [
-  { value: "ja", label: "Ja", active: "bg-success text-success-foreground", dot: "bg-success" },
-  { value: "nein", label: "Nein", active: "bg-destructive text-destructive-foreground", dot: "bg-destructive" },
-  { value: "vielleicht", label: "Vielleicht", active: "bg-warning text-warning-foreground", dot: "bg-warning" },
+  { value: "ja", label: "Ja", active: "border-success bg-success text-primary-foreground hover:bg-success", dot: "bg-success" },
+  { value: "nein", label: "Nein", active: "border-primary bg-primary text-primary-foreground hover:bg-primary", dot: "bg-primary" },
+  { value: "vielleicht", label: "Vielleicht", active: "border-strong bg-strong text-background hover:bg-strong", dot: "bg-strong" },
 ];
 
 function dotClass(decision?: Decision) {
