@@ -33,6 +33,7 @@ import { Configurator } from "./configurator";
 import { PartnerWizard } from "./partner-wizard";
 import { EarningsCalculator } from "./earnings-calculator";
 import { FileServiceTeaser } from "./file-service-teaser";
+import { DynoCompare } from "./dyno-compare";
 import { StartPlan } from "./start-plan";
 import { ToolAdvisor } from "./tool-advisor";
 import { VehicleCheck } from "./vehicle-check";
@@ -753,6 +754,18 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
           <Section id="portal-demo" kicker={c.portal.kicker} title={c.portal.title} intro={c.portal.intro}>
             <Reveal>
               <FileServiceTeaser c={c} />
+            </Reveal>
+          </Section>
+
+          <Section
+            id="dyno-vergleich"
+            kicker={c.dynoCompare.kicker}
+            title={c.dynoCompare.title}
+            intro={c.dynoCompare.intro}
+            className={mixed ? "dark bg-background text-foreground" : "bg-sunken"}
+          >
+            <Reveal>
+              <DynoCompare c={c} />
             </Reveal>
           </Section>
 

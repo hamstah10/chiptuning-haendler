@@ -27,6 +27,7 @@ import { Configurator } from "./configurator";
 import { PartnerWizard } from "./partner-wizard";
 import { EarningsCalculator } from "./earnings-calculator";
 import { FileServiceTeaser } from "./file-service-teaser";
+import { DynoCompare } from "./dyno-compare";
 import { Logo } from "./logo";
 import { ToolAdvisor } from "./tool-advisor";
 import { StartPlan } from "./start-plan";
@@ -272,6 +273,12 @@ export function LandingPageDark({ c }: { c: Content }) {
         <Section id="portal-demo" kicker={c.portal.kicker} title={c.portal.title} intro={c.portal.intro}>
           <Reveal>
             <FileServiceTeaser c={c} />
+          </Reveal>
+        </Section>
+
+        <Section id="dyno-vergleich" kicker={c.dynoCompare.kicker} title={c.dynoCompare.title} intro={c.dynoCompare.intro}>
+          <Reveal>
+            <DynoCompare c={c} />
           </Reveal>
         </Section>
 
