@@ -756,6 +756,18 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
             </Reveal>
           </Section>
 
+          <Section
+            id="dyno-vergleich"
+            kicker={c.dynoCompare.kicker}
+            title={c.dynoCompare.title}
+            intro={c.dynoCompare.intro}
+            className={mixed ? "dark bg-background text-foreground" : "bg-sunken"}
+          >
+            <Reveal>
+              <DynoCompare c={c} />
+            </Reveal>
+          </Section>
+
           <Section id="verdienst" kicker={c.calculator.kicker} title={c.calculator.title}>
             <Reveal>
               <EarningsCalculator c={c} />

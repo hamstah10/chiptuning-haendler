@@ -275,6 +275,12 @@ export function LandingPageDark({ c }: { c: Content }) {
           </Reveal>
         </Section>
 
+        <Section id="dyno-vergleich" kicker={c.dynoCompare.kicker} title={c.dynoCompare.title} intro={c.dynoCompare.intro}>
+          <Reveal>
+            <DynoCompare c={c} />
+          </Reveal>
+        </Section>
+
 
         <Section id="verdienst" kicker={c.calculator.kicker} title={c.calculator.title}>
           <Reveal>
