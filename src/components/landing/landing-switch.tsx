@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import type { Content } from "@/lib/content";
 import { LandingPageLight } from "./landing-page";
 import { LandingPageDark } from "./landing-page-dark";
+import { SectionReview } from "./section-review";
 
 type Design = "light" | "dark" | "mixed";
 const STORAGE_KEY = "tf-design";
@@ -31,6 +32,7 @@ export function LandingPage({ c }: { c: Content }) {
       ) : (
         <LandingPageLight key={design} c={c} mixed={design === "mixed"} />
       )}
+      <SectionReview scanKey={design} />
       <div
         role="radiogroup"
         aria-label={c.design.label}
