@@ -57,12 +57,12 @@ export function DynoCompare({ c }: { c: Content }) {
   const [enabled, setEnabled] = useState<string[]>(["stock", "s1"]);
   const [markerRpm, setMarkerRpm] = useState(3000);
 
-  const engine = t.engines.find((e) => e.id === engineId) ?? t.engines[0];
+  const engine = t.engines.find((e) => e.id === engineId) ?? t.engines[0] ?? { id: "", name: "", ps: 0, nm: 0 };
 
   const stages = useMemo(
     () =>
       t.stages.map((s) => {
-        const mult = STAGE_MULT[s.id] ?? STAGE_MULT.stock;
+        const mult = STAGE_MULT[s.id] ?? { ps: 1, nm: 1 };
         return {
           ...s,
           ps: Math.round((engine.ps * mult.ps) / 5) * 5,
