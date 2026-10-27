@@ -30,13 +30,24 @@ function torqueShape(x: number): number {
 
 const SAMPLES = 60;
 
-function buildPath(peakNm: number, rpmForPath: (x: number) => number, mapX: (rpm: number) => number, mapY: (v: number) => number, scale: (nm: number, rpm: number) => number): string {
+function buildPath(peakNm: number, mapX: (rpm: number) => number, mapY: (v: number) => number, value: (nm: number, rpm: number) => number): string {
   return Array.from({ length: SAMPLES }, (_, i) => {
     const x = i / (SAMPLES - 1);
-    const rpm = rpmForPath(x);
+    const rpm = RPM_MIN + x * (RPM_MAX - RPM_MIN);
     const nm = peakNm * torqueShape(x);
-    return `${i ? "L" : "M"}${mapX(rpm).toFixed(1)},${mapY(scale(nm, rpm)).toFixed(1)}`;
+    return `${i ? "L" : "M"}${mapX(rpm).toFixed(1)},${mapY(value(nm, rpm)).toFixed(1)}`;
   }).join(" ");
+}
+
+/** Raw PS curve maximum (before scaling to the stated stage peak). */
+function psRawMax(peakNm: number): number {
+  let max = 0;
+  for (let i = 0; i < SAMPLES; i++) {
+    const x = i / (SAMPLES - 1);
+    const rpm = RPM_MIN + x * (RPM_MAX - RPM_MIN);
+    max = Math.max(max, (peakNm * torqueShape(x) * rpm) / 7023.5);
+  }
+  return max;
 }
 
 export function DynoCompare({ c }: { c: Content }) {
