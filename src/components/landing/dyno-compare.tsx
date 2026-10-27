@@ -86,8 +86,8 @@ export function DynoCompare({ c }: { c: Content }) {
     () =>
       stages.map((s) => ({
         id: s.id,
-        ps: buildPath(s.nm, rpmAt, mapX, mapYPs, (nm, rpm) => (nm * rpm) / 7023.5 * (s.ps / ((s.nm * psPeakRpm(s.nm)) / 7023.5) || 1) * 1),
-        nm: buildPath(s.nm, rpmAt, mapX, mapYNm, (nm) => nm),
+        ps: buildPath(s.nm, mapX, mapYPs, (nm, rpm) => ((nm * rpm) / 7023.5) * (s.ps / psRawMax(s.nm))),
+        nm: buildPath(s.nm, mapX, mapYNm, (nm) => nm),
       })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [stages, yMaxPs, yMaxNm],
