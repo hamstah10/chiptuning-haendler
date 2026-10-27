@@ -1,17 +1,45 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { calcMonthlyEarnings, formatEuro, formatNumber } from "@/lib/format";
+import { calcLaborCostPerJob, calcMonthlyEarnings, formatEuro, formatNumber } from "@/lib/format";
 import type { Content } from "@/lib/content";
+
+function FixedField({ label, unit, value, min, max, onChange }: { label: string; unit: string; value: number; min: number; max: number; onChange: (v: number) => void }) {
+  return (
+    <label className="grid gap-2">
+      <span className="label-caps text-xs text-strong">{label}</span>
+      <div className="flex items-center gap-2">
+        <Input
+          type="number"
+          inputMode="numeric"
+          min={min}
+          max={max}
+          value={value}
+          onChange={(e) => {
+            const next = Number(e.target.value);
+            onChange(Number.isFinite(next) ? Math.min(max, Math.max(min, next)) : min);
+          }}
+          aria-label={label}
+          className="w-28"
+        />
+        <span className="text-sm text-muted-foreground">{unit}</span>
+      </div>
+    </label>
+  );
+}
 
 export function EarningsCalculator({ c }: { c: Content }) {
   const t = c.calculator;
   const [jobs, setJobs] = useState(10);
   const [price, setPrice] = useState(449);
+  const [minutes, setMinutes] = useState(60);
+  const [rate, setRate] = useState(90);
   const [pkgId, setPkgId] = useState("pro");
   const pkg = c.packages.find((p) => p.id === pkgId) ?? { file: 0, monthly: 0 };
-  const monthly = calcMonthlyEarnings(jobs, price, pkg.file, pkg.monthly);
+  const labor = calcLaborCostPerJob(minutes, rate);
+  const monthly = calcMonthlyEarnings(jobs, price, pkg.file, pkg.monthly, labor);
 
   return (
     <div className="grid gap-6 rounded-md border bg-card p-5 md:grid-cols-[1.2fr_1fr] md:p-8">
@@ -29,6 +57,14 @@ export function EarningsCalculator({ c }: { c: Content }) {
             <span className="font-display text-2xl font-bold text-strong">{formatEuro(price, c.locale)}</span>
           </div>
           <Slider className="mt-3" min={199} max={1199} step={10} value={[price]} onValueChange={(v) => setPrice(v[0] ?? 199)} aria-label={t.price} />
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FixedField label={t.workTime} unit={t.workTimeUnit} value={minutes} min={5} max={480} onChange={setMinutes} />
+          <FixedField label={t.hourlyRate} unit={t.hourlyRateUnit} value={rate} min={0} max={500} onChange={setRate} />
+        </div>
+        <div className="flex items-baseline justify-between rounded-sm border bg-background px-4 py-3">
+          <span className="text-sm text-muted-foreground">{t.labor}</span>
+          <span className="font-display text-lg font-bold text-strong">{formatEuro(labor, c.locale)}</span>
         </div>
         <div>
           <span className="label-caps text-xs text-strong">{t.pkg}</span>
