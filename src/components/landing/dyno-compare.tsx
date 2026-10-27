@@ -97,7 +97,8 @@ export function DynoCompare({ c }: { c: Content }) {
   const valuesAt = (s: { ps: number; nm: number }, rpm: number) => {
     const x = (rpm - RPM_MIN) / (RPM_MAX - RPM_MIN);
     const nm = s.nm * torqueShape(x);
-    return { nm: Math.round(nm), ps: Math.round((nm * rpm) / 7023.5) };
+    const ps = (nm * rpm) / 7023.5 * (s.ps / psRawMax(s.nm) || 0);
+    return { nm: Math.round(nm), ps: Math.round(ps) };
   };
 
   const stageStyle = (id: string) =>
@@ -163,7 +164,7 @@ export function DynoCompare({ c }: { c: Content }) {
               <circle cx={mapX(markerRpm)} cy={PAD_T} r="3" className="fill-strong" />
             </svg>
             <div className="pointer-events-none absolute bottom-8 right-3 font-mono text-[10px] uppercase tracking-wider text-faint">{t.axisRpm}</div>
-            <div className="pointer-events-none absolute left-1.5 top-2 font-mono text-[10px] uppercase tracking-wider text-faint">{t.unitPs}</div>
+            <div className="pointer-events-none absolute right-3 top-2 font-mono text-[10px] uppercase tracking-wider text-faint">{t.unitPs}</div>
           </div>
 
           <div className="mt-4">
