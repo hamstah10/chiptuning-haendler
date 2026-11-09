@@ -30,6 +30,7 @@ import { formatNumber } from "@/lib/format";
 import { CountUp, Reveal, ScrollProgress } from "./motion";
 import { Configurator } from "./configurator";
 import { PartnerWizard } from "./partner-wizard";
+import { PartnerWizardEmbed } from "./partner-wizard-embed";
 import { EarningsCalculator } from "./earnings-calculator";
 import { FileServiceTeaser } from "./file-service-teaser";
 import { DynoCompare } from "./dyno-compare";
@@ -744,6 +745,20 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
               </Reveal>
             </div>
           </section>
+
+          {mixed && (
+            <Section
+              id="partner-wizard"
+              kicker={c.partnerEmbed.kicker}
+              title={c.partnerEmbed.title}
+              intro={c.partnerEmbed.intro}
+              className="bg-sunken"
+            >
+              <Reveal>
+                <PartnerWizardEmbed />
+              </Reveal>
+            </Section>
+          )}
 
           <div className={mixed ? "dark bg-background text-foreground" : undefined}>
             <PinnedSteps c={c} />
