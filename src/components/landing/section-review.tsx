@@ -13,6 +13,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { listSectionReviews, saveSectionReview } from "@/lib/reviews.functions";
 
 type Decision = "ja" | "nein" | "vielleicht";
 type Review = { decision?: Decision; comment: string; note?: string };
