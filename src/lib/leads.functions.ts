@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { TablesInsert } from "@/integrations/supabase/types";
 
 const detailsSchema = z
-  .record(z.string().max(300))
+  .record(z.string(), z.string().max(300))
   .refine((value) => Object.keys(value).length <= 25, { message: "Too many details" });
 
 const locale = z.enum(["de", "en"]);
