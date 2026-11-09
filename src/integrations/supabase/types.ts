@@ -50,6 +50,30 @@ export type Database = {
         }
         Relationships: []
       }
+      section_reviews: {
+        Row: {
+          comment: string
+          decision: string | null
+          note: string
+          section_id: string
+          updated_at: string
+        }
+        Insert: {
+          comment?: string
+          decision?: string | null
+          note?: string
+          section_id: string
+          updated_at?: string
+        }
+        Update: {
+          comment?: string
+          decision?: string | null
+          note?: string
+          section_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
