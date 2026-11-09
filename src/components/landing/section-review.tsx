@@ -18,6 +18,7 @@ type Decision = "ja" | "nein" | "vielleicht";
 type Review = { decision?: Decision; comment: string; note?: string };
 type Target = { id: string; title: string; el: HTMLElement };
 
+const saveTimers: Record<string, number> = {};
 const STORAGE_KEY = "tf-section-review";
 const VISIBLE_KEY = "tf-section-review-visible";
 
@@ -47,6 +48,21 @@ export function SectionReview({ scanKey }: { scanKey: string }) {
       /* ignore broken storage */
     }
     setVisible(localStorage.getItem(VISIBLE_KEY) !== "0");
+    listSectionReviews()
+      .then((rows) => {
+        const fromDb: Record<string, Review> = {};
+        for (const r of rows) {
+          fromDb[r.section_id] = {
+            decision: (r.decision as Decision | null) ?? undefined,
+            comment: r.comment,
+            note: r.note,
+          };
+        }
+        setReviews((prev) => ({ ...prev, ...fromDb }));
+      })
+      .catch(() => {
+        /* keep local copy if the database is unreachable */
+      });
   }, []);
 
   useEffect(() => {
@@ -68,6 +84,13 @@ export function SectionReview({ scanKey }: { scanKey: string }) {
     setReviews((prev) => {
       const next = { ...prev, [id]: { comment: "", ...prev[id], ...patch } };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      const r = next[id];
+      if (saveTimers[id]) window.clearTimeout(saveTimers[id]);
+      saveTimers[id] = window.setTimeout(() => {
+        saveSectionReview({
+          data: { sectionId: id, decision: r.decision ?? null, comment: r.comment ?? "", note: r.note ?? "" },
+        }).catch(() => toast.error("Speichern in der Datenbank fehlgeschlagen"));
+      }, 600);
       return next;
     });
   };
