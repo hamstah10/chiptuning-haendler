@@ -232,6 +232,7 @@ export function legalHead(locale: Locale, kind: "imprint" | "privacy") {
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: legalPaths[locale][kind] },
       { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: legalPaths[locale][kind] }],
