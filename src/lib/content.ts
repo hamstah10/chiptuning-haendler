@@ -18,7 +18,7 @@ const de = {
     before: "Ohne Partner",
     after: "Mit Tuningfiles-download.com",
     beforeItems: ["Tuning-Anfragen ablehnen oder weiterempfehlen", "Teure eigene Kalibrierung mit Prüfstand", "Fahrzeug wartet tagelang auf Dateien", "Ungeprüfte Dateien gefährden den Ruf"],
-    afterItems: ["Jede Anfrage wird zu Umsatz in deiner Werkstatt", "Geprüfte Kennfelder ohne eigene Entwicklung", "Datei in 30 bis 60 Minuten zurück", "Persönlicher Support bei jedem Sonderfall"],
+    afterItems: ["Jede Anfrage wird zu Umsatz in deiner Werkstatt", "Geprüfte Kennfelder ohne eigene Entwicklung", "Datei in 10 bis 30 Minuten zurück", "Persönlicher Support bei jedem Sonderfall"],
   },
   stepsHint: "Weiterscrollen, um alle Schritte zu sehen",
   nav: {
@@ -36,21 +36,21 @@ const de = {
     kicker: "Partnerprogramm für Werkstätten · seit 2005",
     title1: "Chiptuning anbieten.",
     title2: "Wir schreiben die Datei.",
-    lead: "Du betreust Kunde und Fahrzeug, wir liefern das geprüfte Kennfeld in 30 bis 60 Minuten. Ohne Grundgebühr, ohne Vertragsbindung, ohne eigene Entwicklung.",
+    lead: "Du betreust Kunde und Fahrzeug, wir liefern die Daten – du erhältst das geprüfte Kennfeld in 10 bis 30 Minuten. Ohne Vertragsbindung, ohne Grundgebühr, ohne eigene Entwicklung.",
     primary: "Jetzt Partner werden",
     secondary: "Verdienst berechnen",
     scroll: "Scrollen, um die Geschichte zu sehen",
     kpis: [
       { to: 8400, suffix: "+", label: "Fahrzeuge in der Datenbank" },
       { to: 62, label: "Marken inkl. Landtechnik" },
-      { to: 60, prefix: "≤ ", suffix: " Min.", label: "Lieferzeit pro Datei" },
+      { to: 30, prefix: "≤ ", suffix: " Min.", label: "Lieferzeit pro Datei" },
       { to: 0, suffix: " €", label: "Grundgebühr im Starter-Paket" },
     ] as Kpi[],
   },
   problem: {
     kicker: "Kapitel 01 · Die Ausgangslage",
     title: "Deine Kunden fragen. Du schickst sie weg.",
-    text: "Jede Woche fragt jemand nach mehr Leistung, weniger Verbrauch oder einer Vmax-Aufhebung. Ohne eigene Kalibrierung bleibt dir nur: ablehnen oder weiterempfehlen. Der Umsatz landet beim Wettbewerb.",
+    text: "Jede Woche fragt jemand nach Mehrleistung, weniger Verbrauch oder einer Deaktivierung (DPF / SCR / AGR). Ohne eigene Kalibrierung bleibt dir nur: ablehnen oder weiterempfehlen. Der Umsatz landet beim Wettbewerb. Das muss nicht sein – alles, was du benötigst, ist ein Auslesetool!",
     points: [
       { title: "Teure Entwicklung", text: "Eigene Kennfelder brauchen Prüfstand, Software-Lizenzen und Jahre an Erfahrung." },
       { title: "Lange Wartezeiten", text: "Fahrzeuge blockieren die Hebebühne, während auf Dateien gewartet wird." },
@@ -63,8 +63,8 @@ const de = {
     text: "Du liest das Steuergerät aus, lädst die Datei hoch und bekommst ein geprüftes Kennfeld zurück. Wir entwickeln, du verkaufst – unter deinem Namen.",
     features: [
       { title: "Geprüfte Kennfelder", text: "Jede Datei wird von Kalibrierern erstellt und vor der Auslieferung kontrolliert." },
-      { title: "30 bis 60 Minuten", text: "Kurze Lieferzeiten, damit das Fahrzeug am selben Tag vom Hof fährt." },
-      { title: "Stage 1 bis 3", text: "Von Serienhardware bis Umbau, plus Sonderfunktionen wie Vmax oder Start-Stopp." },
+      { title: "10 bis 30 Minuten", text: "Kurze Lieferzeiten, damit das Fahrzeug am selben Tag vom Hof fährt." },
+      { title: "Stage 1 bis 3", text: "Von Serienhardware bis Umbau, plus Deaktivierungen (DPF / AGR / AdBlue) und Sonderfunktionen wie Vmax oder Start-Stopp." },
       { title: "Persönlicher Support", text: "Techniker am Telefon, die bei Lesefehlern oder Sonderfällen helfen." },
     ],
   },
@@ -98,6 +98,7 @@ const de = {
     originalFile: "Originaldatei",
     chooseOptions: "Wähle die Tuning-Optionen",
     estimate: "Geschätzte Bearbeitungszeit",
+    estimateNote: "Je nach Auslastung kann die Bearbeitung etwas Wartezeit in Anspruch nehmen.",
     credits: "Credits",
     minutes: "Min.",
     submit: "Datei einreichen",
@@ -256,7 +257,7 @@ const de = {
   wizard: {
     kicker: "Kapitel 03 · Anmeldung",
     title: "Jetzt Partner werden",
-    lead: "Vier kurze Schritte, zwei Minuten. Unverbindlich – die Freigabe erfolgt nach Prüfung der Gewerbedaten, meist am selben Werktag.",
+    lead: "Vier kurze Schritte, zwei Minuten. Unverbindlich – deine Anfrage wird schnellstmöglich beantwortet, meist noch am selben Werktag.",
     kpis: [
       ["2 Min.", "Formular"],
       ["≤ 24 Std.", "Prüfung"],
@@ -370,7 +371,7 @@ const de = {
     sample: "Beispielstimme",
     quotes: [
       { q: "Früher haben wir Tuning-Anfragen abgelehnt. Heute sind es zwölf Aufträge im Monat – ohne zusätzliches Personal.", a: "Freie Werkstatt, Raum Köln" },
-      { q: "Die Dateien kommen meist nach 40 Minuten. Der Kunde wartet im Aufenthaltsraum, das ist unser Verkaufsargument.", a: "Autohaus, Bayern" },
+      { q: "Die Dateien kommen meist nach 20 Minuten. Der Kunde wartet im Aufenthaltsraum, das ist unser Verkaufsargument.", a: "Autohaus, Bayern" },
       { q: "Beim ersten Auslesen hat uns der Support per Fernwartung begleitet. Danach lief alles allein.", a: "Existenzgründer, Niedersachsen" },
     ],
     strip: ["Seit 2005 am Markt", "Geprüfte Kennfelder", "Support auf Deutsch", "Keine Vertragsbindung"],
@@ -381,7 +382,7 @@ const de = {
     items: [
       { q: "Welche Hardware brauche ich?", a: "Ein gängiges Lese-/Schreibgerät wie Autotuner, KESS3, Flex oder CMD reicht. Wenn du noch keins hast, empfehlen wir dir bei der Anmeldung das passende." },
       { q: "Gibt es eine Vertragsbindung?", a: "Nein. Das Starter-Paket hat keine Grundgebühr, Professional und Premium sind monatlich kündbar." },
-      { q: "Wie schnell bekomme ich eine Datei?", a: "In der Regel innerhalb von 30 bis 60 Minuten während der Servicezeiten." },
+      { q: "Wie schnell bekomme ich eine Datei?", a: "In der Regel innerhalb von 10 bis 30 Minuten während der Servicezeiten." },
       { q: "Darf ich unter meinem eigenen Namen verkaufen?", a: "Ja. Du bist der Ansprechpartner für deinen Kunden, wir bleiben im Hintergrund." },
       { q: "Was passiert, wenn eine Datei nicht passt?", a: "Unser Support prüft den Fall und liefert eine Korrektur – ohne zusätzliche Kosten." },
       { q: "Brauche ich Erfahrung mit Chiptuning?", a: "Nein. Wir begleiten dich beim ersten Auslesen und erklären jeden Schritt im Portal." },
