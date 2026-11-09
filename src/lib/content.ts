@@ -372,6 +372,13 @@ const de = {
     kicker: "Kapitel 08 · Vertrauen",
     title: "Betriebe, die schon mit uns arbeiten.",
     sample: "Beispielstimme",
+    google: {
+      source: "Google-Bewertungen",
+      reviewsLabel: "Bewertungen",
+      cta: "Alle Bewertungen auf Google",
+      write: "Bewertung schreiben",
+      pending: "Echte Google-Bewertungen folgen in Kürze. Bis dahin zeigen wir Beispielstimmen.",
+    },
     quotes: [
       { q: "Früher haben wir Tuning-Anfragen abgelehnt. Heute sind es zwölf Aufträge im Monat – ohne zusätzliches Personal.", a: "Freie Werkstatt, Raum Köln" },
       { q: "Die Dateien kommen meist nach 20 Minuten. Der Kunde wartet im Aufenthaltsraum, das ist unser Verkaufsargument.", a: "Autohaus, Bayern" },
@@ -769,6 +776,13 @@ const en: Content = {
     kicker: "Chapter 08 · Trust",
     title: "Workshops already working with us.",
     sample: "Sample quote",
+    google: {
+      source: "Google reviews",
+      reviewsLabel: "reviews",
+      cta: "All reviews on Google",
+      write: "Write a review",
+      pending: "Real Google reviews are coming soon. Until then we show sample quotes.",
+    },
     quotes: [
       { q: "We used to turn down tuning requests. Now it's twelve jobs a month – without extra staff.", a: "Independent workshop, Cologne area" },
       { q: "Files usually arrive after 20 minutes. The customer waits in the lounge – that's our selling point.", a: "Car dealer, Bavaria" },

@@ -13,7 +13,6 @@ import {
   Languages,
   Layers,
   Moon,
-  Quote,
   ShieldCheck,
   Sun,
   Upload,
@@ -29,6 +28,7 @@ import { EarningsCalculator } from "./earnings-calculator";
 import { FileServiceTeaser } from "./file-service-teaser";
 import { DynoCompare } from "./dyno-compare";
 import { Logo } from "./logo";
+import { GoogleReviews } from "./google-reviews";
 import { ToolAdvisor } from "./tool-advisor";
 import { StartPlan } from "./start-plan";
 import { VehicleCheck } from "./vehicle-check";
@@ -336,21 +336,8 @@ export function LandingPageDark({ c }: { c: Content }) {
         </section>
 
         <Section id="vertrauen" kicker={c.trust.kicker} title={c.trust.title}>
-          <div className="grid gap-5 md:grid-cols-3">
-            {c.trust.quotes.map((q, i) => (
-              <Reveal key={q.a} delay={0.1 * i} className="h-full">
-                <figure className="flex h-full flex-col rounded-md border bg-card p-6">
-                  <Quote className="size-6 text-primary" />
-                  <blockquote className="mt-4 flex-1 leading-relaxed text-strong">{q.q}</blockquote>
-                  <figcaption className="mt-5 flex items-center justify-between gap-2 border-t pt-4 text-sm text-muted-foreground">
-                    {q.a}
-                    <span className="rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase text-faint">{c.trust.sample}</span>
-                  </figcaption>
-                </figure>
-              </Reveal>
-            ))}
-          </div>
-          <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <GoogleReviews c={c} />
+            <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4">
             {c.trust.strip.map((s) => (
               <div key={s} className="flex items-center gap-2 rounded-sm border bg-sunken px-4 py-3 text-sm text-strong">
                 <ShieldCheck className="size-4 shrink-0 text-primary" />
