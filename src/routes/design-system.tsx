@@ -219,7 +219,7 @@ function DesignSystemPage() {
             <div className="space-y-6 rounded-lg border bg-card p-6">
               <div>
                 <p className="kicker">Kicker – Saira Condensed, Kapitälchen</p>
-                <p role="heading" aria-level={2} className="mt-2 font-heading text-4xl">Überschrift 1 – Saira Condensed kursiv</p>
+                <h2 className="mt-2 text-4xl">Überschrift 1 – Saira Condensed kursiv</h2>
                 <h2 className="mt-3 text-2xl">Überschrift 2 – Mehr Leistung für deine Werkstatt</h2>
                 <h3 className="mt-3 text-xl">Überschrift 3 – Stage 1 bis Stage 3</h3>
               </div>
