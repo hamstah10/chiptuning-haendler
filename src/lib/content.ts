@@ -141,14 +141,14 @@ const de = {
     legendNm: "Drehmoment (gestrichelt)",
     disclaimer: "Illustrative Beispielkurven – reale Werte hängen von Fahrzeug, Softwarestand und Messbedingungen ab.",
     engines: [
-      { id: "tdi20", name: "2.0 TDI", ps: 150, nm: 340 },
-      { id: "tfsi20", name: "2.0 TFSI", ps: 190, nm: 320 },
-      { id: "tdi30", name: "3.0 TDI", ps: 286, nm: 650 },
+      { id: "tdi20", name: "2.0 TDI", ps: 150, nm: 340, fuel: "diesel" },
+      { id: "tfsi20", name: "2.0 TFSI", ps: 190, nm: 320, fuel: "petrol" },
+      { id: "tdi30", name: "3.0 TDI", ps: 286, nm: 650, fuel: "diesel" },
     ],
     stages: [
-      { id: "stock", label: "Serie", note: "Originalzustand des Steuergeräts" },
-      { id: "s1", label: "Stage 1", note: "Optimierte Software auf Serienhardware" },
-      { id: "s2", label: "Stage 2", note: "Mit Hardware-Upgrade, z. B. Downpipe" },
+      { id: "stock", label: "Serie", note: "Originalzustand des Steuergeräts", options: [] as string[] },
+      { id: "s1", label: "Stage 1", note: "Optimierte Software auf Serienhardware", options: ["Serienhardware", "Vmax-Aufhebung optional"] },
+      { id: "s2", label: "Stage 2", note: "Mit Hardware-Upgrade, z. B. Downpipe", options: ["Downpipe / Sportluftfilter", "Ladedruck angepasst"] },
     ],
   },
   calculator: {
@@ -317,8 +317,8 @@ const de = {
   },
   advisor: {
     kicker: "Tool-Berater",
-    title: "Welches Flashtool passt zu deiner Werkstatt?",
-    intro: "Drei Fragen, eine klare Empfehlung – inklusive der Frage, ob du als Master oder Slave startest.",
+    title: "Welches Flashtool passt zu deinem Betrieb?",
+    intro: "Drei Fragen, eine klare Empfehlung – egal ob Werkstatt, Reifenservice, Aufbereitung oder Neueinstieg. Inklusive der Frage, ob du als Master oder Slave startest.",
     steps: ["Fokus", "Methode", "Budget"],
     focus: { title: "Was willst du hauptsächlich tunen?", car: "PKW", van: "Transporter", truck: "LKW & Agrar", bike: "Motorrad" },
     method: { title: "Wie möchtest du flashen?", obd: "Nur OBD", obdText: "Über die Diagnosebuchse, ohne Steuergerät auszubauen.", bench: "OBD und Bench/Boot", benchText: "Auch am Tisch für gesperrte Steuergeräte." },
@@ -328,7 +328,7 @@ const de = {
     resultKicker: "Unsere Empfehlung",
     modes: {
       slave: { title: "Starte als Slave", text: "Dein Tool ist an unseren Master gekoppelt. Du liest aus, wir schicken die fertige Datei zurück – ohne eigene Kalibrier-Software und Lizenzen." },
-      master: { title: "Master ist eine Option", text: "Mit eigenem Master-Tool kannst du Dateien selbst entschlüsseln. Die Kalibrierung und den Support holen sich die meisten Werkstätten trotzdem bei uns." },
+      master: { title: "Master ist eine Option", text: "Mit eigenem Master-Tool kannst du Dateien selbst entschlüsseln. Die Kalibrierung und den Support holen sich die meisten Betriebe trotzdem bei uns." },
     },
     tools: {
       obdSlave: { title: "OBD-Slave-Tool", text: "z. B. Autotuner, Kess3 oder bflash als Slave – deckt die meisten aktuellen PKW per OBD ab." },
@@ -353,6 +353,9 @@ const de = {
     stock: "Serie",
     stage1: "Stage 1",
     options: "Verfügbare Optionen",
+    includedLabel: "Im Preis enthalten",
+    extraLabel: "Zubuchbare Optionen",
+    includedOptions: ["vmax", "startstop"],
     optionNames: { vmax: "Vmax-Aufhebung", dpf: "DPF-Optionen", opf: "OPF-Optionen", popcorn: "Pop & Bang", startstop: "Start-Stopp-Memory", dsg: "Getriebesoftware DSG", egr: "AGR-Optionen" },
     customerPrice: "Dein Endkundenpreis",
     margin: "Deine Marge pro Fahrzeug",
