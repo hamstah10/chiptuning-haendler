@@ -21,31 +21,39 @@ const STAGE_MULT: Record<string, { ps: number; nm: number }> = {
   s2: { ps: 1.42, nm: 1.32 },
 };
 
-/** Torque shape over the rev band: rises to a mid-range plateau, falls off towards the limiter. */
-function torqueShape(x: number): number {
-  if (x < 0.2) return 0.55 + 0.45 * (x / 0.2);
-  if (x <= 0.65) return 1;
-  return 1 - 0.25 * ((x - 0.65) / 0.35);
+/** Torque shape over the rev band per fuel type: diesel peaks early and falls off hard, petrol holds a wide plateau. Tuned stages reach the plateau earlier and keep it longer. */
+function torqueShape(x: number, fuel: string, tuned: boolean): number {
+  const p =
+    fuel === "diesel"
+      ? tuned
+        ? { rise: 0.14, hold: 0.58, drop: 0.38 }
+        : { rise: 0.18, hold: 0.5, drop: 0.45 }
+      : tuned
+        ? { rise: 0.2, hold: 0.8, drop: 0.18 }
+        : { rise: 0.26, hold: 0.72, drop: 0.22 };
+  if (x < p.rise) return 0.55 + 0.45 * (x / p.rise);
+  if (x <= p.hold) return 1;
+  return 1 - p.drop * ((x - p.hold) / (1 - p.hold));
 }
 
 const SAMPLES = 60;
 
-function buildPath(peakNm: number, mapX: (rpm: number) => number, mapY: (v: number) => number, value: (nm: number, rpm: number) => number): string {
+function buildPath(peakNm: number, fuel: string, tuned: boolean, mapX: (rpm: number) => number, mapY: (v: number) => number, value: (nm: number, rpm: number) => number): string {
   return Array.from({ length: SAMPLES }, (_, i) => {
     const x = i / (SAMPLES - 1);
     const rpm = RPM_MIN + x * (RPM_MAX - RPM_MIN);
-    const nm = peakNm * torqueShape(x);
+    const nm = peakNm * torqueShape(x, fuel, tuned);
     return `${i ? "L" : "M"}${mapX(rpm).toFixed(1)},${mapY(value(nm, rpm)).toFixed(1)}`;
   }).join(" ");
 }
 
 /** Raw PS curve maximum (before scaling to the stated stage peak). */
-function psRawMax(peakNm: number): number {
+function psRawMax(peakNm: number, fuel: string, tuned: boolean): number {
   let max = 0;
   for (let i = 0; i < SAMPLES; i++) {
     const x = i / (SAMPLES - 1);
     const rpm = RPM_MIN + x * (RPM_MAX - RPM_MIN);
-    max = Math.max(max, (peakNm * torqueShape(x) * rpm) / 7023.5);
+    max = Math.max(max, (peakNm * torqueShape(x, fuel, tuned) * rpm) / 7023.5);
   }
   return max;
 }
@@ -85,19 +93,20 @@ export function DynoCompare({ c }: { c: Content }) {
     () =>
       stages.map((s) => ({
         id: s.id,
-        ps: buildPath(s.nm, mapX, mapYPs, (nm, rpm) => ((nm * rpm) / 7023.5) * (s.ps / psRawMax(s.nm))),
-        nm: buildPath(s.nm, mapX, mapYNm, (nm) => nm),
+        ps: buildPath(s.nm, engine.fuel, s.id !== "stock", mapX, mapYPs, (nm, rpm) => ((nm * rpm) / 7023.5) * (s.ps / psRawMax(s.nm, engine.fuel, s.id !== "stock"))),
+        nm: buildPath(s.nm, engine.fuel, s.id !== "stock", mapX, mapYNm, (nm) => nm),
       })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [stages, yMaxPs, yMaxNm],
+    [stages, yMaxPs, yMaxNm, engine.fuel],
   );
 
   const toggle = (id: string) => setEnabled((cur) => (cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]));
 
-  const valuesAt = (s: { ps: number; nm: number }, rpm: number) => {
+  const valuesAt = (s: { id: string; ps: number; nm: number }, rpm: number) => {
     const x = (rpm - RPM_MIN) / (RPM_MAX - RPM_MIN);
-    const nm = s.nm * torqueShape(x);
-    const ps = (nm * rpm) / 7023.5 * (s.ps / psRawMax(s.nm) || 0);
+    const tuned = s.id !== "stock";
+    const nm = s.nm * torqueShape(x, engine.fuel, tuned);
+    const ps = (nm * rpm) / 7023.5 * (s.ps / psRawMax(s.nm, engine.fuel, tuned) || 0);
     return { nm: Math.round(nm), ps: Math.round(ps) };
   };
 
@@ -206,6 +215,15 @@ export function DynoCompare({ c }: { c: Content }) {
                     </span>
                   </span>
                   <span className="mt-1 block text-[13px] leading-relaxed text-muted-foreground">{s.note}</span>
+                  {s.options.length > 0 && (
+                    <span className="mt-2 flex flex-wrap gap-1.5">
+                      {s.options.map((o) => (
+                        <span key={o} className="rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-faint">
+                          {o}
+                        </span>
+                      ))}
+                    </span>
+                  )}
                 </button>
               );
             })}

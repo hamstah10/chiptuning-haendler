@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Gauge } from "lucide-react";
+import { Check, Gauge } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
@@ -104,12 +104,26 @@ export function VehicleCheck({ c }: { c: Content }) {
           <div>
             <span className="label-caps text-xs text-strong">{t.options}</span>
             <div className="mt-2 flex flex-wrap gap-2">
-              {engine.options.map((o) => (
-                <Badge key={o} variant="outline">
-                  {t.optionNames[o as OptionKey] ?? o}
-                </Badge>
-              ))}
+              {engine.options
+                .filter((o) => (t.includedOptions as string[]).includes(o))
+                .map((o) => (
+                  <Badge key={o}>
+                    <Check className="size-3" aria-hidden="true" />
+                    {t.optionNames[o as OptionKey] ?? o}
+                  </Badge>
+                ))}
             </div>
+            <span className="mt-1 block text-[11px] text-muted-foreground">{t.includedLabel}</span>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {engine.options
+                .filter((o) => !(t.includedOptions as string[]).includes(o))
+                .map((o) => (
+                  <Badge key={o} variant="outline">
+                    {t.optionNames[o as OptionKey] ?? o}
+                  </Badge>
+                ))}
+            </div>
+            <span className="mt-1 block text-[11px] text-muted-foreground">{t.extraLabel}</span>
           </div>
           <div className="rounded-sm border border-primary bg-background p-4">
             <div className="flex items-baseline justify-between">
