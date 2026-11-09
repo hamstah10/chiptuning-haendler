@@ -1,4 +1,14 @@
 import type { Locale } from "./format";
+import ogLanding from "@/assets/og-landing.jpg.asset.json";
+import ogStartPlan from "@/assets/og-startplan.jpg.asset.json";
+
+const SITE = "https://chiptuning.company";
+const imageTags = (url: string) => [
+  { property: "og:image", content: `${SITE}${url}` },
+  { property: "og:image:width", content: "1200" },
+  { property: "og:image:height", content: "630" },
+  { name: "twitter:image", content: `${SITE}${url}` },
+];
 
 const meta: Record<Locale, { title: string; description: string; path: string; ogLocale: string }> = {
   de: {
@@ -45,7 +55,8 @@ export function startPlanHead(locale: Locale) {
       { property: "og:type", content: "website" },
       { property: "og:url", content: m.path },
       { property: "og:locale", content: m.ogLocale },
-      { name: "twitter:card", content: "summary" },
+      { name: "twitter:card", content: "summary_large_image" },
+      ...imageTags(ogStartPlan.url),
       { name: "twitter:title", content: m.title },
       { name: "twitter:description", content: m.description },
     ],
@@ -70,6 +81,7 @@ export function landingHead(locale: Locale) {
       { property: "og:url", content: m.path },
       { property: "og:locale", content: m.ogLocale },
       { name: "twitter:card", content: "summary_large_image" },
+      ...imageTags(ogLanding.url),
       { name: "twitter:title", content: m.title },
       { name: "twitter:description", content: m.description },
     ],
