@@ -4,6 +4,7 @@ import { content } from "@/lib/content";
 import { landingHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
+  staticData: { sitemap: true },
   head: () => landingHead("de"),
   component: IndexPage,
 });

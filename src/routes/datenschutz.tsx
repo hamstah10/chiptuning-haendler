@@ -4,6 +4,7 @@ import { content } from "@/lib/content";
 import { legalHead } from "@/lib/legal";
 
 export const Route = createFileRoute("/datenschutz")({
+  staticData: { sitemap: true },
   head: () => legalHead("de", "privacy"),
   component: PrivacyDe,
 });
