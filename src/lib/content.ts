@@ -254,6 +254,11 @@ const de = {
     },
     disclaimer: "KI-generierter Vorschlag – unverbindlich und kostenlos.",
   },
+  partnerEmbed: {
+    kicker: "Direkt loslegen",
+    title: "Partner-Wizard",
+    intro: "Der schnellste Weg in die Zusammenarbeit: Fülle den Wizard direkt hier aus – deine Angaben landen sofort bei uns.",
+  },
   wizard: {
     kicker: "Kapitel 03 · Anmeldung",
     title: "Jetzt Partner werden",
@@ -657,6 +662,11 @@ const en: Content = {
       printDate: "Created on",
     },
     disclaimer: "AI-generated suggestion – free and without obligation.",
+  },
+  partnerEmbed: {
+    kicker: "Get started right away",
+    title: "Partner wizard",
+    intro: "The fastest way to start working together: fill in the wizard right here – your details reach us immediately.",
   },
   wizard: {
     kicker: "Chapter 03 · Sign-up",
