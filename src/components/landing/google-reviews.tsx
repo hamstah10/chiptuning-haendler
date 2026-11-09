@@ -38,7 +38,7 @@ export function GoogleReviews({ c }: { c: Content }) {
     ? googleReviews.reviews
     : c.trust.quotes.map((q) => ({ author: q.a, rating: 5, text: q.q, date: "", sample: true }));
   const rating = googleReviews.rating ?? 5;
-  const locale = c === undefined ? "de" : (c.trust.sample === "Sample quote" ? "en" : "de");
+  const locale = c.locale;
 
   return (
     <div>
@@ -94,7 +94,7 @@ export function GoogleReviews({ c }: { c: Content }) {
                 <figcaption className="min-w-0 flex-1">
                   <div className="truncate text-sm font-medium text-strong">{r.author}</div>
                   <div className="text-xs text-muted-foreground">
-                    {r.sample ? c.trust.sample : r.date ? formatDate(r.date, locale) : ""}
+                    {r.sample ? c.trust.sample : r.date ? formatDate(new Date(r.date), locale) : ""}
                   </div>
                 </figcaption>
                 <GoogleMark className="size-5 shrink-0" />

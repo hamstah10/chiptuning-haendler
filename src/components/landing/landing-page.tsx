@@ -39,6 +39,7 @@ import { ToolAdvisor } from "./tool-advisor";
 import { VehicleCheck } from "./vehicle-check";
 import { LegalLinks } from "./legal-links";
 import { Logo } from "./logo";
+import { GoogleReviews } from "./google-reviews";
 import { MixedHero } from "./mixed-hero";
 import { TuningDrive } from "./tuning-drive";
 
@@ -828,24 +829,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
             title={c.trust.title}
             className={mixed ? "dark bg-background text-foreground" : undefined}
           >
-            <div className="grid gap-5 md:grid-cols-3">
-              {c.trust.quotes.map((q, i) => (
-                <Reveal key={q.a} delay={0.1 * i} className="h-full">
-                  <figure className="flex h-full flex-col rounded-md border bg-card p-6">
-                    <Quote className="size-6 text-primary" />
-                    <blockquote className="mt-4 flex-1 leading-relaxed text-strong">
-                      {q.q}
-                    </blockquote>
-                    <figcaption className="mt-5 flex items-center justify-between gap-2 border-t pt-4 text-sm text-muted-foreground">
-                      {q.a}
-                      <span className="rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase text-faint">
-                        {c.trust.sample}
-                      </span>
-                    </figcaption>
-                  </figure>
-                </Reveal>
-              ))}
-            </div>
+            <GoogleReviews c={c} />
             <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4">
               {c.trust.strip.map((s) => (
                 <div
