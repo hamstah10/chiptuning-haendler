@@ -13,7 +13,6 @@ import {
   Languages,
   Layers,
   Moon,
-  Quote,
   ShieldCheck,
   Sun,
   Upload,
