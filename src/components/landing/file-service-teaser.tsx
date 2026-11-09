@@ -149,6 +149,7 @@ export function FileServiceTeaser({ c }: { c: Content }) {
                     </div>
                   </div>
                 </div>
+                <p className="mt-3 text-xs text-muted-foreground">{p.estimateNote}</p>
                 <div className="mt-6 flex justify-between gap-3">
                   <Button variant="outline" onClick={() => setStep(0)}>
                     {p.back}
