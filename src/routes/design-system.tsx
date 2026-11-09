@@ -70,6 +70,7 @@ import {
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/design-system")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Designsystem – Tuningfiles-download.com" },

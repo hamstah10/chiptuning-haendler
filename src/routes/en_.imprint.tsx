@@ -4,6 +4,7 @@ import { content } from "@/lib/content";
 import { legalHead } from "@/lib/legal";
 
 export const Route = createFileRoute("/en_/imprint")({
+  staticData: { sitemap: true },
   head: () => legalHead("en", "imprint"),
   component: ImprintEn,
 });

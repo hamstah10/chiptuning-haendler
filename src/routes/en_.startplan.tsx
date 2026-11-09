@@ -4,6 +4,7 @@ import { content } from "@/lib/content";
 import { startPlanHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/en_/startplan")({
+  staticData: { sitemap: true },
   head: () => startPlanHead("en"),
   component: StartPlanRouteEn,
 });
