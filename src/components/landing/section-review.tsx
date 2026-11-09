@@ -54,9 +54,9 @@ export function SectionReview({ scanKey }: { scanKey: string }) {
         const fromDb: Record<string, Review> = {};
         for (const r of rows) {
           fromDb[r.section_id] = {
-            decision: (r.decision as Decision | null) ?? undefined,
             comment: r.comment,
             note: r.note,
+            ...(r.decision ? { decision: r.decision as Decision } : {}),
           };
         }
         setReviews((prev) => ({ ...prev, ...fromDb }));
@@ -85,7 +85,7 @@ export function SectionReview({ scanKey }: { scanKey: string }) {
     setReviews((prev) => {
       const next = { ...prev, [id]: { comment: "", ...prev[id], ...patch } };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      const r = next[id];
+      const r = next[id] ?? { comment: "" };
       if (saveTimers[id]) window.clearTimeout(saveTimers[id]);
       saveTimers[id] = window.setTimeout(() => {
         saveSectionReview({
