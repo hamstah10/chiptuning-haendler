@@ -65,7 +65,7 @@ export function DynoCompare({ c }: { c: Content }) {
   const [enabled, setEnabled] = useState<string[]>(["stock", "s1"]);
   const [markerRpm, setMarkerRpm] = useState(3000);
 
-  const engine = t.engines.find((e) => e.id === engineId) ?? t.engines[0] ?? { id: "", name: "", ps: 0, nm: 0 };
+  const engine = t.engines.find((e) => e.id === engineId) ?? t.engines[0] ?? { id: "", name: "", ps: 0, nm: 0, fuel: "diesel" };
 
   const stages = useMemo(
     () =>
