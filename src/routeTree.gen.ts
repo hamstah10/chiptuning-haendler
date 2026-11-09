@@ -14,6 +14,7 @@ import { Route as DatenschutzRouteImport } from './routes/datenschutz'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as EnRouteImport } from './routes/en'
 import { Route as ImpressumRouteImport } from './routes/impressum'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StartplanRouteImport } from './routes/startplan'
 import { Route as EnImprintRouteImport } from './routes/en_.imprint'
 import { Route as EnPrivacyRouteImport } from './routes/en_.privacy'
@@ -44,6 +45,11 @@ const ImpressumRoute = ImpressumRouteImport.update({
   path: '/impressum',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StartplanRoute = StartplanRouteImport.update({
   id: '/startplan',
   path: '/startplan',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/design-system': typeof DesignSystemRoute
   '/en': typeof EnRoute
   '/impressum': typeof ImpressumRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
   '/en/imprint': typeof EnImprintRoute
   '/en/privacy': typeof EnPrivacyRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/design-system': typeof DesignSystemRoute
   '/en': typeof EnRoute
   '/impressum': typeof ImpressumRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
   '/en/imprint': typeof EnImprintRoute
   '/en/privacy': typeof EnPrivacyRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/design-system': typeof DesignSystemRoute
   '/en': typeof EnRoute
   '/impressum': typeof ImpressumRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
   '/en_/imprint': typeof EnImprintRoute
   '/en_/privacy': typeof EnPrivacyRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/en'
     | '/impressum'
+    | '/sitemap.xml'
     | '/startplan'
     | '/en/imprint'
     | '/en/privacy'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/en'
     | '/impressum'
+    | '/sitemap.xml'
     | '/startplan'
     | '/en/imprint'
     | '/en/privacy'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/en'
     | '/impressum'
+    | '/sitemap.xml'
     | '/startplan'
     | '/en_/imprint'
     | '/en_/privacy'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   DesignSystemRoute: typeof DesignSystemRoute
   EnRoute: typeof EnRoute
   ImpressumRoute: typeof ImpressumRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StartplanRoute: typeof StartplanRoute
   EnImprintRoute: typeof EnImprintRoute
   EnPrivacyRoute: typeof EnPrivacyRoute
@@ -184,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ImpressumRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/startplan': {
       id: '/startplan'
       path: '/startplan'
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   DesignSystemRoute: DesignSystemRoute,
   EnRoute: EnRoute,
   ImpressumRoute: ImpressumRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   StartplanRoute: StartplanRoute,
   EnImprintRoute: EnImprintRoute,
   EnPrivacyRoute: EnPrivacyRoute,
