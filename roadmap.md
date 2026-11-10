@@ -1,6 +1,7 @@
 # Tasks
-- [ ] Add protected WhatsApp inbox, sending, signed durable receiver and recovery.
-- [ ] Verify WhatsApp with an authorized account and a signed deployed callback (requires owner sign-in and incoming-message destination).
+- [x] Add protected WhatsApp inbox, text replies inside 24 hours, signed durable receiver and traffic-triggered recovery; verify local signatures and mobile layout.
+- [ ] Enable owner access and verify real WhatsApp send/delivery (blocked: owner must sign in; publish and select Incoming messages destination). Quiet-period recovery waits for new callbacks.
+- [ ] Add approved-template sending outside the reply window (blocked: account activation and approved templates must be verified).
 - [ ] Add OAuth-protected MCP tools and browser-local earnings read tool.
 - [ ] Add login and consent pages, verify catalog and authorization boundaries.
 - [x] Remove Ablauf, Startplan and Verdienst links from the top navigation only.
