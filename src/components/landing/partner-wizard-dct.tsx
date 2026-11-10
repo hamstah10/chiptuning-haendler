@@ -369,7 +369,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                   </div>
                 </div>
                 <div className="grid gap-1.5">
-                  <Label htmlFor="dct-message" className="label-caps text-xs text-strong">{c.contact?.message ?? "Nachricht"}</Label>
+                  <Label htmlFor="dct-message" className="label-caps text-xs text-strong">{c.locale === "en" ? "Message" : "Nachricht"}</Label>
                   <textarea
                     id="dct-message"
                     value={contact.message}
