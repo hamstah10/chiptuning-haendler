@@ -1,4 +1,6 @@
 # Tasks
+- [ ] Add protected WhatsApp inbox, sending, signed durable receiver and recovery.
+- [ ] Verify WhatsApp with an authorized account and a signed deployed callback (requires owner sign-in and incoming-message destination).
 - [ ] Add OAuth-protected MCP tools and browser-local earnings read tool.
 - [ ] Add login and consent pages, verify catalog and authorization boundaries.
 - [x] Remove Ablauf, Startplan and Verdienst links from the top navigation only.
