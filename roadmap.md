@@ -1,7 +1,8 @@
 # Tasks
-- [ ] Remove Ablauf, Startplan and Verdienst links from the top navigation only.
+- [x] Remove Ablauf, Startplan and Verdienst links from the top navigation only.
+- [ ] Replace language switch text with flags.
 - [x] Match vehicle check selection and framing to the configurator.
-- [ ] Display real API tuning options in the configurator and vehicle check.
+- [x] Display real API tuning options in the configurator and vehicle check.
 - [x] Securely connect DCT vehicle API with the haendler_werden context.
 - [x] Replace configurator sample data with cascading live vehicle data and verify selection.
 - [x] Replace the old player with the supplied animation.
