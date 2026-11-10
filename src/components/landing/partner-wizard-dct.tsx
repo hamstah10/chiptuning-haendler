@@ -75,6 +75,41 @@ function OptionTile({
   );
 }
 
+function VehicleTypeCard({
+  selected,
+  title,
+  icon,
+  onClick,
+}: {
+  selected: boolean;
+  title: string;
+  icon?: string | null;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={selected}
+      className={cn(
+        "relative flex flex-col items-center gap-2.5 rounded-sm border px-3 py-4 text-center transition-colors",
+        selected ? "border-primary bg-primary-soft" : "hover:border-border-strong",
+      )}
+    >
+      <span
+        className={cn(
+          "absolute right-2 top-2 inline-flex size-4 shrink-0 items-center justify-center rounded-full border",
+          selected ? "border-primary bg-primary text-primary-foreground" : "text-transparent",
+        )}
+      >
+        <Check className="size-2.5" />
+      </span>
+      {icon && <img src={icon} alt="" loading="lazy" className="size-10 shrink-0 object-contain" width={40} height={40} />}
+      <span className="font-display text-sm font-bold uppercase leading-tight text-strong">{title}</span>
+    </button>
+  );
+}
+
 function QuestionBlock({
   q,
   answers,
@@ -111,21 +146,38 @@ function QuestionBlock({
     <fieldset className="grid gap-2.5">
       <legend className="label-caps mb-1 text-xs text-strong">{q.title}</legend>
       {q.helpText && <p className="text-sm text-muted-foreground">{q.helpText}</p>}
-      <div className="grid gap-2.5 sm:grid-cols-2">
-        {q.options.map((o) => {
-          const raw = optionValue(q, o);
-          return (
-            <OptionTile
-              key={raw}
-              selected={isSelected(raw)}
-              title={optionTitle(o)}
-              text={o.text}
-              icon={o.icon ?? o.imageUrl}
-              onClick={() => toggle(raw)}
-            />
-          );
-        })}
-      </div>
+      {q.questionType === "vehicleType" ? (
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
+          {q.options.map((o) => {
+            const raw = optionValue(q, o);
+            return (
+              <VehicleTypeCard
+                key={raw}
+                selected={isSelected(raw)}
+                title={optionTitle(o)}
+                icon={o.icon ?? o.imageUrl}
+                onClick={() => toggle(raw)}
+              />
+            );
+          })}
+        </div>
+      ) : (
+        <div className="grid gap-2.5 sm:grid-cols-2">
+          {q.options.map((o) => {
+            const raw = optionValue(q, o);
+            return (
+              <OptionTile
+                key={raw}
+                selected={isSelected(raw)}
+                title={optionTitle(o)}
+                text={o.text}
+                icon={o.icon ?? o.imageUrl}
+                onClick={() => toggle(raw)}
+              />
+            );
+          })}
+        </div>
+      )}
     </fieldset>
   );
 }
