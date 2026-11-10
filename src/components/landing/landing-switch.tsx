@@ -9,14 +9,21 @@ import { SectionReview } from "./section-review";
 
 type Design = "light" | "dark" | "mixed";
 const STORAGE_KEY = "tf-design";
+const REVIEW_KEY = "tf-review-enabled";
 
 /** All compositions share the same content and retain the visitor's choice. */
 export function LandingPage({ c }: { c: Content }) {
   const [design, setDesign] = useState<Design>("mixed");
+  const [reviewEnabled, setReviewEnabled] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     setDesign(saved === "light" || saved === "dark" ? saved : "mixed");
+    // Review tool is hidden unless unlocked via ?review=1 (remembered); ?review=0 locks it again.
+    const param = new URLSearchParams(window.location.search).get("review");
+    if (param === "1") localStorage.setItem(REVIEW_KEY, "1");
+    if (param === "0") localStorage.removeItem(REVIEW_KEY);
+    setReviewEnabled(localStorage.getItem(REVIEW_KEY) === "1");
   }, []);
 
   const choose = (next: Design) => {
@@ -32,7 +39,7 @@ export function LandingPage({ c }: { c: Content }) {
       ) : (
         <LandingPageLight key={design} c={c} mixed={design === "mixed"} />
       )}
-      <SectionReview scanKey={design} />
+      {reviewEnabled && <SectionReview scanKey={design} />}
       <div
         role="radiogroup"
         aria-label={c.design.label}
