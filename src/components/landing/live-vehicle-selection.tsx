@@ -26,9 +26,9 @@ function SelectionField({ kind, parentId, value, label, onChange, c }: { kind: "
   return <div className="grid min-w-0 gap-2">
     <span className="label-caps text-xs text-strong">{label}</span>
     <Select value={value ? String(value.id) : ""} disabled={!enabled || query.isPending || query.data?.error} onValueChange={(id) => { const item = items.find((entry) => String(entry.id) === id); if (item) onChange(item); }}>
-      <SelectTrigger aria-label={label} className="w-full min-w-0 [&>span]:truncate"><SelectValue placeholder={enabled && query.isPending ? c.vehicleApi.loading : c.vehicleCheck.choose} /></SelectTrigger>
+      <SelectTrigger aria-label={label} className="h-10 w-full min-w-0 border-border-strong bg-sunken shadow-none transition-colors hover:border-primary disabled:hover:border-border-strong [&>span]:truncate [&>svg]:shrink-0"><SelectValue placeholder={enabled && query.isPending ? c.vehicleApi.loading : c.vehicleCheck.choose} /></SelectTrigger>
       <SelectContent>
-        <div className="p-2"><Input aria-label={`${label}: ${c.vehicleApi.search}`} placeholder={c.vehicleApi.search} value={search} onChange={(e) => setSearch(e.target.value)} onKeyDown={(e) => e.stopPropagation()} /></div>
+        <div className="p-2"><Input className="h-10 border-border-strong bg-sunken shadow-none" aria-label={`${label}: ${c.vehicleApi.search}`} placeholder={c.vehicleApi.search} value={search} onChange={(e) => setSearch(e.target.value)} onKeyDown={(e) => e.stopPropagation()} /></div>
         {kind === "engines" ? groupVehicleEngines(filteredItems, c.locale).map((group) => <SelectGroup key={group.key}><SelectLabel className="border-b border-border text-muted-foreground">{group.fuel ? c.vehicleApi.fuels[group.fuel] : group.label}</SelectLabel>{group.items.map(renderItem)}</SelectGroup>) : filteredItems.map(renderItem)}
       </SelectContent>
     </Select>
@@ -48,7 +48,7 @@ export function LiveVehicleSelection({ c, children, typeButtons = false }: { c: 
     {typeButtons && <div className="grid gap-3">
       <span className="label-caps text-xs text-strong">{c.vehicleApi.type}</span>
       <div role="group" aria-label={c.vehicleApi.type} className="flex flex-wrap gap-2">
-        {types.data?.items.map((item) => <Button key={item.id} variant={chosen[0]?.id === item.id ? "default" : "outline"} aria-pressed={chosen[0]?.id === item.id} onClick={() => setChosen([item])}><VehicleIcon item={item} />{item.name}</Button>)}
+        {types.data?.items.map((item) => <Button key={item.id} variant="outline" className={`h-10 min-w-0 shadow-none ${chosen[0]?.id === item.id ? "border-primary bg-primary-soft text-strong hover:bg-primary-soft" : "border-border-strong bg-sunken text-foreground hover:border-primary hover:bg-accent"}`} aria-pressed={chosen[0]?.id === item.id} onClick={() => setChosen([item])}><VehicleIcon item={item} /><span className="truncate">{item.name}</span></Button>)}
       </div>
       {types.isPending && <span role="status" className="text-sm text-muted-foreground">{c.vehicleApi.loading}</span>}
       {(types.isError || types.data?.error) && <div role="alert" className="text-sm text-destructive">{c.vehicleApi.error}<Button variant="ghost" onClick={() => void types.refetch()}><RotateCcw />{c.vehicleApi.retry}</Button></div>}
