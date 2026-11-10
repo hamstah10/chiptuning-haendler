@@ -11,6 +11,7 @@
 
 - Landing page copy lives in `src/lib/content.ts` (one object per locale, `en` typed as `typeof de`); sections only render it. Why: DE/EN stay in sync and SEO pages share one layout.
 - Leads are written only via the `submitLead` server function (zod-validated, admin client); `dealer_leads` has no public policies. Why: visitors must never read or alter leads.
+- Lead inserts atomically queue owner-only WhatsApp template notifications via a database trigger; subsequent submissions and signed callbacks resume pending work, while ambiguous sends remain unresolved. Why: stored enquiries survive notification outages without blind duplicate sends.
 - Call server functions directly (`fn({ data })`) from event handlers, never via `useServerFn`. Why: `useServerFn`-wrapped calls silently never fire in this setup, while direct calls work (proven by `submitLead`).
 - AI Gateway calls in server functions use `createResponsesCall` from `src/lib/ai/responses.server.ts` without the incoming `Request` (no `getRequest()`, no `abortSignal`). Why: the RPC request's abort signal kills the outgoing gateway fetch and the call hangs forever.
 - Design tokens come from the TuningFiles design system and live in `src/styles.css` (light default on :root, `.dark` override). Why: one source for brand colors and fonts.

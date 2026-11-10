@@ -29,6 +29,13 @@
       "when": 1794291223955,
       "tag": "0003_whatsapp_fair_reconciliation",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794292863700,
+      "tag": "0004_lead_whatsapp_outbox",
+      "breakpoints": true
     }
   ]
 }

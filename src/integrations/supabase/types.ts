@@ -118,6 +118,7 @@ export type Database = {
           error: Json | null
           id: string
           kind: string
+          lead_id: string | null
           media: Json | null
           media_id: string | null
           phone: string
@@ -134,6 +135,7 @@ export type Database = {
           error?: Json | null
           id?: string
           kind?: string
+          lead_id?: string | null
           media?: Json | null
           media_id?: string | null
           phone: string
@@ -150,6 +152,7 @@ export type Database = {
           error?: Json | null
           id?: string
           kind?: string
+          lead_id?: string | null
           media?: Json | null
           media_id?: string | null
           phone?: string
@@ -159,7 +162,15 @@ export type Database = {
           state?: string
           status_times?: Json
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_messages_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_leads"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       whatsapp_statuses: {
         Row: {
