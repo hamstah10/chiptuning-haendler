@@ -86,16 +86,16 @@ export type WizardAnswers = Record<string, string | string[] | number[]>;
 
 /** Maps collected answers to the fixed field names the recommend/leads API expects. */
 export function buildWizardRequest(answers: WizardAnswers) {
-  const vehicles = (answers.vehicles as number[] | undefined) ?? [];
+  const vehicles = (answers["vehicles"] as number[] | undefined) ?? [];
   return {
     clientId: PARTNER_WIZARD_CLIENT,
-    goal: (answers.goal as string) || undefined,
-    experience: (answers.experience as string) || undefined,
+    goal: (answers["goal"] as string) || undefined,
+    experience: (answers["experience"] as string) || undefined,
     vehicleCategories: vehicles,
     mainVehicleCategory: vehicles[0],
-    currentTool: (answers.tool as string) || undefined,
-    services: (answers.services as string[] | undefined) ?? [],
-    website: (answers.website as string) || undefined,
+    currentTool: (answers["tool"] as string) || undefined,
+    services: (answers["services"] as string[] | undefined) ?? [],
+    website: (answers["website"] as string) || undefined,
   };
 }
 
