@@ -20,6 +20,10 @@ export function PartnerWizardEmbed() {
     script.setAttribute("data-primary-color", "#E41D24");
     script.setAttribute("data-theme", "light");
     host.appendChild(script);
+    return () => {
+      script.remove();
+      host.replaceChildren();
+    };
   }, []);
 
   return <div ref={hostRef} className="partner-wizard-embed" />;
