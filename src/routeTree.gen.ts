@@ -14,8 +14,10 @@ import { Route as DatenschutzRouteImport } from './routes/datenschutz'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as EnRouteImport } from './routes/en'
 import { Route as ImpressumRouteImport } from './routes/impressum'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StartplanRouteImport } from './routes/startplan'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as EnImprintRouteImport } from './routes/en_.imprint'
 import { Route as EnPrivacyRouteImport } from './routes/en_.privacy'
 import { Route as EnStartplanRouteImport } from './routes/en_.startplan'
@@ -45,6 +47,11 @@ const ImpressumRoute = ImpressumRouteImport.update({
   path: '/impressum',
   getParentRoute: () => rootRouteImport,
 } as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -55,6 +62,12 @@ const StartplanRoute = StartplanRouteImport.update({
   path: '/startplan',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const EnImprintRoute = EnImprintRouteImport.update({
   id: '/en_/imprint',
   path: '/en/imprint',
@@ -77,8 +90,10 @@ export interface FileRoutesByFullPath {
   '/design-system': typeof DesignSystemRoute
   '/en': typeof EnRoute
   '/impressum': typeof ImpressumRoute
+  '/mcp': typeof McpRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/en/imprint': typeof EnImprintRoute
   '/en/privacy': typeof EnPrivacyRoute
   '/en/startplan': typeof EnStartplanRoute
@@ -89,8 +104,10 @@ export interface FileRoutesByTo {
   '/design-system': typeof DesignSystemRoute
   '/en': typeof EnRoute
   '/impressum': typeof ImpressumRoute
+  '/mcp': typeof McpRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/en/imprint': typeof EnImprintRoute
   '/en/privacy': typeof EnPrivacyRoute
   '/en/startplan': typeof EnStartplanRoute
@@ -102,8 +119,10 @@ export interface FileRoutesById {
   '/design-system': typeof DesignSystemRoute
   '/en': typeof EnRoute
   '/impressum': typeof ImpressumRoute
+  '/mcp': typeof McpRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/en_/imprint': typeof EnImprintRoute
   '/en_/privacy': typeof EnPrivacyRoute
   '/en_/startplan': typeof EnStartplanRoute
@@ -116,8 +135,10 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/en'
     | '/impressum'
+    | '/mcp'
     | '/sitemap.xml'
     | '/startplan'
+    | '/.well-known/oauth-protected-resource'
     | '/en/imprint'
     | '/en/privacy'
     | '/en/startplan'
@@ -128,8 +149,10 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/en'
     | '/impressum'
+    | '/mcp'
     | '/sitemap.xml'
     | '/startplan'
+    | '/.well-known/oauth-protected-resource'
     | '/en/imprint'
     | '/en/privacy'
     | '/en/startplan'
@@ -140,8 +163,10 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/en'
     | '/impressum'
+    | '/mcp'
     | '/sitemap.xml'
     | '/startplan'
+    | '/.well-known/oauth-protected-resource'
     | '/en_/imprint'
     | '/en_/privacy'
     | '/en_/startplan'
@@ -153,8 +178,10 @@ export interface RootRouteChildren {
   DesignSystemRoute: typeof DesignSystemRoute
   EnRoute: typeof EnRoute
   ImpressumRoute: typeof ImpressumRoute
+  McpRoute: typeof McpRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StartplanRoute: typeof StartplanRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   EnImprintRoute: typeof EnImprintRoute
   EnPrivacyRoute: typeof EnPrivacyRoute
   EnStartplanRoute: typeof EnStartplanRoute
@@ -197,6 +224,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ImpressumRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -209,6 +243,13 @@ declare module '@tanstack/react-router' {
       path: '/startplan'
       fullPath: '/startplan'
       preLoaderRoute: typeof StartplanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en_/imprint': {
@@ -241,8 +282,11 @@ const rootRouteChildren: RootRouteChildren = {
   DesignSystemRoute: DesignSystemRoute,
   EnRoute: EnRoute,
   ImpressumRoute: ImpressumRoute,
+  McpRoute: McpRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StartplanRoute: StartplanRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   EnImprintRoute: EnImprintRoute,
   EnPrivacyRoute: EnPrivacyRoute,
   EnStartplanRoute: EnStartplanRoute,
