@@ -26,7 +26,7 @@ export function vehicleMediaUrl(path: string | null | undefined): string | null 
   } catch { return null; }
 }
 const vehicleMediaSchema = z.string().nullable().optional().transform(vehicleMediaUrl);
-export const vehicleItemSchema = z.object({ id: z.number().int().positive(), name: z.string(), icon: vehicleMediaSchema, image: vehicleMediaSchema, fuel: z.string().nullable().optional() });
+export const vehicleItemSchema = z.object({ id: z.number().int().positive(), name: z.string(), icon: vehicleMediaSchema, image: vehicleMediaSchema, fuel: z.string().nullable().optional().transform((value) => value ?? null) });
 const nullableNumber = z.union([z.number(), z.string().regex(/^\d+(\.\d+)?$/).transform(Number), z.null()]);
 const vehicleOptionSchema = vehicleItemSchema.extend({
   price: nullableNumber.optional().transform((value) => value ?? null),
