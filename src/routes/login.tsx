@@ -8,9 +8,10 @@ import { oauthReturnPath } from "@/lib/oauth-return-path";
 import { integrationHead } from "@/lib/integration-head";
 
 export const Route = createFileRoute("/login")({
+  staticData: { sitemap: false },
   ssr: false,
   head: () => integrationHead("Anmeldung für Agent-Integrationen", "Melde dich an, um eine Agent-Integration für TuningFiles zu bestätigen."),
-  validateSearch: (s: Record<string, unknown>) => ({ next: oauthReturnPath(s.next) }),
+  validateSearch: (s: Record<string, unknown>) => ({ next: oauthReturnPath(s['next']) }),
   component: Login,
 });
 

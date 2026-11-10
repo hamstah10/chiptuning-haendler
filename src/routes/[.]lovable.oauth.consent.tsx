@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { integrationHead } from "@/lib/integration-head";
 
 export const Route = createFileRoute("/.lovable/oauth/consent")({
+  staticData: { sitemap: false },
   ssr: false,
   head: () => integrationHead("Agent-Verbindung bestätigen", "Bestätige oder verweigere den Zugriff eines Agenten auf TuningFiles."),
-  validateSearch: (s: Record<string, unknown>) => ({ authorization_id: typeof s.authorization_id === "string" ? s.authorization_id : "" }),
+  validateSearch: (s: Record<string, unknown>) => ({ authorization_id: typeof s['authorization_id'] === "string" ? s['authorization_id'] : "" }),
   beforeLoad: async ({ search, location }) => {
     if (!search.authorization_id) throw new Error("Die Verbindungsanfrage fehlt oder ist abgelaufen.");
     const { data, error } = await supabase.auth.getSession();

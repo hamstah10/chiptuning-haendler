@@ -2,7 +2,7 @@ import { auth, defineMcp } from "@lovable.dev/mcp-js";
 import dealerInformation from "./tools/dealer-information";
 import calculateEarnings from "./tools/calculate-earnings";
 
-const projectRef = import.meta.env.VITE_SUPABASE_PROJECT_ID ?? "project-ref-unset";
+const projectRef = import.meta.env['VITE_SUPABASE_PROJECT_ID'] ?? "project-ref-unset";
 export default defineMcp({
   name: "chiptuning-haendler",
   title: "Chiptuning Haendler",
