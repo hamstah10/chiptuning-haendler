@@ -19,6 +19,7 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StartplanRouteImport } from './routes/startplan'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as EnImprintRouteImport } from './routes/en_.imprint'
 import { Route as EnPrivacyRouteImport } from './routes/en_.privacy'
 import { Route as EnStartplanRouteImport } from './routes/en_.startplan'
@@ -75,6 +76,11 @@ const Char91DotwellKnownChar93OauthProtectedResourceRoute =
     path: '/.well-known/oauth-protected-resource',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EnImprintRoute = EnImprintRouteImport.update({
   id: '/en_/imprint',
   path: '/en/imprint',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/en/imprint': typeof EnImprintRoute
   '/en/privacy': typeof EnPrivacyRoute
   '/en/startplan': typeof EnStartplanRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/en/imprint': typeof EnImprintRoute
   '/en/privacy': typeof EnPrivacyRoute
   '/en/startplan': typeof EnStartplanRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/en_/imprint': typeof EnImprintRoute
   '/en_/privacy': typeof EnPrivacyRoute
   '/en_/startplan': typeof EnStartplanRoute
@@ -158,6 +167,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/startplan'
     | '/.well-known/oauth-protected-resource'
+    | '/auth/callback'
     | '/en/imprint'
     | '/en/privacy'
     | '/en/startplan'
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/startplan'
     | '/.well-known/oauth-protected-resource'
+    | '/auth/callback'
     | '/en/imprint'
     | '/en/privacy'
     | '/en/startplan'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/startplan'
     | '/.well-known/oauth-protected-resource'
+    | '/auth/callback'
     | '/en_/imprint'
     | '/en_/privacy'
     | '/en_/startplan'
@@ -207,6 +219,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StartplanRoute: typeof StartplanRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   EnImprintRoute: typeof EnImprintRoute
   EnPrivacyRoute: typeof EnPrivacyRoute
   EnStartplanRoute: typeof EnStartplanRoute
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/en_/imprint': {
       id: '/en_/imprint'
       path: '/en/imprint'
@@ -328,6 +348,7 @@ const rootRouteChildren: RootRouteChildren = {
   StartplanRoute: StartplanRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   EnImprintRoute: EnImprintRoute,
   EnPrivacyRoute: EnPrivacyRoute,
   EnStartplanRoute: EnStartplanRoute,
