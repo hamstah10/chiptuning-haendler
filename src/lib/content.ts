@@ -168,6 +168,11 @@ const de = {
     year: "Hochgerechnet aufs Jahr",
     note: "Beispielrechnung: Endkundenpreis minus Dateipreis und Arbeitskosten je Auftrag, abzüglich der Monatsgebühr des Pakets. Ohne Steuern.",
   },
+  vehicleApi: {
+    type: "Fahrzeugtyp", series: "Baureihe", loading: "Fahrzeugdaten werden geladen …", search: "Suchen …",
+    error: "Die Fahrzeugdaten sind gerade nicht erreichbar.", retry: "Erneut versuchen", empty: "Keine Einträge verfügbar.",
+    live: "DCT Fahrzeugdaten", noStages: "Für diesen Motor sind keine Tuningstufen hinterlegt.", noValue: "Nicht angegeben", price: "Preis laut Fahrzeugdatenbank",
+  },
   configurator: {
     kicker: "Kapitel 06 · Für deine Kunden",
     title: "Dein eigener Konfigurator. Kunden wählen, du bekommst die Anfrage.",
@@ -176,7 +181,7 @@ const de = {
     demo: "Demo",
     stepLabels: ["Marke", "Modell", "Motor", "Ergebnis"],
     brandTitle: "Marke wählen",
-    brandText: "8.400 Fahrzeuge, 62 Marken – inklusive Landtechnik und Marine.",
+    brandText: "Wähle dein Fahrzeug aus der angebundenen DCT-Fahrzeugdatenbank.",
     modelTitle: "Modell wählen",
     modelText: "Baureihe inklusive Facelift-Stände und Bauzeiträumen.",
     engineTitle: "Motorisierung",
@@ -193,7 +198,7 @@ const de = {
     sending: "Wird gesendet …",
     sent: "Danke! Deine Anfrage ist angekommen. Wir melden uns innerhalb eines Werktags.",
     error: "Die Anfrage konnte nicht gesendet werden. Bitte prüfe deine Angaben.",
-    disclaimer: "Demo-Daten. Preise und Leistungswerte sind im Livebetrieb deine eigenen.",
+    disclaimer: "Werte und Preise aus der DCT-Fahrzeugdatenbank. Verfügbarkeit und endgültigen Preis bestätigen wir mit deinem Angebot.",
     otherModels: ["Basisreihe", "Kombi / Avant", "SUV-Variante", "Nutzfahrzeug"],
     stages: [
       { id: 1, n: "Stage 1", d: "Serienhardware, optimiertes Kennfeld. Der Standardfall – kein Umbau nötig.", mult: 1, price: 649 },
@@ -366,7 +371,7 @@ const de = {
     margin: "Deine Marge pro Fahrzeug",
     marginNote: "Endkundenpreis minus Dateipreis im Professional-Paket",
     empty: "Wähle ein Fahrzeug, um die Werte zu sehen.",
-    disclaimer: "Beispielwerte. Echte Werte hängen von Fahrzeugzustand und Softwarestand ab.",
+    disclaimer: "DCT-Fahrzeugdaten. Tatsächliche Leistungswerte hängen von Fahrzeugzustand und Softwarestand ab.",
   },
   packages: [
     { id: "starter", n: "Starter", monthly: 0, file: 39, d: "Dateiservice, Portal und Support – für den Test." },
@@ -577,6 +582,11 @@ const en: Content = {
     year: "Projected per year",
     note: "Example: customer price minus file price and labour costs per job, less the package's monthly fee. Excludes tax.",
   },
+  vehicleApi: {
+    type: "Vehicle type", series: "Series", loading: "Loading vehicle data …", search: "Search …",
+    error: "Vehicle data is currently unavailable.", retry: "Try again", empty: "No entries available.",
+    live: "DCT vehicle data", noStages: "No tuning stages are listed for this engine.", noValue: "Not specified", price: "Vehicle database price",
+  },
   configurator: {
     kicker: "Chapter 06 · For your customers",
     title: "Your own configurator. Customers choose, you get the enquiry.",
@@ -585,7 +595,7 @@ const en: Content = {
     demo: "Demo",
     stepLabels: ["Brand", "Model", "Engine", "Result"],
     brandTitle: "Choose brand",
-    brandText: "8,400 vehicles, 62 brands – including agricultural and marine.",
+    brandText: "Select your vehicle from the connected DCT vehicle database.",
     modelTitle: "Choose model",
     modelText: "Series including facelifts and production years.",
     engineTitle: "Engine",
@@ -602,7 +612,7 @@ const en: Content = {
     sending: "Sending …",
     sent: "Thank you! Your enquiry has arrived. We'll get back to you within one working day.",
     error: "Your enquiry could not be sent. Please check your details.",
-    disclaimer: "Demo data. In live use, prices and performance figures are your own.",
+    disclaimer: "Values and prices from the DCT vehicle database. Availability and the final price will be confirmed in your quote.",
     otherModels: ["Base series", "Estate / Avant", "SUV variant", "Commercial"],
     stages: [
       { id: 1, n: "Stage 1", d: "Stock hardware, optimised map. The standard case – no modifications needed.", mult: 1, price: 649 },
@@ -775,7 +785,7 @@ const en: Content = {
     margin: "Your margin per vehicle",
     marginNote: "Customer price minus file price in the Professional package",
     empty: "Select a vehicle to see the values.",
-    disclaimer: "Example values. Real figures depend on vehicle condition and software version.",
+    disclaimer: "DCT vehicle data. Actual figures depend on vehicle condition and software version.",
   },
   packages: [
     { id: "starter", n: "Starter", monthly: 0, file: 39, d: "File service, portal and support – to try it out." },
