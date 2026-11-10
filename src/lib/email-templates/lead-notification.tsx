@@ -37,7 +37,7 @@ const LeadNotification = ({ form = 'Formular', name = '–', company, email, pho
 
 export const template = {
   component: LeadNotification,
-  subject: (d: Record<string, any>) => `Neue Anfrage (${d.form ?? 'Formular'}) – ${d.name ?? ''}`,
+  subject: (d: Record<string, any>) => `Neue Anfrage (${d['form'] ?? 'Formular'}) – ${d['name'] ?? ''}`,
   displayName: 'Lead-Benachrichtigung (Inhaber)',
   to: 'hamstahstudio@gmail.com',
   previewData: { form: 'Partner-Wizard', name: 'Max Muster', company: 'Muster Tuning', email: 'max@example.com', phone: '+49 170 000000', details: [{ key: 'goal', value: 'start' }] },
