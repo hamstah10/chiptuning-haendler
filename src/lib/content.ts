@@ -170,6 +170,7 @@ const de = {
   },
   vehicleApi: {
     type: "Fahrzeugtyp", series: "Baureihe", loading: "Fahrzeugdaten werden geladen …", search: "Suchen …",
+    fuels: { diesel: "Diesel", petrol: "Benzin", hybrid: "Hybrid", electric: "Elektro", lpg: "Autogas (LPG)", cng: "Erdgas (CNG)", hydrogen: "Wasserstoff", unknown: "Kraftstoff nicht angegeben" },
     error: "Die Fahrzeugdaten sind gerade nicht erreichbar.", retry: "Erneut versuchen", empty: "Keine Einträge verfügbar.",
     live: "DCT Fahrzeugdaten", noStages: "Für diesen Motor sind keine Tuningstufen hinterlegt.", noValue: "Nicht angegeben", price: "Preis laut Fahrzeugdatenbank",
   },
@@ -584,6 +585,7 @@ const en: Content = {
   },
   vehicleApi: {
     type: "Vehicle type", series: "Series", loading: "Loading vehicle data …", search: "Search …",
+    fuels: { diesel: "Diesel", petrol: "Petrol", hybrid: "Hybrid", electric: "Electric", lpg: "LPG", cng: "CNG", hydrogen: "Hydrogen", unknown: "Fuel not specified" },
     error: "Vehicle data is currently unavailable.", retry: "Try again", empty: "No entries available.",
     live: "DCT vehicle data", noStages: "No tuning stages are listed for this engine.", noValue: "Not specified", price: "Vehicle database price",
   },
