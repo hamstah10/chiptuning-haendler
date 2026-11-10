@@ -28,7 +28,7 @@ import { formatNumber } from "@/lib/format";
 import { CountUp, Reveal, ScrollProgress } from "./motion";
 import { Configurator } from "./configurator";
 import { PartnerWizard } from "./partner-wizard";
-import { PartnerWizardEmbed } from "./partner-wizard-embed";
+import { PartnerWizardDct } from "./partner-wizard-dct";
 import { EarningsCalculator } from "./earnings-calculator";
 import { FileServiceTeaser } from "./file-service-teaser";
 import { DynoCompare } from "./dyno-compare";
@@ -744,7 +744,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
               className="bg-sunken"
             >
               <Reveal>
-                <PartnerWizardEmbed />
+                <PartnerWizardDct c={c} />
               </Reveal>
             </Section>
           )}
