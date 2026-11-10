@@ -712,7 +712,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
             </div>
           </Section>
 
-          <section id="anmeldung" className="scroll-mt-16 border-b bg-card">
+          {!mixed && <section id="anmeldung" className="scroll-mt-16 border-b bg-card">
             <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:py-28 md:pl-20 lg:grid-cols-[0.8fr_1.2fr]">
               <Reveal>
                 <span className="kicker">{c.wizard.kicker}</span>
@@ -733,11 +733,11 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
                 <PartnerWizard c={c} />
               </Reveal>
             </div>
-          </section>
+          </section>}
 
           {mixed && (
             <Section
-              id="partner-wizard"
+              id="anmeldung"
               kicker={c.partnerEmbed.kicker}
               title={c.partnerEmbed.title}
               intro={c.partnerEmbed.intro}
