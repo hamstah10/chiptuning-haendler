@@ -8,6 +8,7 @@ import { submitLead } from "@/lib/leads.functions";
 import type { Content } from "@/lib/content";
 import type { VehicleStage } from "@/lib/vehicle-api";
 import { LiveVehicleSelection, type VehicleSelection } from "./live-vehicle-selection";
+import { VehicleOptions } from "./vehicle-options";
 
 function Result({ c, selection }: { c: Content; selection: VehicleSelection }) {
   const t = c.configurator;
@@ -44,6 +45,7 @@ function Result({ c, selection }: { c: Content; selection: VehicleSelection }) {
         </div>)}
       </div>
       {details.ecus.length > 0 && <div className="mt-5 flex flex-wrap gap-2">{details.ecus.map((ecu) => <Badge variant="secondary" key={ecu.id}>{ecu.manufacturer} {ecu.name}</Badge>)}</div>}
+      <div className="mt-5"><VehicleOptions details={details} c={c} /></div>
     </div>
     <div>
       <div className="label-caps text-xs text-muted-foreground">{t.chooseStage}</div>

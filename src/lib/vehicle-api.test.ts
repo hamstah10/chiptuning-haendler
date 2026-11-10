@@ -2,6 +2,13 @@ import { describe, expect, it } from "vitest";
 import { VEHICLE_CONTEXT, vehicleDetailsSchema, vehiclePath, vehicleItemSchema, vehicleMediaUrl } from "./vehicle-api";
 
 describe("DCT vehicle API", () => {
+  it("preserves real tuning options, ECU assignments and decimal prices", () => {
+    const result = vehicleDetailsSchema.parse({ engine: { id: 1, name: "Engine", horsepower: 105, torque: 175, fuel: "Benzin" }, stages: [], engineOptions: [], ecus: [{ id: 7, name: "ME7.5.20", manufacturer: null, options: [{ id: 105881, name: "FEHLERCODES LÖSCHEN (Max5)", price: "149.00", icon: "/uploads/media/option.svg", active: true, category: { name: "Diagnose" } }, { id: 8, name: "Inactive", price: null, active: false }] }] });
+    expect(result.ecus[0]?.options).toHaveLength(1);
+    expect(result.ecus[0]?.options[0]?.price).toBe(149);
+    expect(result.ecus[0]?.options[0]?.category?.name).toBe("Diagnose");
+    expect(result.ecus[0]?.options[0]?.icon).toBe("https://portal.dct-files.de/uploads/media/option.svg");
+  });
   it("preserves and resolves the API's vehicle icons and images", () => {
     const item = vehicleItemSchema.parse({ id: 1, name: "PKW", icon: "/uploads/vehicle-type/pkw.svg", image: "/uploads/vehicle-type/pkw.webp" });
     expect(item.icon).toBe("https://portal.dct-files.de/uploads/vehicle-type/pkw.svg");

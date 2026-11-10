@@ -5,6 +5,7 @@ import { Slider } from "@/components/ui/slider";
 import { formatEuro, formatNumber } from "@/lib/format";
 import type { Content } from "@/lib/content";
 import { LiveVehicleSelection } from "./live-vehicle-selection";
+import { VehicleOptions } from "./vehicle-options";
 
 export function VehicleCheck({ c }: { c: Content }) {
   const t = c.vehicleCheck;
@@ -19,6 +20,7 @@ export function VehicleCheck({ c }: { c: Content }) {
       <div className="flex flex-wrap items-center gap-2"><Badge>{stage?.name ?? c.vehicleApi.noStages}</Badge><span className="font-display font-semibold text-strong">{labels.slice(1).join(" · ")}</span></div>
       <div className="grid gap-4 sm:grid-cols-2">{[[t.power, details.engine.horsepower, stage?.hp, "PS"], [t.torque, details.engine.torque, stage?.nm, "Nm"]].map(([label, stock, tuned, unit]) => <div key={String(label)} className="border-l-2 border-primary pl-4"><span className="text-xs text-muted-foreground">{label}</span><div className="mt-1 font-display text-2xl font-bold text-primary">{typeof tuned === "number" ? `${formatNumber(tuned, c.locale)} ${unit}` : c.vehicleApi.noValue}</div><span className="text-sm text-muted-foreground">{t.stock}: {typeof stock === "number" ? `${formatNumber(stock, c.locale)} ${unit}` : c.vehicleApi.noValue}</span></div>)}</div>
       {stage?.price != null && <p className="text-sm text-strong">{c.vehicleApi.price}: <span className="font-mono">{formatEuro(stage.price, c.locale)}</span></p>}
+      <VehicleOptions details={details} c={c} />
       <div className="border-t pt-4">
         <div className="flex items-baseline justify-between gap-3"><span className="text-sm text-strong">{t.customerPrice}</span><span className="font-mono text-strong">{formatEuro(price, c.locale)}</span></div>
         <Slider className="mt-3" min={199} max={999} step={10} value={[price]} onValueChange={(values) => setPrice(values[0] ?? 449)} aria-label={t.customerPrice} />
