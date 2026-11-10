@@ -1,4 +1,4 @@
-import { useConversation } from "@elevenlabs/react";
+import { ConversationProvider, useConversation } from "@elevenlabs/react";
 import { useState } from "react";
 import { Mic, PhoneOff, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,10 @@ const labels = {
 };
 
 export default function TurboAgent({ locale }: { locale: "de" | "en" }) {
+  return <ConversationProvider><TurboControls locale={locale} /></ConversationProvider>;
+}
+
+function TurboControls({ locale }: { locale: "de" | "en" }) {
   const t = labels[locale];
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
