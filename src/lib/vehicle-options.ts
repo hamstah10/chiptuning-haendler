@@ -16,8 +16,8 @@ export function uniqueVehicleOptions(details: VehicleDetails): DisplayVehicleOpt
       if (!option.active) continue;
       const key = option.name.normalize("NFKC").trim().replace(/\s+/g, " ").toLocaleLowerCase("de");
       const entry = options.get(key) ?? { ...option, name: option.name.trim(), key, assignments: [] };
-      entry.icon ??= option.icon;
-      entry.image ??= option.image;
+      entry.icon ??= option.icon ?? null;
+      entry.image ??= option.image ?? null;
       entry.category ??= option.category;
       const assignment = entry.assignments.find((item) => item.name === source.name);
       if (assignment) {
