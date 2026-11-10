@@ -123,9 +123,9 @@ export function fetchWizardRecommendation(answers: WizardAnswers): Promise<Wizar
 export interface WizardContact {
   name: string;
   email: string;
-  company?: string;
-  phone?: string;
-  message?: string;
+  company?: string | undefined;
+  phone?: string | undefined;
+  message?: string | undefined;
 }
 
 export function submitWizardLead(answers: WizardAnswers, contact: WizardContact) {
