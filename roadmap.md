@@ -1,5 +1,5 @@
 # Tasks
-- [ ] Add the supplied public ElevenLabs Turbo voice agent to all landing compositions and verify session controls.
+- [x] Add the supplied public ElevenLabs Turbo voice agent to all landing compositions; mobile controls checked and user confirmed a working conversation.
 - [x] Add protected WhatsApp inbox, text replies inside 24 hours, signed durable receiver and traffic-triggered recovery; verify local signatures and mobile layout.
 - [ ] Enable owner access and verify real WhatsApp send/delivery (blocked: owner must sign in; publish and select Incoming messages destination). Quiet-period recovery waits for new callbacks.
 - [ ] Add approved-template sending outside the reply window (blocked: account activation and approved templates must be verified).
