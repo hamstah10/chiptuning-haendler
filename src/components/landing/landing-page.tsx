@@ -181,7 +181,7 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
     <nav
       aria-label={c.chapterLabel}
       className={cn(
-        "fixed left-2 top-1/2 z-40 hidden w-36 -translate-y-1/2 transition-opacity duration-300 md:block",
+        "group/rail fixed left-2 top-1/2 z-40 hidden w-16 -translate-y-1/2 transition-[width,opacity] duration-300 hover:w-40 focus-within:w-40 motion-reduce:transition-none md:block",
         onDrive && "pointer-events-none opacity-0",
       )}
     >
@@ -199,7 +199,8 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
               <a
                 href={`#${id}`}
                 title={c.chapters[i]}
-                className="group relative flex items-center gap-2"
+                className="group relative flex items-center gap-2 overflow-hidden"
+                aria-label={`${String(i + 1).padStart(2, "0")} ${c.chapters[i]}`}
                 aria-current={on ? "step" : undefined}
               >
                 <span className="relative flex w-3 shrink-0 justify-start">
@@ -225,13 +226,13 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
 
                 <span
                   className={cn(
-                    "font-mono text-xs transition-colors duration-500 motion-reduce:transition-none",
+                    "shrink-0 font-mono text-xs transition-colors duration-500 motion-reduce:transition-none",
                     on ? "text-strong" : "text-faint group-hover:text-strong",
                   )}
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className={cn("min-w-0 whitespace-normal text-left text-xs leading-tight", on ? "font-semibold text-strong" : "text-muted-foreground group-hover:text-strong")}>
+                <span className={cn("absolute left-12 w-24 whitespace-nowrap text-left text-xs leading-tight opacity-0 transition-opacity duration-200 group-hover/rail:opacity-100 group-focus-within/rail:opacity-100 motion-reduce:transition-none", on ? "font-semibold text-strong" : "text-muted-foreground group-hover:text-strong")}>
                   {c.chapters[i]}
                 </span>
               </a>
