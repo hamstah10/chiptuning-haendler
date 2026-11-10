@@ -1,4 +1,6 @@
 # Tasks
+- [ ] Securely connect DCT vehicle API with the haendler_werden context.
+- [ ] Replace configurator sample data with cascading live vehicle data and verify selection.
 - [x] Replace the old player with the supplied animation.
 - [x] Remove scroll playback, pinning, and scroll-driven stage highlighting.
 - [x] Verify the animation on the page.
