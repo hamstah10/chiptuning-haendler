@@ -1,4 +1,6 @@
 # Tasks
+- [x] Match vehicle check selection and framing to the configurator.
+- [ ] Display real API tuning options in the configurator and vehicle check.
 - [x] Securely connect DCT vehicle API with the haendler_werden context.
 - [x] Replace configurator sample data with cascading live vehicle data and verify selection.
 - [x] Replace the old player with the supplied animation.
