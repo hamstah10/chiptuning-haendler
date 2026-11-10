@@ -91,7 +91,7 @@ export function ThemeToggle({ c }: { c: Content }) {
 function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-5 md:pl-20">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-5 md:pl-44">
         <a href="#top" className="min-w-0 shrink" aria-label="Tuningfiles-download.com">
           <Logo />
         </a>
@@ -181,7 +181,7 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
     <nav
       aria-label={c.chapterLabel}
       className={cn(
-        "fixed left-2 top-1/2 z-40 hidden -translate-y-1/2 transition-opacity duration-300 md:block",
+        "fixed left-2 top-1/2 z-40 hidden w-36 -translate-y-1/2 transition-opacity duration-300 md:block",
         onDrive && "pointer-events-none opacity-0",
       )}
     >
@@ -195,13 +195,14 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
           const on = i === active;
           return (
             <li key={id}>
+              <Button asChild variant="ghost" className="h-auto w-full justify-start rounded-sm px-2 py-2">
               <a
                 href={`#${id}`}
                 title={c.chapters[i]}
-                className="group relative flex items-center justify-center gap-1.5 py-1"
+                className="group relative flex items-center gap-2"
                 aria-current={on ? "step" : undefined}
               >
-                <span className="relative flex w-6 justify-start">
+                <span className="relative flex w-3 shrink-0 justify-start">
                   <span
                     className={cn(
                       "h-px transition-all duration-300",
@@ -212,7 +213,7 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
                     <motion.span
                       layoutId="active-chapter-line"
                       aria-hidden="true"
-                      className="absolute inset-y-0 left-0 h-px w-6 bg-primary"
+                      className="absolute inset-y-0 left-0 h-px w-3 bg-primary"
                       transition={
                         reducedMotion
                           ? { duration: 0 }
@@ -230,7 +231,11 @@ function ChapterRail({ c, mixed = false }: { c: Content; mixed?: boolean }) {
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
+                <span className={cn("min-w-0 whitespace-normal text-left text-xs leading-tight", on ? "font-semibold text-strong" : "text-muted-foreground group-hover:text-strong")}>
+                  {c.chapters[i]}
+                </span>
               </a>
+              </Button>
             </li>
           );
         })}
@@ -256,7 +261,7 @@ function Section({
 }) {
   return (
     <section id={id} className={cn("scroll-mt-16 border-b", className)}>
-      <div className="mx-auto max-w-6xl px-5 py-20 md:py-28 md:pl-20">
+      <div className="mx-auto max-w-6xl px-5 py-20 md:py-28 md:pl-44">
         <Reveal>
           <span className="kicker">{kicker}</span>
           <h2 className="mt-3 max-w-3xl text-3xl leading-[1.08] md:text-5xl">{title}</h2>
@@ -396,7 +401,7 @@ function Hero({ c }: { c: Content }) {
   return (
     <section id="top" className="relative overflow-hidden border-b">
       <div aria-hidden className="grid-lines absolute inset-0 opacity-70" />
-      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-14 md:pt-20 md:pl-20 lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-14 md:pt-20 md:pl-44 lg:grid-cols-[1.05fr_0.95fr]">
         <div>
           <motion.span
             initial={{ opacity: 0, y: 10 }}
@@ -608,7 +613,7 @@ function PinnedSteps({ c }: { c: Content }) {
   if (reduce) {
     return (
       <section ref={ref} id="ablauf" className="scroll-mt-16 border-b bg-sunken">
-        <div className="mx-auto max-w-6xl px-5 py-20 md:py-28 md:pl-20">
+        <div className="mx-auto max-w-6xl px-5 py-20 md:py-28 md:pl-44">
           {header}
           {grid}
         </div>
@@ -624,7 +629,7 @@ function PinnedSteps({ c }: { c: Content }) {
       </div>
       <div className="relative hidden h-[300vh] md:block">
         <div className="sticky top-16 flex h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden">
-          <div className="mx-auto w-full max-w-6xl px-5 pl-20">
+          <div className="mx-auto w-full max-w-6xl px-5 pl-44">
             {header}
             <div className="mt-6 flex items-center gap-4">
               <div className="h-0.5 flex-1 overflow-hidden bg-border">
@@ -636,7 +641,7 @@ function PinnedSteps({ c }: { c: Content }) {
           <motion.div
             ref={stripRef}
             style={{ x }}
-            className="mt-10 flex gap-6 pl-[max(5rem,calc((100vw-72rem)/2+5rem))]"
+            className="mt-10 flex gap-6 pl-[max(11rem,calc((100vw-72rem)/2+11rem))]"
           >
             {c.steps.items.map((s, i) => (
               <div key={s.title} className="h-60 w-[min(20rem,70vw)] shrink-0">
@@ -724,7 +729,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
           </Section>
 
           <section id="anmeldung" className="scroll-mt-16 border-b bg-card">
-            <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:py-28 md:pl-20 lg:grid-cols-[0.8fr_1.2fr]">
+            <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:py-28 md:pl-44 lg:grid-cols-[0.8fr_1.2fr]">
               <Reveal>
                 <span className="kicker">{c.wizard.kicker}</span>
                 <h2 className="mt-3 text-4xl leading-[1.04] md:text-5xl">{c.wizard.title}</h2>
@@ -875,7 +880,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
           </Section>
 
           <section className="bg-strong text-background">
-            <div className="mx-auto max-w-4xl px-5 py-24 text-center md:py-32 md:pl-20">
+            <div className="mx-auto max-w-4xl px-5 py-24 text-center md:py-32 md:pl-44">
               <Reveal>
                 <h2 className="text-4xl leading-[1.04] text-background md:text-6xl">
                   {c.final.title}
@@ -893,7 +898,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
         </main>
 
         <footer className="border-t bg-sunken">
-          <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-10 md:flex-row md:items-center md:justify-between md:pl-20">
+          <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-10 md:flex-row md:items-center md:justify-between md:pl-44">
             <div>
               <Logo />
               <p className="mt-3 text-sm text-muted-foreground">{c.footer.claim}</p>
