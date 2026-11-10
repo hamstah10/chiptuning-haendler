@@ -67,7 +67,7 @@ function Result({ c, selection }: { c: Content; selection: VehicleSelection }) {
 
 export function Configurator({ c }: { c: Content }) {
   return <div className="overflow-hidden rounded-md border border-border-strong border-t-2 border-t-primary bg-card">
-    <div className="flex flex-wrap items-center gap-2 border-b bg-sunken px-5 py-4"><SlidersHorizontal className="size-4 text-primary" /><span className="label-caps text-sm text-strong">{c.configurator.widgetTitle}</span><Badge variant="secondary">{c.vehicleApi.live}</Badge></div>
+    <div className="flex flex-wrap items-center gap-2 border-b bg-sunken px-5 py-4"><SlidersHorizontal className="size-4 text-primary" /><span className="label-caps text-sm text-strong">{c.configurator.widgetTitle}</span></div>
     <div className="p-5 md:p-7"><LiveVehicleSelection c={c} typeButtons>{(selection) => <Result key={selection.details?.engine.id ?? "empty"} c={c} selection={selection} />}</LiveVehicleSelection><p className="mt-5 text-xs text-muted-foreground">{c.configurator.disclaimer}</p></div>
   </div>;
 }
