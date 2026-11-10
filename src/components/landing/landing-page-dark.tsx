@@ -67,8 +67,6 @@ function ThemeToggle({ c }: { c: Content }) {
 function Header({ c }: { c: Content }) {
   const links: [string, string][] = [
     ["#problem", c.nav.story],
-    ["#ablauf", c.nav.process],
-    ["#verdienst", c.nav.calculator],
     ["#konfigurator", c.nav.configurator],
     ["#faq", c.nav.faq],
   ];

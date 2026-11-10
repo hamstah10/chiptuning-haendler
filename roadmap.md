@@ -1,4 +1,5 @@
 # Tasks
+- [ ] Remove Ablauf, Startplan and Verdienst links from the top navigation only.
 - [x] Match vehicle check selection and framing to the configurator.
 - [ ] Display real API tuning options in the configurator and vehicle check.
 - [x] Securely connect DCT vehicle API with the haendler_werden context.
