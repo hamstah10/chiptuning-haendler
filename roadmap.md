@@ -1,4 +1,6 @@
 # Tasks
+- [ ] Replace the mixed landing's embedded wizard with a native DCT API wizard and matching design; verify configuration, recommendation and submission (blocked: working no1 connector credential).
+- [ ] Diagnose DCT credential form error and establish a working no1 connection.
 - [ ] Add owner email notifications to hamstahstudio@gmail.com for every first-party lead form independently of WhatsApp; verify a test send (blocked: no sender domain configured; email setup required). External DCT wizard still needs portal forwarding support.
 - [x] Queue owner WhatsApp notifications atomically for both first-party lead forms; verify a real wizard submission and remove its test row. Stored leads remain in dealer_leads.
 - [ ] Verify owner WhatsApp delivery after Meta approves dealer_form_notification (currently PENDING); publish the changes. Pending notifications resume one at a time on new submissions or callbacks, so quiet periods delay recovery.
