@@ -1,17 +1,17 @@
 import { Link } from "@tanstack/react-router";
 import { MotionConfig } from "motion/react";
-import { ArrowRight, Languages } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo, ThemeToggle } from "./landing-page";
 import { StartPlan } from "./start-plan";
 import { LegalLinks } from "./legal-links";
+import { LanguageSelector } from "./language-selector";
 import type { Content } from "@/lib/content";
 
 /** Standalone start plan page: slim header, generator, footer – reachable via its own URL. */
 export function StartPlanPage({ c }: { c: Content }) {
   const year = 2026;
   const home = c.locale === "de" ? "/" : "/en";
-  const langTarget = c.locale === "de" ? "/en/startplan" : "/startplan";
 
   return (
     <MotionConfig reducedMotion="user">
@@ -21,12 +21,7 @@ export function StartPlanPage({ c }: { c: Content }) {
             <Logo />
           </Link>
           <div className="flex items-center gap-2">
-            <Button asChild variant="ghost" size="sm" className="label-caps rounded-sm text-xs">
-              <Link to={langTarget} hrefLang={c.locale === "de" ? "en" : "de"}>
-                <Languages />
-                {c.nav.switchLang}
-              </Link>
-            </Button>
+            <LanguageSelector locale={c.locale} page="startplan" />
             <ThemeToggle c={c} />
             <Button asChild className="label-caps hidden rounded-sm sm:inline-flex">
               <Link to={home} hash="anmeldung">

@@ -22,3 +22,4 @@
 - Vehicle selection shares a cascading DCT selector; a validated read-only server function supplies only vehicle lists and typed engine details using both server-side credentials. Why: no credential or invented tuning value reaches browser code.
 - Vehicle selection preserves DCT media fields, resolves them only against the HTTPS portal origin, and uses a shared icon renderer with image fallback. Why: API-provided vehicle imagery stays consistent without unsafe URLs or broken-image placeholders.
 - Both vehicle tools display active API tuning options grouped by engine or ECU through one shared read-only renderer. Why: availability and prices must retain their ECU context rather than imply every option fits every ECU.
+- Public page headers share a language selector with local flag assets and explicit equivalent-page destinations. Why: changing language must retain the page topic and use existing translated content rather than runtime machine translation.

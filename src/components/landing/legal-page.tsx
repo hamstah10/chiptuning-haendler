@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo, ThemeToggle } from "./landing-page";
 import { LegalLinks } from "./legal-links";
+import { LanguageSelector } from "./language-selector";
 import { legal, legalPaths, provider } from "@/lib/legal";
 import type { Content } from "@/lib/content";
 
@@ -19,6 +20,7 @@ export function LegalPage({ c, kind }: { c: Content; kind: "imprint" | "privacy"
             <Logo />
           </Link>
           <div className="flex items-center gap-2">
+            <LanguageSelector locale={c.locale} page={kind} />
             <ThemeToggle c={c} />
             <Button asChild variant="outline" size="sm" className="label-caps rounded-sm text-xs">
               <Link to={paths.home}>

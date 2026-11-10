@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
 import { motion, MotionConfig, useReducedMotion, useScroll, useTransform } from "motion/react";
 import {
   ArrowRight,
@@ -9,7 +8,6 @@ import {
   Cpu,
   Download,
   Headphones,
-  Languages,
   Layers,
   Moon,
   ShieldCheck,
@@ -39,6 +37,7 @@ import { ToolAdvisor } from "./tool-advisor";
 import { VehicleCheck } from "./vehicle-check";
 import { LegalLinks } from "./legal-links";
 import { Logo } from "./logo";
+import { LanguageSelector } from "./language-selector";
 import { GoogleReviews } from "./google-reviews";
 import { MixedHero } from "./mixed-hero";
 import { TuningDrive } from "./tuning-drive";
@@ -96,12 +95,7 @@ function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
           <Logo />
         </a>
         <nav aria-label={c.chapterLabel} className="flex shrink-0 items-center gap-1 sm:gap-2">
-          <Button asChild variant="ghost" size="sm" className="label-caps rounded-sm text-xs">
-            <Link to={c.locale === "de" ? "/en" : "/"} hrefLang={c.locale === "de" ? "en" : "de"}>
-              <Languages />
-              {c.nav.switchLang}
-            </Link>
-          </Button>
+          <LanguageSelector locale={c.locale} />
           {!mixed && <ThemeToggle c={c} />}
           <Button asChild className="label-caps hidden rounded-sm sm:inline-flex">
             <a href="#anmeldung">

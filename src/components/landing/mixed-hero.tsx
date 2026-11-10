@@ -97,10 +97,10 @@ export function MixedHero({ c }: { c: Content }) {
               <ArrowDown className="size-4 text-primary" />
               {c.hero.scroll}
             </a>
-            <div className="flex items-center gap-2" role="tablist" aria-label="Hero-Slider">
+            <div className="flex items-center gap-2" role="tablist" aria-label={c.locale === "de" ? "Bilder" : "Images"}>
               <button
                 type="button"
-                aria-label="Vorheriges Bild"
+                aria-label={c.locale === "de" ? "Vorheriges Bild" : "Previous image"}
                 onClick={() => go(index - 1)}
                 className="flex size-8 items-center justify-center rounded-sm border border-border bg-background/60 text-foreground transition-colors hover:bg-background/90"
               >
@@ -112,7 +112,7 @@ export function MixedHero({ c }: { c: Content }) {
                   type="button"
                   role="tab"
                   aria-selected={i === index}
-                  aria-label={`Bild ${i + 1} von ${SLIDES.length}`}
+                  aria-label={c.locale === "de" ? `Bild ${i + 1} von ${SLIDES.length}` : `Image ${i + 1} of ${SLIDES.length}`}
                   onClick={() => go(i)}
                   className={`h-1.5 rounded-full transition-all ${
                     i === index ? "w-7 bg-primary" : "w-3 bg-foreground/30 hover:bg-foreground/60"
@@ -121,7 +121,7 @@ export function MixedHero({ c }: { c: Content }) {
               ))}
               <button
                 type="button"
-                aria-label="Nächstes Bild"
+                aria-label={c.locale === "de" ? "Nächstes Bild" : "Next image"}
                 onClick={() => go(index + 1)}
                 className="flex size-8 items-center justify-center rounded-sm border border-border bg-background/60 text-foreground transition-colors hover:bg-background/90"
               >
