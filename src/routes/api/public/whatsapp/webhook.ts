@@ -21,6 +21,12 @@ export const Route = createFileRoute("/api/public/whatsapp/webhook")({
     if (processed.error) return new Response("Processing failed", { status: 503 });
     const current = await supabaseAdmin.from("whatsapp_webhook_events").select("processing_error,processed_at").eq("delivery_id", delivery).single();
     if (current.error || current.data.processing_error) return new Response("Processing pending", { status: 503 });
+    try {
+      const { processLeadWhatsAppNotifications } = await import("@/lib/lead-whatsapp.server");
+      await processLeadWhatsAppNotifications();
+    } catch (error) {
+      console.error("Lead notification recovery pending:", error);
+    }
     return Response.json({ received: true });
   } } },
 });

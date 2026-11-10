@@ -58,5 +58,13 @@ export const submitLead = createServerFn({ method: "POST" })
 
     const { error } = await supabaseAdmin.from("dealer_leads").insert(row);
     if (error) throw new Error("Lead could not be saved");
+    // The database trigger queues notification atomically with the lead.
+    // Notification failures must never make a saved enquiry look unsuccessful.
+    try {
+      const { processLeadWhatsAppNotifications } = await import("./lead-whatsapp.server");
+      await processLeadWhatsAppNotifications();
+    } catch (error) {
+      console.error("Stored lead; WhatsApp notification pending:", error);
+    }
     return { ok: true as const };
   });
