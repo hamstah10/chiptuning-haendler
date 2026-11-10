@@ -96,17 +96,6 @@ function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
           <Logo />
         </a>
         <nav aria-label={c.chapterLabel} className="flex shrink-0 items-center gap-1 sm:gap-2">
-          <div className="hidden items-center lg:flex">
-            {[
-              { id: "ablauf", label: c.nav.process },
-              { id: "verdienst", label: c.nav.calculator },
-              { id: "startplan", label: c.chapters[6] },
-            ].map((item) => (
-              <Button key={item.id} asChild variant="ghost" size="sm">
-                <a href={`#${item.id}`}>{item.label}</a>
-              </Button>
-            ))}
-          </div>
           <Button asChild variant="ghost" size="sm" className="label-caps rounded-sm text-xs">
             <Link to={c.locale === "de" ? "/en" : "/"} hrefLang={c.locale === "de" ? "en" : "de"}>
               <Languages />
