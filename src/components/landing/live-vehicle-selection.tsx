@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { getVehicleData } from "@/lib/vehicle.functions";
 import type { VehicleDetails, VehicleItem } from "@/lib/vehicle-api";
 import type { Content } from "@/lib/content";
+import { VehicleIcon } from "./vehicle-icon";
 
 export interface VehicleSelection { labels: string[]; details: VehicleDetails | null }
 
@@ -25,7 +26,7 @@ function SelectionField({ kind, parentId, value, label, onChange, c }: { kind: "
       <SelectTrigger aria-label={label} className="w-full min-w-0 [&>span]:truncate"><SelectValue placeholder={enabled && query.isPending ? c.vehicleApi.loading : c.vehicleCheck.choose} /></SelectTrigger>
       <SelectContent>
         <div className="p-2"><Input aria-label={`${label}: ${c.vehicleApi.search}`} placeholder={c.vehicleApi.search} value={search} onChange={(e) => setSearch(e.target.value)} onKeyDown={(e) => e.stopPropagation()} /></div>
-        {items.filter((item) => item.name.toLowerCase().includes(search.toLowerCase())).map((item) => <SelectItem key={item.id} value={String(item.id)}>{item.name}</SelectItem>)}
+        {items.filter((item) => item.name.toLowerCase().includes(search.toLowerCase())).map((item) => <SelectItem key={item.id} value={String(item.id)}><span className="flex min-w-0 items-center gap-2"><VehicleIcon key={`${item.icon}-${item.image}`} item={item} /><span className="truncate">{item.name}</span></span></SelectItem>)}
       </SelectContent>
     </Select>
     {enabled && (query.isError || query.data?.error) && <div role="alert" className="text-xs text-destructive">{c.vehicleApi.error}<Button variant="ghost" size="sm" onClick={() => void query.refetch()}><RotateCcw />{c.vehicleApi.retry}</Button></div>}
@@ -44,7 +45,7 @@ export function LiveVehicleSelection({ c, children, typeButtons = false }: { c: 
     {typeButtons && <div className="grid gap-3">
       <span className="label-caps text-xs text-strong">{c.vehicleApi.type}</span>
       <div role="group" aria-label={c.vehicleApi.type} className="flex flex-wrap gap-2">
-        {types.data?.items.map((item) => <Button key={item.id} variant={chosen[0]?.id === item.id ? "default" : "outline"} aria-pressed={chosen[0]?.id === item.id} onClick={() => setChosen([item])}>{item.name}</Button>)}
+        {types.data?.items.map((item) => <Button key={item.id} variant={chosen[0]?.id === item.id ? "default" : "outline"} aria-pressed={chosen[0]?.id === item.id} onClick={() => setChosen([item])}><VehicleIcon item={item} />{item.name}</Button>)}
       </div>
       {types.isPending && <span role="status" className="text-sm text-muted-foreground">{c.vehicleApi.loading}</span>}
       {(types.isError || types.data?.error) && <div role="alert" className="text-sm text-destructive">{c.vehicleApi.error}<Button variant="ghost" onClick={() => void types.refetch()}><RotateCcw />{c.vehicleApi.retry}</Button></div>}
