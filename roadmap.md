@@ -1,4 +1,5 @@
 # Tasks
+- [ ] Add owner email notifications for every first-party lead form independently of WhatsApp; verify a test send (requires configured sender domain and confirmed owner email address). External DCT wizard still needs portal forwarding support.
 - [x] Queue owner WhatsApp notifications atomically for both first-party lead forms; verify a real wizard submission and remove its test row. Stored leads remain in dealer_leads.
 - [ ] Verify owner WhatsApp delivery after Meta approves dealer_form_notification (currently PENDING); publish the changes. Pending notifications resume one at a time on new submissions or callbacks, so quiet periods delay recovery.
 - [ ] Forward external embedded DCT wizard submissions (blocked: the external portal must supply a forwarding hook or supported integration; first-party submission code cannot intercept its forms).
