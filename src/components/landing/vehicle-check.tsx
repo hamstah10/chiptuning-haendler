@@ -10,7 +10,9 @@ export function VehicleCheck({ c }: { c: Content }) {
   const t = c.vehicleCheck;
   const [price, setPrice] = useState(449);
   const filePrice = c.packages.find((item) => item.id === "pro")?.file ?? 0;
-  return <div className="rounded-md border bg-card p-5 md:p-8"><LiveVehicleSelection c={c}>{({ details, labels }) => {
+  return <div className="overflow-hidden rounded-md border border-border-strong border-t-2 border-t-primary bg-card shadow-2xl">
+    <div className="flex flex-wrap items-center gap-2 border-b bg-sunken px-5 py-4"><Gauge className="size-4 text-primary" /><span className="label-caps text-sm text-strong">{t.kicker}</span><Badge variant="secondary">{c.vehicleApi.live}</Badge></div>
+    <div className="p-5 md:p-7"><LiveVehicleSelection c={c} typeButtons>{({ details, labels }) => {
     if (!details) return <div className="flex items-center justify-center gap-3 border-t py-8 text-muted-foreground"><Gauge className="size-6 text-primary" /><p className="text-sm">{t.empty}</p></div>;
     const stage = details.stages.find((item) => /stage\s*1/i.test(item.name)) ?? details.stages[0];
     return <div className="grid gap-4 border-t pt-5">
@@ -25,5 +27,5 @@ export function VehicleCheck({ c }: { c: Content }) {
       </div>
       <p className="text-xs text-muted-foreground">{t.disclaimer}</p>
     </div>;
-  }}</LiveVehicleSelection></div>;
+  }}</LiveVehicleSelection></div></div>;
 }
