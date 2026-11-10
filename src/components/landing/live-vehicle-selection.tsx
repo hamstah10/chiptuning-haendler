@@ -10,7 +10,7 @@ import type { Content } from "@/lib/content";
 
 export interface VehicleSelection { labels: string[]; details: VehicleDetails | null }
 
-function SelectionField({ kind, parentId, value, label, onChange, c }: { kind: "types" | "brands" | "series" | "models" | "engines"; parentId?: number; value?: VehicleItem; label: string; onChange: (item: VehicleItem) => void; c: Content }) {
+function SelectionField({ kind, parentId, value, label, onChange, c }: { kind: "types" | "brands" | "series" | "models" | "engines"; parentId: number | undefined; value: VehicleItem | undefined; label: string; onChange: (item: VehicleItem) => void; c: Content }) {
   const [search, setSearch] = useState("");
   const enabled = kind === "types" || Boolean(parentId);
   const query = useQuery({
