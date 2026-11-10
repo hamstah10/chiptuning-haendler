@@ -2,14 +2,14 @@ import { LEAD_WHATSAPP_RECIPIENT, LEAD_WHATSAPP_TEMPLATE, leadNotificationParame
 
 // Imported only inside server handlers. Pending jobs are durable and picked up
 // by later submissions or signed callbacks; quiet periods delay recovery.
-export async function processLeadWhatsAppNotifications() {
+export async function processLeadWhatsAppNotifications(sendTimeoutMs = 15000) {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const key = process.env['LOVABLE_API_KEY'];
   const connection = process.env['WHATSAPP_API_KEY'];
   if (!key || !connection) throw new Error("WhatsApp-Verbindung fehlt.");
   const gateway = "https://connector-gateway.lovable.dev/whatsapp";
   const headers = { Authorization: `Bearer ${key}`, "X-Connection-Api-Key": connection, "Content-Type": "application/json" };
-  const jobs = await supabaseAdmin.from("whatsapp_messages").select("id,lead_id").eq("state", "pending_template").not("lead_id", "is", null).order("created_at").limit(3);
+  const jobs = await supabaseAdmin.from("whatsapp_messages").select("id,lead_id").eq("state", "pending_template").not("lead_id", "is", null).order("created_at").limit(1);
   if (jobs.error) throw new Error("Benachrichtigungen konnten nicht geladen werden.");
   if (!jobs.data.length) return;
   const account = await supabaseAdmin.from("whatsapp_account").select("sending_enabled").maybeSingle();
@@ -35,7 +35,7 @@ export async function processLeadWhatsAppNotifications() {
     let response: Response;
     try {
       response = await fetch(`${gateway}/messages`, {
-        method: "POST", headers, signal: AbortSignal.timeout(700),
+        method: "POST", headers, signal: AbortSignal.timeout(sendTimeoutMs),
         body: JSON.stringify({ messaging_product: "whatsapp", to: LEAD_WHATSAPP_RECIPIENT, type: "template", template: { name: LEAD_WHATSAPP_TEMPLATE, language: { code: "de" }, components: [{ type: "body", parameters: [{ type: "text", text: parameter }] }] } }),
       });
     } catch {

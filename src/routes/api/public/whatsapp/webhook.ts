@@ -23,7 +23,7 @@ export const Route = createFileRoute("/api/public/whatsapp/webhook")({
     if (current.error || current.data.processing_error) return new Response("Processing pending", { status: 503 });
     try {
       const { processLeadWhatsAppNotifications } = await import("@/lib/lead-whatsapp.server");
-      await processLeadWhatsAppNotifications();
+      await processLeadWhatsAppNotifications(1500);
     } catch (error) {
       console.error("Lead notification recovery pending:", error);
     }

@@ -1,5 +1,7 @@
 # Tasks
-- [ ] Notify the owner on WhatsApp for all first-party lead forms while preserving stored submissions (blocked: recipient number and approved notification template required); external embedded wizard requires provider support.
+- [x] Queue owner WhatsApp notifications atomically for both first-party lead forms; verify a real wizard submission and remove its test row. Stored leads remain in dealer_leads.
+- [ ] Verify owner WhatsApp delivery after Meta approves dealer_form_notification (currently PENDING); publish the changes. Pending notifications resume one at a time on new submissions or callbacks, so quiet periods delay recovery.
+- [ ] Forward external embedded DCT wizard submissions (blocked: the external portal must supply a forwarding hook or supported integration; first-party submission code cannot intercept its forms).
 - [x] Add the supplied public ElevenLabs Turbo voice agent to all landing compositions; mobile controls checked and user confirmed a working conversation.
 - [x] Add protected WhatsApp inbox, text replies inside 24 hours, signed durable receiver and traffic-triggered recovery; verify local signatures and mobile layout.
 - [ ] Enable owner access and verify real WhatsApp send/delivery (blocked: owner must sign in; publish and select Incoming messages destination). Quiet-period recovery waits for new callbacks.
