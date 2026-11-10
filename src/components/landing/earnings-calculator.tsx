@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { calcLaborCostPerJob, calcMonthlyEarnings, formatEuro, formatNumber } from "@/lib/format";
 import type { Content } from "@/lib/content";
+import { useWebMCP } from "use-webmcp-tool";
+import { runWebMCPTool } from "@/lib/webmcp-telemetry";
 
 function FixedField({ label, unit, value, min, max, onChange }: { label: string; unit: string; value: number; min: number; max: number; onChange: (v: number) => void }) {
   return (
@@ -40,6 +42,12 @@ export function EarningsCalculator({ c }: { c: Content }) {
   const pkg = c.packages.find((p) => p.id === pkgId) ?? { file: 0, monthly: 0 };
   const labor = calcLaborCostPerJob(minutes, rate);
   const monthly = calcMonthlyEarnings(jobs, price, pkg.file, pkg.monthly, labor);
+  useWebMCP({
+    name: "read_current_earnings",
+    description: "Read the current earnings calculator inputs and result without changing them.",
+    annotations: { readOnlyHint: true },
+    execute: () => runWebMCPTool("read_current_earnings", () => `${jobs} jobs/month; customer price ${formatEuro(price, c.locale)}; ${minutes} minutes/file; hourly rate ${formatEuro(rate, c.locale)}; file cost ${formatEuro(pkg.file, c.locale)}; monthly fee ${formatEuro(pkg.monthly, c.locale)}; illustrative monthly earnings ${formatEuro(monthly, c.locale)}.`),
+  });
 
   return (
     <div className="grid gap-6 rounded-md border bg-card p-5 md:grid-cols-[1.2fr_1fr] md:p-8">
