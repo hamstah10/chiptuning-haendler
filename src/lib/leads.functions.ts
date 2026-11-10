@@ -56,8 +56,24 @@ export const submitLead = createServerFn({ method: "POST" })
             details: data.details,
           };
 
-    const { error } = await supabaseAdmin.from("dealer_leads").insert(row);
+    const { data: saved, error } = await supabaseAdmin.from("dealer_leads").insert(row).select("id").single();
     if (error) throw new Error("Lead could not be saved");
+    try {
+      const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
+      await sendTemplateEmail("lead-notification", "hamstahstudio@gmail.com", {
+        idempotencyKey: `lead-notification-${saved.id}`,
+        templateData: {
+          form: data.source === "wizard" ? "Partner-Wizard" : "Konfigurator",
+          name: row.contact_name,
+          company: row.company ?? undefined,
+          email: row.email ?? undefined,
+          phone: row.phone ?? undefined,
+          details: Object.entries(data.details).map(([key, value]) => ({ key, value })),
+        },
+      });
+    } catch (mailError) {
+      console.error("Stored lead; email notification failed:", mailError);
+    }
     // The database trigger queues notification atomically with the lead.
     // Notification failures must never make a saved enquiry look unsuccessful.
     try {
