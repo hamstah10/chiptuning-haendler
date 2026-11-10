@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "sdk_version": "3.4.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://nepggzhjbjugkysklrty.supabase.co/auth/v1",
+    "require_oauth_client_claim": true,
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "chiptuning-haendler",
+      "version": "0.1.0",
+      "title": "Chiptuning Haendler"
+    },
+    "tools": [
+      {
+        "name": "dealer_information",
+        "title": "Händler-Pakete lesen",
+        "description": "Read the published dealer packages in German or English; does not access leads, notes or saved plans.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "locale": {
+              "default": "de",
+              "description": "Language of the published package information.",
+              "type": "string",
+              "enum": [
+                "de",
+                "en"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "calculate_earnings",
+        "title": "Verdienst berechnen",
+        "description": "Calculate illustrative monthly earnings using the app's formula and caller-supplied amounts; no data is saved.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "jobs": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 60,
+              "description": "Jobs per month, 1 to 60."
+            },
+            "customerPrice": {
+              "type": "number",
+              "minimum": 199,
+              "maximum": 1199,
+              "description": "Customer price per job in EUR."
+            },
+            "filePrice": {
+              "type": "number",
+              "minimum": 0,
+              "description": "File cost per job in EUR."
+            },
+            "monthlyFee": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Monthly package cost in EUR."
+            },
+            "minutes": {
+              "type": "number",
+              "minimum": 5,
+              "maximum": 480,
+              "description": "Working minutes per file."
+            },
+            "hourlyRate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 500,
+              "description": "Hourly rate in EUR."
+            }
+          },
+          "required": [
+            "jobs",
+            "customerPrice",
+            "filePrice",
+            "monthlyFee",
+            "minutes",
+            "hourlyRate"
+          ],
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

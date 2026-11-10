@@ -1,4 +1,6 @@
 # Tasks
+- [ ] Add OAuth-protected MCP tools and browser-local earnings read tool.
+- [ ] Add login and consent pages, verify catalog and authorization boundaries.
 - [x] Remove Ablauf, Startplan and Verdienst links from the top navigation only.
 - [x] Add shared flag-and-text language selection across public pages and verify DE/EN content switching.
 - [x] Match vehicle check selection and framing to the configurator.

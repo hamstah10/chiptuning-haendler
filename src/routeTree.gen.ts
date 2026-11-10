@@ -14,11 +14,16 @@ import { Route as DatenschutzRouteImport } from './routes/datenschutz'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as EnRouteImport } from './routes/en'
 import { Route as ImpressumRouteImport } from './routes/impressum'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StartplanRouteImport } from './routes/startplan'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as EnImprintRouteImport } from './routes/en_.imprint'
 import { Route as EnPrivacyRouteImport } from './routes/en_.privacy'
 import { Route as EnStartplanRouteImport } from './routes/en_.startplan'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -45,6 +50,16 @@ const ImpressumRoute = ImpressumRouteImport.update({
   path: '/impressum',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -53,6 +68,17 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const StartplanRoute = StartplanRouteImport.update({
   id: '/startplan',
   path: '/startplan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnImprintRoute = EnImprintRouteImport.update({
@@ -70,6 +96,11 @@ const EnStartplanRoute = EnStartplanRouteImport.update({
   path: '/en/startplan',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -77,11 +108,16 @@ export interface FileRoutesByFullPath {
   '/design-system': typeof DesignSystemRoute
   '/en': typeof EnRoute
   '/impressum': typeof ImpressumRoute
+  '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/en/imprint': typeof EnImprintRoute
   '/en/privacy': typeof EnPrivacyRoute
   '/en/startplan': typeof EnStartplanRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -89,11 +125,16 @@ export interface FileRoutesByTo {
   '/design-system': typeof DesignSystemRoute
   '/en': typeof EnRoute
   '/impressum': typeof ImpressumRoute
+  '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/en/imprint': typeof EnImprintRoute
   '/en/privacy': typeof EnPrivacyRoute
   '/en/startplan': typeof EnStartplanRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -102,11 +143,16 @@ export interface FileRoutesById {
   '/design-system': typeof DesignSystemRoute
   '/en': typeof EnRoute
   '/impressum': typeof ImpressumRoute
+  '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/en_/imprint': typeof EnImprintRoute
   '/en_/privacy': typeof EnPrivacyRoute
   '/en_/startplan': typeof EnStartplanRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -116,11 +162,16 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/en'
     | '/impressum'
+    | '/login'
+    | '/mcp'
     | '/sitemap.xml'
     | '/startplan'
+    | '/.well-known/oauth-protected-resource'
+    | '/auth/callback'
     | '/en/imprint'
     | '/en/privacy'
     | '/en/startplan'
+    | '/.lovable/oauth/consent'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -128,11 +179,16 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/en'
     | '/impressum'
+    | '/login'
+    | '/mcp'
     | '/sitemap.xml'
     | '/startplan'
+    | '/.well-known/oauth-protected-resource'
+    | '/auth/callback'
     | '/en/imprint'
     | '/en/privacy'
     | '/en/startplan'
+    | '/.lovable/oauth/consent'
   id:
     | '__root__'
     | '/'
@@ -140,11 +196,16 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/en'
     | '/impressum'
+    | '/login'
+    | '/mcp'
     | '/sitemap.xml'
     | '/startplan'
+    | '/.well-known/oauth-protected-resource'
+    | '/auth/callback'
     | '/en_/imprint'
     | '/en_/privacy'
     | '/en_/startplan'
+    | '/.lovable/oauth/consent'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -153,11 +214,16 @@ export interface RootRouteChildren {
   DesignSystemRoute: typeof DesignSystemRoute
   EnRoute: typeof EnRoute
   ImpressumRoute: typeof ImpressumRoute
+  LoginRoute: typeof LoginRoute
+  McpRoute: typeof McpRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StartplanRoute: typeof StartplanRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   EnImprintRoute: typeof EnImprintRoute
   EnPrivacyRoute: typeof EnPrivacyRoute
   EnStartplanRoute: typeof EnStartplanRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -197,6 +263,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ImpressumRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -209,6 +289,20 @@ declare module '@tanstack/react-router' {
       path: '/startplan'
       fullPath: '/startplan'
       preLoaderRoute: typeof StartplanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en_/imprint': {
@@ -232,6 +326,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnStartplanRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -241,11 +342,17 @@ const rootRouteChildren: RootRouteChildren = {
   DesignSystemRoute: DesignSystemRoute,
   EnRoute: EnRoute,
   ImpressumRoute: ImpressumRoute,
+  LoginRoute: LoginRoute,
+  McpRoute: McpRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StartplanRoute: StartplanRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   EnImprintRoute: EnImprintRoute,
   EnPrivacyRoute: EnPrivacyRoute,
   EnStartplanRoute: EnStartplanRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
