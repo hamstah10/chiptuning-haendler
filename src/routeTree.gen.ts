@@ -18,6 +18,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StartplanRouteImport } from './routes/startplan'
+import { Route as WhatsappRouteImport } from './routes/whatsapp'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as EnImprintRouteImport } from './routes/en_.imprint'
@@ -71,6 +72,11 @@ const StartplanRoute = StartplanRouteImport.update({
   path: '/startplan',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WhatsappRoute = WhatsappRouteImport.update({
+  id: '/whatsapp',
+  path: '/whatsapp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
   Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
     id: '/.well-known/oauth-protected-resource',
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/mcp': typeof McpRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
+  '/whatsapp': typeof WhatsappRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/en/imprint': typeof EnImprintRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/mcp': typeof McpRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
+  '/whatsapp': typeof WhatsappRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/en/imprint': typeof EnImprintRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/mcp': typeof McpRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/startplan': typeof StartplanRoute
+  '/whatsapp': typeof WhatsappRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/en_/imprint': typeof EnImprintRoute
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/sitemap.xml'
     | '/startplan'
+    | '/whatsapp'
     | '/.well-known/oauth-protected-resource'
     | '/auth/callback'
     | '/en/imprint'
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/sitemap.xml'
     | '/startplan'
+    | '/whatsapp'
     | '/.well-known/oauth-protected-resource'
     | '/auth/callback'
     | '/en/imprint'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/sitemap.xml'
     | '/startplan'
+    | '/whatsapp'
     | '/.well-known/oauth-protected-resource'
     | '/auth/callback'
     | '/en_/imprint'
@@ -231,6 +243,7 @@ export interface RootRouteChildren {
   McpRoute: typeof McpRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StartplanRoute: typeof StartplanRoute
+  WhatsappRoute: typeof WhatsappRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   EnImprintRoute: typeof EnImprintRoute
@@ -305,6 +318,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StartplanRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/whatsapp': {
+      id: '/whatsapp'
+      path: '/whatsapp'
+      fullPath: '/whatsapp'
+      preLoaderRoute: typeof WhatsappRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/.well-known/oauth-protected-resource': {
       id: '/.well-known/oauth-protected-resource'
       path: '/.well-known/oauth-protected-resource'
@@ -367,6 +387,7 @@ const rootRouteChildren: RootRouteChildren = {
   McpRoute: McpRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StartplanRoute: StartplanRoute,
+  WhatsappRoute: WhatsappRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   AuthCallbackRoute: AuthCallbackRoute,
