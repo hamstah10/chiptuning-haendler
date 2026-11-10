@@ -1,7 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { VEHICLE_CONTEXT, vehicleDetailsSchema, vehiclePath } from "./vehicle-api";
+import { VEHICLE_CONTEXT, vehicleDetailsSchema, vehiclePath, vehicleItemSchema, vehicleMediaUrl } from "./vehicle-api";
 
 describe("DCT vehicle API", () => {
+  it("preserves and resolves the API's vehicle icons and images", () => {
+    const item = vehicleItemSchema.parse({ id: 1, name: "PKW", icon: "/uploads/vehicle-type/pkw.svg", image: "/uploads/vehicle-type/pkw.webp" });
+    expect(item.icon).toBe("https://portal.dct-files.de/uploads/vehicle-type/pkw.svg");
+    expect(item.image).toBe("https://portal.dct-files.de/uploads/vehicle-type/pkw.webp");
+    expect(vehicleItemSchema.parse({ id: 2, name: "LKW" }).icon).toBeNull();
+  });
+  it("rejects unsafe or external media URLs", () => {
+    expect(vehicleMediaUrl("javascript:alert(1)")).toBeNull();
+    expect(vehicleMediaUrl("https://example.com/icon.svg")).toBeNull();
+  });
   it("uses the requested dealer context", () => expect(VEHICLE_CONTEXT).toBe("haendler_werden"));
   it("allows only documented vehicle paths", () => {
     expect(vehiclePath({ kind: "engine-details", id: 123 })).toBe("/engine-details/123");
