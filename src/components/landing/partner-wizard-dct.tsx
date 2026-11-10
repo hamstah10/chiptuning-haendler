@@ -104,7 +104,7 @@ function VehicleTypeCard({
       >
         <Check className="size-2.5" />
       </span>
-      {icon && <img src={icon} alt="" loading="lazy" className="size-10 shrink-0 object-contain" width={40} height={40} />}
+      {icon && <img src={icon} alt="" loading="lazy" className="size-14 shrink-0 object-contain" width={56} height={56} />}
       <span className="font-display text-sm font-bold uppercase leading-tight text-strong">{title}</span>
     </button>
   );
