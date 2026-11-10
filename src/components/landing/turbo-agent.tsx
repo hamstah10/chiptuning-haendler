@@ -28,7 +28,13 @@ function TurboControls({ locale }: { locale: "de" | "en" }) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       stream.getTracks().forEach(track => track.stop());
-      await conversation.startSession({ agentId: "agent_0201m721fk54f4gbae2bdjw7rc0j", connectionType: "webrtc" });
+      try {
+        await conversation.startSession({ agentId: "agent_0201m721fk54f4gbae2bdjw7rc0j", connectionType: "webrtc" });
+      } catch {
+        await conversation.endSession();
+        await conversation.startSession({ agentId: "agent_0201m721fk54f4gbae2bdjw7rc0j", connectionType: "websocket" });
+      }
+      setError("");
     } catch { setError(t.error); }
     finally { setBusy(false); }
   }
