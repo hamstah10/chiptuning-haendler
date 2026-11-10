@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { ClientOnly } from "@tanstack/react-router";
 import { Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -10,6 +11,7 @@ import { SectionReview } from "./section-review";
 type Design = "light" | "dark" | "mixed";
 const STORAGE_KEY = "tf-design";
 const REVIEW_KEY = "tf-review-enabled";
+const TurboAgent = lazy(() => import("./turbo-agent"));
 
 /** All compositions share the same content and retain the visitor's choice. */
 export function LandingPage({ c }: { c: Content }) {
@@ -40,6 +42,7 @@ export function LandingPage({ c }: { c: Content }) {
         <LandingPageLight key={design} c={c} mixed={design === "mixed"} />
       )}
       {reviewEnabled && <SectionReview scanKey={design} />}
+      <ClientOnly><Suspense fallback={null}><TurboAgent locale={c.locale} /></Suspense></ClientOnly>
       <div
         role="radiogroup"
         aria-label={c.design.label}
