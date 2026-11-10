@@ -1,6 +1,6 @@
 # Tasks
 - [x] Remove Ablauf, Startplan and Verdienst links from the top navigation only.
-- [ ] Add shared flag-and-text language selection across public pages and verify DE/EN content switching.
+- [x] Add shared flag-and-text language selection across public pages and verify DE/EN content switching.
 - [x] Match vehicle check selection and framing to the configurator.
 - [x] Display real API tuning options in the configurator and vehicle check.
 - [x] Securely connect DCT vehicle API with the haendler_werden context.
