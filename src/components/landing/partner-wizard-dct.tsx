@@ -467,6 +467,27 @@ export function PartnerWizardDct({ c }: { c: Content }) {
           )}
         </div>
       </div>
+
+      <details className="mt-6 rounded-md border bg-card">
+        <summary className="label-caps cursor-pointer select-none px-4 py-3 text-xs text-faint">
+          {c.locale === "en" ? "Debug: wizard data (JSON)" : "Debug: Wizard-Daten (JSON)"}
+        </summary>
+        <pre className="max-h-[480px] overflow-auto border-t px-4 py-3 font-mono text-xs leading-relaxed text-muted-foreground">
+          {JSON.stringify(
+            {
+              step: { index: step, key: currentStep?.key ?? null, type: currentStep?.type ?? null },
+              status,
+              answers,
+              contact,
+              privacy,
+              recommendation: rec,
+              config,
+            },
+            null,
+            2,
+          )}
+        </pre>
+      </details>
     </div>
   );
 }
