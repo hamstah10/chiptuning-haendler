@@ -1,5 +1,4 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
 import { motion, MotionConfig, useScroll, useTransform } from "motion/react";
 import {
   AlertTriangle,
@@ -10,7 +9,6 @@ import {
   Cpu,
   Download,
   Headphones,
-  Languages,
   Layers,
   Moon,
   ShieldCheck,
@@ -28,6 +26,7 @@ import { EarningsCalculator } from "./earnings-calculator";
 import { FileServiceTeaser } from "./file-service-teaser";
 import { DynoCompare } from "./dyno-compare";
 import { Logo } from "./logo";
+import { LanguageSelector } from "./language-selector";
 import { GoogleReviews } from "./google-reviews";
 import { ToolAdvisor } from "./tool-advisor";
 import { StartPlan } from "./start-plan";
@@ -84,12 +83,7 @@ function Header({ c }: { c: Content }) {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <Button asChild variant="ghost" size="sm" className="label-caps rounded-sm text-xs">
-            <Link to={c.locale === "de" ? "/en" : "/"} hrefLang={c.locale === "de" ? "en" : "de"}>
-              <Languages />
-              {c.nav.switchLang}
-            </Link>
-          </Button>
+          <LanguageSelector locale={c.locale} />
           <ThemeToggle c={c} />
           <Button asChild className="label-caps hidden rounded-sm sm:inline-flex">
             <a href="#anmeldung">
