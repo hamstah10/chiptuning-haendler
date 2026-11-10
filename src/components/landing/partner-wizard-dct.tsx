@@ -171,7 +171,7 @@ function RecommendationView({ rec, c }: { rec: WizardRecommendation; c: Content 
         </div>
       )}
 
-      {rec.estimatedMonthlyRevenue != null && (
+      {rec.estimatedMonthlyRevenue != null && rec.estimatedMonthlyRevenue > 0 && (
         <p className="text-sm text-muted-foreground">
           {c.calculator.perMonth}:{" "}
           <span className="font-mono font-semibold tabular-nums text-strong">
