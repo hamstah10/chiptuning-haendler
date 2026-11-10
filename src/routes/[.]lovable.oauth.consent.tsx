@@ -48,6 +48,7 @@ function Consent() {
   return <main className="mx-auto max-w-lg px-6 py-20">
     <h1 className="text-3xl">{details?.client.name ?? "Agent"} mit TuningFiles verbinden</h1>
     <p className="mt-4 text-sm text-muted-foreground">Angemeldet als {email}</p>
+    <Button variant="link" disabled={busy} className="px-0" onClick={async () => { await supabase.auth.signOut(); window.location.assign(`/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}`); }}>Anderes Konto verwenden</Button>
     <p className="mt-5">Die Verbindung erlaubt das Lesen der Händler-Pakete und unverbindliche Verdienstberechnungen.</p>
     <p className="mt-3 break-all text-sm text-muted-foreground">Ziel: {details?.redirect_uri}</p>
     <p className="mt-3 text-sm">Angefragte Identitätsfreigaben: {details?.scope || "Keine zusätzlichen Angaben"}</p>
