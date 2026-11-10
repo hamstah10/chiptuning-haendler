@@ -15,6 +15,13 @@
       "when": 1794237460699,
       "tag": "0001_create_section_reviews",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794291126125,
+      "tag": "0002_whatsapp_inbox",
+      "breakpoints": true
     }
   ]
 }

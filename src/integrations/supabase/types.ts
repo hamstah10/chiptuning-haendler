@@ -74,12 +74,164 @@ export type Database = {
         }
         Relationships: []
       }
+      whatsapp_access: {
+        Row: {
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      whatsapp_account: {
+        Row: {
+          event: string | null
+          id: boolean
+          sending_enabled: boolean
+          updated_at: string
+        }
+        Insert: {
+          event?: string | null
+          id?: boolean
+          sending_enabled?: boolean
+          updated_at?: string
+        }
+        Update: {
+          event?: string | null
+          id?: boolean
+          sending_enabled?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      whatsapp_messages: {
+        Row: {
+          body: string
+          created_at: string
+          direction: string
+          error: Json | null
+          id: string
+          kind: string
+          media: Json | null
+          media_id: string | null
+          phone: string
+          provider_id: string | null
+          provider_time: string | null
+          request_id: string | null
+          state: string
+          status_times: Json
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          direction: string
+          error?: Json | null
+          id?: string
+          kind?: string
+          media?: Json | null
+          media_id?: string | null
+          phone: string
+          provider_id?: string | null
+          provider_time?: string | null
+          request_id?: string | null
+          state?: string
+          status_times?: Json
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          direction?: string
+          error?: Json | null
+          id?: string
+          kind?: string
+          media?: Json | null
+          media_id?: string | null
+          phone?: string
+          provider_id?: string | null
+          provider_time?: string | null
+          request_id?: string | null
+          state?: string
+          status_times?: Json
+        }
+        Relationships: []
+      }
+      whatsapp_statuses: {
+        Row: {
+          applied_at: string | null
+          delivery_id: string
+          errors: Json | null
+          ordinal: number
+          provider_id: string
+          provider_time: string | null
+          state: string
+        }
+        Insert: {
+          applied_at?: string | null
+          delivery_id: string
+          errors?: Json | null
+          ordinal: number
+          provider_id: string
+          provider_time?: string | null
+          state: string
+        }
+        Update: {
+          applied_at?: string | null
+          delivery_id?: string
+          errors?: Json | null
+          ordinal?: number
+          provider_id?: string
+          provider_time?: string | null
+          state?: string
+        }
+        Relationships: []
+      }
+      whatsapp_webhook_events: {
+        Row: {
+          attempts: number
+          delivery_id: string
+          event: string
+          next_attempt_at: string
+          payload: Json
+          processed_at: string | null
+          processing_error: string | null
+          received_at: string
+        }
+        Insert: {
+          attempts?: number
+          delivery_id: string
+          event: string
+          next_attempt_at?: string
+          payload: Json
+          processed_at?: string | null
+          processing_error?: string | null
+          received_at?: string
+        }
+        Update: {
+          attempts?: number
+          delivery_id?: string
+          event?: string
+          next_attempt_at?: string
+          payload?: Json
+          processed_at?: string | null
+          processing_error?: string | null
+          received_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      can_use_whatsapp: { Args: never; Returns: boolean }
+      process_whatsapp_events: { Args: never; Returns: undefined }
+      reconcile_whatsapp: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
