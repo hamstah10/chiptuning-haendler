@@ -3,6 +3,7 @@ import { verifyWebhookRequest } from "@lovable.dev/webhooks-js";
 import type { Json } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/api/public/whatsapp/webhook")({
+  staticData: { sitemap: false },
   server: { handlers: { POST: async ({ request }) => {
     const secret = process.env['WHATSAPP_API_KEY'];
     if (!secret) return new Response("Connection unavailable", { status: 503 });

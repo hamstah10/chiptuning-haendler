@@ -51,7 +51,7 @@ export const sendWhatsAppMessage = createServerFn({ method: "POST" })
     }
     let providerId: string | undefined;
     try { const parsed = JSON.parse(body) as { messages?: Array<{ id?: string }> }; providerId = parsed.messages?.[0]?.id; } catch { /* Remains unresolved, never blindly retry. */ }
-    const saved = await supabaseAdmin.from("whatsapp_messages").update({ provider_id: providerId, state: providerId ? "accepted" : "unresolved" }).eq("id", reservation.data.id);
+    const saved = await supabaseAdmin.from("whatsapp_messages").update({ provider_id: providerId ?? null, state: providerId ? "accepted" : "unresolved" }).eq("id", reservation.data.id);
     if (saved.error) throw new Error("WhatsApp hat geantwortet, aber der Versandstatus konnte nicht gespeichert werden. Nicht erneut senden.");
     const reconciled = await supabaseAdmin.rpc("reconcile_whatsapp");
     if (reconciled.error) throw new Error("Nachricht angenommen; Zustellstatus konnte noch nicht abgeglichen werden.");
