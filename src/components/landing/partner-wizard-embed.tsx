@@ -16,7 +16,7 @@ export function PartnerWizardEmbed() {
     const script = document.createElement("script");
     script.src = EMBED_SRC;
     script.async = true;
-    script.setAttribute("data-client-id", "no1");
+    script.setAttribute("data-client-id", "tfd");
     script.setAttribute("data-primary-color", "#E41D24");
     script.setAttribute("data-theme", "light");
     host.appendChild(script);
