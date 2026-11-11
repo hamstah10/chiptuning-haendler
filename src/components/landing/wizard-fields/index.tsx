@@ -82,7 +82,7 @@ export function LogoTiles({ options, isOn, onToggle, noneLabel, noneOn, onNone }
 }
 
 /** Compact toggle chips for many answers, with select-all / reset. */
-export function ChipGroup({ options, isOn, onToggle, onAll, onReset, allLabel, resetLabel }: { options: FieldOption[]; isOn: (v: string) => boolean; onToggle: (v: string) => void; onAll?: () => void; onReset?: () => void; allLabel?: string; resetLabel?: string }) {
+export function ChipGroup({ options, isOn, onToggle, onAll, onReset, allLabel, resetLabel }: { options: FieldOption[]; isOn: (v: string) => boolean; onToggle: (v: string) => void; onAll?: (() => void) | undefined; onReset?: (() => void) | undefined; allLabel?: string; resetLabel?: string }) {
   return (
     <div className="grid gap-2.5">
       <div className="flex flex-wrap gap-2">

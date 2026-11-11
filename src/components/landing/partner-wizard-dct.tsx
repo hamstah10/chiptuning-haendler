@@ -314,7 +314,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
 
           <div className="p-5 md:p-7">
             <AnimatePresence mode="wait">
-              <motion.div key={currentStep?.key ?? step} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? undefined : { opacity: 0, y: -6 }} transition={{ duration: 0.22, ease: "easeOut" }}>
+              <motion.div key={currentStep?.key ?? step} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 1 } : { opacity: 0, y: -6 }} transition={{ duration: 0.22, ease: "easeOut" }}>
                 <div className="label-caps text-xs text-primary">{c.locale === "en" ? "Step" : "Schritt"} {String(step + 1).padStart(2, "0")}</div>
                 <h3 className="mt-1 text-2xl">{currentStep?.label}</h3>
 
