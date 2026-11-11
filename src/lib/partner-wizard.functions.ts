@@ -20,3 +20,24 @@ export const submitPartnerWizardLead = createServerFn({ method: "POST" })
     }
     return { ok: true as const, status: res.status, message: typeof body["message"] === "string" ? body["message"] : "" };
   });
+
+const ALLOWED_PATHS = [
+  /^\/api\/tfd-partner-wizard\/config\/tfd$/,
+  /^\/api\/tfd-partner-wizard\/appointments\/tfd$/,
+  /^\/api\/tfd-partner-wizard\/recommend$/,
+];
+
+/** Server-side proxy for read endpoints: the portal rejects browser origins. */
+export const partnerWizardProxy = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) =>
+    z.object({ path: z.string().refine((p) => ALLOWED_PATHS.some((r) => r.test(p))), body: z.unknown().optional() }).parse(input),
+  )
+  .handler(async ({ data }) => {
+    const res = await fetch(`https://portal.dct-files.de${data.path}`, {
+      method: data.body === undefined ? "GET" : "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: data.body === undefined ? null : JSON.stringify(data.body),
+    });
+    const json = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+    return { ok: res.ok, status: res.status, json: JSON.stringify(json) };
+  });

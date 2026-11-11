@@ -3,7 +3,6 @@
  * Public client config — no token required for client "tfd".
  */
 
-const API_BASE = "https://portal.dct-files.de";
 export const PARTNER_WIZARD_CLIENT = "tfd";
 
 export interface WizardOption {
@@ -100,21 +99,17 @@ export function buildWizardRequest(answers: WizardAnswers) {
   };
 }
 
-async function postJson<T>(path: string, body: unknown): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+async function proxy<T>(path: string, body?: unknown): Promise<T> {
+  const { partnerWizardProxy } = await import("./partner-wizard.functions");
+  const res = await partnerWizardProxy({ data: { path, body } });
+  const data = JSON.parse(res.json) as Record<string, unknown>;
+  if (!res.ok) throw new Error(typeof data["error"] === "string" ? data["error"] : `Request failed (${res.status})`);
   return data as T;
 }
+const postJson = <T,>(path: string, body: unknown) => proxy<T>(path, body);
 
 export async function fetchWizardConfig(): Promise<WizardConfig> {
-  const res = await fetch(`${API_BASE}/api/tfd-partner-wizard/config/${PARTNER_WIZARD_CLIENT}`);
-  if (!res.ok) throw new Error(`Config failed (${res.status})`);
-  return res.json();
+  return proxy<WizardConfig>(`/api/tfd-partner-wizard/config/${PARTNER_WIZARD_CLIENT}`);
 }
 
 export function fetchWizardRecommendation(answers: WizardAnswers): Promise<WizardRecommendation> {
@@ -125,9 +120,7 @@ export interface WizardSlot { start: string; end: string; time: string }
 export interface WizardDay { date: string; weekday: number; slots: WizardSlot[] }
 
 export async function fetchWizardAppointments(): Promise<WizardDay[]> {
-  const res = await fetch(`${API_BASE}/api/tfd-partner-wizard/appointments/${PARTNER_WIZARD_CLIENT}`, { cache: "no-store" });
-  if (!res.ok) throw new Error(`Appointments failed (${res.status})`);
-  const data = (await res.json()) as { days?: WizardDay[] };
+  const data = await proxy<{ days?: WizardDay[] }>(`/api/tfd-partner-wizard/appointments/${PARTNER_WIZARD_CLIENT}`);
   return (data.days ?? []).filter((d) => d.slots?.length);
 }
 
