@@ -133,8 +133,9 @@ export async function fetchWizardAppointments(): Promise<WizardDay[]> {
 
 export type WizardContact = Record<string, string | boolean | string[]>;
 
-export function submitWizardLead(answers: WizardAnswers, contact: WizardContact, appointmentStart?: string) {
-  return postJson<{ ok: boolean; id: number; message: string; appointment?: { start?: string } }>("/api/tfd-partner-wizard/leads", {
+export async function submitWizardLead(answers: WizardAnswers, contact: WizardContact, appointmentStart?: string) {
+  const { submitPartnerWizardLead } = await import("./partner-wizard.functions");
+  const result = await submitPartnerWizardLead({ data: {
     ...buildWizardRequest(answers),
     contact,
     name: contact["name"], company: contact["company"], email: contact["email"], phone: contact["phone"], message: contact["message"],
@@ -143,5 +144,13 @@ export function submitWizardLead(answers: WizardAnswers, contact: WizardContact,
     website_confirm: "",
     answers: { ...answers, contact, privacyAccepted: contact["privacyAccepted"] === true },
     ...(appointmentStart ? { appointment: { start: appointmentStart } } : {}),
-  });
+  } });
+  if (!result.ok) throw new WizardSubmitError(result.status, result.message);
+  return result;
+}
+
+export class WizardSubmitError extends Error {
+  constructor(public status: number, message: string) {
+    super(message || `Request failed (${status})`);
+  }
 }
