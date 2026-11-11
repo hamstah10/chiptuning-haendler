@@ -115,7 +115,8 @@ export function AppointmentPicker({ settings, locale, value, onChange }: { setti
 
   const cells = useMemo(() => {
     if (!month) return [];
-    const [y, m] = month.split("-").map(Number);
+    const y = Number(month.slice(0, 4));
+    const m = Number(month.slice(5, 7));
     const first = new Date(Date.UTC(y, m - 1, 1));
     const offset = (first.getUTCDay() + 6) % 7;
     const count = new Date(Date.UTC(y, m, 0)).getUTCDate();
@@ -137,9 +138,9 @@ export function AppointmentPicker({ settings, locale, value, onChange }: { setti
           <div className="grid md:grid-cols-[1fr_200px]">
             <div className="p-4">
               <div className="mb-3 flex items-center justify-between">
-                <button type="button" aria-label={en ? "Previous month" : "Vorheriger Monat"} disabled={mi <= 0} onClick={() => setMonth(months[mi - 1])} className="inline-flex size-8 items-center justify-center rounded-sm border border-border-strong disabled:opacity-40"><ChevronLeft className="size-4" /></button>
+                <button type="button" aria-label={en ? "Previous month" : "Vorheriger Monat"} disabled={mi <= 0} onClick={() => setMonth(months[mi - 1] ?? month)} className="inline-flex size-8 items-center justify-center rounded-sm border border-border-strong disabled:opacity-40"><ChevronLeft className="size-4" /></button>
                 <span className="font-display font-bold uppercase text-strong">{fmt(`${month}-15T12:00:00Z`, { month: "long", year: "numeric" })}</span>
-                <button type="button" aria-label={en ? "Next month" : "Nächster Monat"} disabled={mi >= months.length - 1} onClick={() => setMonth(months[mi + 1])} className="inline-flex size-8 items-center justify-center rounded-sm border border-border-strong disabled:opacity-40"><ChevronRight className="size-4" /></button>
+                <button type="button" aria-label={en ? "Next month" : "Nächster Monat"} disabled={mi >= months.length - 1} onClick={() => setMonth(months[mi + 1] ?? month)} className="inline-flex size-8 items-center justify-center rounded-sm border border-border-strong disabled:opacity-40"><ChevronRight className="size-4" /></button>
               </div>
               <div className="grid grid-cols-7 gap-1 text-center">
                 {weekdays.map((w) => <span key={w} className="label-caps py-1 text-[10px] text-faint">{w}</span>)}
