@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowLeft, ArrowRight, Check, ClipboardList, Loader2 } from "lucide-react";
-import { useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatEuro } from "@/lib/format";
@@ -23,6 +22,7 @@ import { pickVariant } from "@/lib/wizard-variants";
 
 /** Local marker for "no tool yet"; never sent to the portal. */
 const NO_TOOL = "__none__";
+const portalAnswers = (a: WizardAnswers): WizardAnswers => Object.fromEntries(Object.entries(a).map(([k, v]) => [k, v === NO_TOOL ? "" : v]));
 
 function optionValue(q: WizardQuestion, o: WizardQuestion["options"][number]): string {
   if (q.questionType === "vehicleType") return String(o.id);
@@ -198,7 +198,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
     if (nextStep?.type === "recommendation") {
       setStatus("loading");
       try {
-        const recommendation = await fetchWizardRecommendation(answers);
+        const recommendation = await fetchWizardRecommendation(portalAnswers(answers));
         setRec(recommendation);
         setStatus("idle");
         setStep(nextIndex);
@@ -218,7 +218,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
     setStatus("sending");
     setSubmitError("");
     try {
-      await submitWizardLead(answers, contact, slot || undefined);
+      await submitWizardLead(portalAnswers(answers), contact, slot || undefined);
       // Keep the owner notifications (WhatsApp/email) that run on stored leads.
       submitLead({
         data: {
@@ -228,7 +228,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
           contactName: str("name"),
           email: str("email"),
           phone: str("phone"),
-          details: { ...Object.fromEntries(Object.entries(answers).map(([key, value]) => [key, (Array.isArray(value) ? value.join(", ") : String(value)).slice(0, 300)])), package: rec?.packageKey ?? "", dctWizard: "tfd", ...(slot ? { termin: slot } : {}) },
+          details: { ...Object.fromEntries(Object.entries(portalAnswers(answers)).map(([key, value]) => [key, (Array.isArray(value) ? value.join(", ") : String(value)).slice(0, 300)])), package: rec?.packageKey ?? "", dctWizard: "tfd", ...(slot ? { termin: slot } : {}) },
         },
       }).catch((error) => console.error("Lead notification storage failed:", error));
       setStatus("done");
