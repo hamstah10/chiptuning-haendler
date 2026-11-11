@@ -32,5 +32,5 @@
 
 
 
-- [ ] DCT Partner Wizard im neuen Workspace verbinden
-- [ ] WhatsApp Business im neuen Workspace verbinden
+- [ ] DCT Partner Wizard Verbindung – wartet auf Rückmeldung (Wizard tfd braucht keinen Token)
+- [x] WhatsApp Business im neuen Workspace verbinden (Vorlage neu angelegt, Meta-Prüfung offen)
