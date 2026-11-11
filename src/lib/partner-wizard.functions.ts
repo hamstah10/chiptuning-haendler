@@ -15,8 +15,8 @@ export const submitPartnerWizardLead = createServerFn({ method: "POST" })
     const body = (await res.json().catch(() => ({}))) as Record<string, unknown>;
     if (!res.ok) {
       console.error("Partner wizard lead rejected", res.status, body);
-      const message = typeof body.error === "string" ? body.error : typeof body.message === "string" ? body.message : "";
+      const message = typeof body["error"] === "string" ? body["error"] : typeof body["message"] === "string" ? body["message"] : "";
       return { ok: false as const, status: res.status, message };
     }
-    return { ok: true as const, status: res.status, message: typeof body.message === "string" ? body.message : "" };
+    return { ok: true as const, status: res.status, message: typeof body["message"] === "string" ? body["message"] : "" };
   });
