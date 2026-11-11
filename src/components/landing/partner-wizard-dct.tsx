@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { ArrowLeft, ArrowRight, Check, ClipboardList, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatEuro } from "@/lib/format";
@@ -17,6 +17,12 @@ import {
   type WizardRecommendation,
 } from "@/lib/partner-wizard-api";
 import { AppointmentPicker, WizardContactFields, contactMissing } from "./wizard-contact";
+import { ChipGroup, ChoiceCards, ImageCards, LogoTiles, SegmentedControl, type FieldOption } from "./wizard-fields";
+import { pickVariant } from "@/lib/wizard-variants";
+
+/** Local marker for "no tool yet"; never sent to the portal. */
+const NO_TOOL = "__none__";
+const portalAnswers = (a: WizardAnswers): WizardAnswers => Object.fromEntries(Object.entries(a).map(([k, v]) => [k, v === NO_TOOL ? "" : v]));
 
 function optionValue(q: WizardQuestion, o: WizardQuestion["options"][number]): string {
   if (q.questionType === "vehicleType") return String(o.id);
@@ -34,157 +40,67 @@ function isVisible(q: WizardQuestion, answers: WizardAnswers): boolean {
   return String(dep ?? "") === q.dependsOnValue;
 }
 
-function OptionTile({
-  selected,
-  title,
-  text,
-  icon,
-  onClick,
-}: {
-  selected: boolean;
-  title: string;
-  text?: string | null;
-  icon?: string | null;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={selected}
-      className={cn(
-        "flex w-full items-center gap-3.5 rounded-sm border px-4 py-3.5 text-left transition-colors",
-        selected ? "border-primary bg-primary-soft" : "hover:border-border-strong",
-      )}
-    >
-      {icon && <img src={icon} alt="" loading="lazy" className="size-8 shrink-0 object-contain" />}
-      <span className="flex-1">
-        <span className="block font-display font-bold uppercase text-strong">{title}</span>
-        {text && <span className="mt-0.5 block text-sm text-muted-foreground">{text}</span>}
-      </span>
-      <span
-        className={cn(
-          "inline-flex size-5 shrink-0 items-center justify-center rounded-full border",
-          selected ? "border-primary bg-primary text-primary-foreground" : "text-transparent",
-        )}
-      >
-        <Check className="size-3" />
-      </span>
-    </button>
-  );
-}
-
-function VehicleTypeCard({
-  selected,
-  title,
-  icon,
-  onClick,
-}: {
-  selected: boolean;
-  title: string;
-  icon?: string | null;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={selected}
-      className={cn(
-        "relative flex flex-col items-center gap-2.5 rounded-sm border px-3 py-4 text-center transition-colors",
-        selected ? "border-primary bg-primary-soft" : "hover:border-border-strong",
-      )}
-    >
-      <span
-        className={cn(
-          "absolute right-2 top-2 inline-flex size-4 shrink-0 items-center justify-center rounded-full border",
-          selected ? "border-primary bg-primary text-primary-foreground" : "text-transparent",
-        )}
-      >
-        <Check className="size-2.5" />
-      </span>
-      {icon && <img src={icon} alt="" loading="lazy" className="size-14 shrink-0 object-contain" width={56} height={56} />}
-      <span className="font-display text-sm font-bold uppercase leading-tight text-strong">{title}</span>
-    </button>
-  );
-}
-
 function QuestionBlock({
   q,
   answers,
   onAnswer,
+  locale,
 }: {
   q: WizardQuestion;
   answers: WizardAnswers;
   onAnswer: (key: string, value: string | string[] | number[]) => void;
+  locale: "de" | "en";
 }) {
+  const en = locale === "en";
   const current = answers[q.answerKey];
-
+  const variant = pickVariant(q);
+  const options: FieldOption[] = q.options.map((o) => ({ value: optionValue(q, o), title: optionTitle(o), text: o.text, icon: o.icon ?? o.imageUrl }));
+  const list = Array.isArray(current) ? (current as (string | number)[]).map(String) : [];
+  const multi = q.questionType === "vehicleType" || q.multiSelect;
+  const isOn = (raw: string) => (multi ? list.includes(raw) : current === raw);
+  const setList = (next: string[]) => onAnswer(q.answerKey, q.questionType === "vehicleType" ? next.map(Number) : next);
   const toggle = (raw: string) => {
-    if (q.questionType === "vehicleType") {
-      const id = Number(raw);
-      const list = Array.isArray(current) ? (current as number[]) : [];
-      onAnswer(q.answerKey, list.includes(id) ? list.filter((v) => v !== id) : [...list, id]);
-      return;
-    }
-    if (q.multiSelect) {
-      const list = Array.isArray(current) ? (current as string[]) : [];
-      onAnswer(q.answerKey, list.includes(raw) ? list.filter((v) => v !== raw) : [...list, raw]);
-      return;
-    }
-    onAnswer(q.answerKey, raw);
-  };
-
-  const isSelected = (raw: string) => {
-    if (q.questionType === "vehicleType") return Array.isArray(current) && (current as number[]).includes(Number(raw));
-    if (q.multiSelect) return Array.isArray(current) && (current as string[]).includes(raw);
-    return current === raw;
+    if (multi) return setList(list.includes(raw) ? list.filter((v) => v !== raw) : [...list, raw]);
+    onAnswer(q.answerKey, current === raw ? "" : raw);
   };
 
   return (
-    <fieldset className="grid gap-2.5">
-      <legend className="label-caps mb-1 text-xs text-strong">{q.title}</legend>
-      {q.helpText && <p className="text-sm text-muted-foreground">{q.helpText}</p>}
-      {q.questionType === "vehicleType" ? (
-        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
-          {q.options.map((o) => {
-            const raw = optionValue(q, o);
-            return (
-              <VehicleTypeCard
-                key={raw}
-                selected={isSelected(raw)}
-                title={optionTitle(o)}
-                icon={o.icon ?? o.imageUrl}
-                onClick={() => toggle(raw)}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        <div className="grid gap-2.5 sm:grid-cols-2">
-          {q.options.map((o) => {
-            const raw = optionValue(q, o);
-            return (
-              <OptionTile
-                key={raw}
-                selected={isSelected(raw)}
-                title={optionTitle(o)}
-                text={o.text}
-                icon={o.icon ?? o.imageUrl}
-                onClick={() => toggle(raw)}
-              />
-            );
-          })}
-        </div>
+    <fieldset className="grid gap-3">
+      <legend className="mb-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <span className="label-caps text-xs text-strong">{q.title}</span>
+        {multi && <span className="text-xs text-faint">{en ? "Multiple choice" : "Mehrfachauswahl"}</span>}
+      </legend>
+      {q.helpText && <p className="-mt-1 text-sm text-muted-foreground">{q.helpText}</p>}
+      {variant === "imageCards" && (
+        <ImageCards options={options} isOn={isOn} onToggle={toggle} countLabel={(n) => (en ? `${n} selected` : `${n} gewählt`)} />
+      )}
+      {variant === "logoTiles" && (
+        <LogoTiles options={options} isOn={isOn} onToggle={toggle} noneLabel={en ? "No tool yet" : "Noch kein Tool"} noneOn={current === NO_TOOL} onNone={() => onAnswer(q.answerKey, current === NO_TOOL ? "" : NO_TOOL)} />
+      )}
+      {variant === "choiceCards" && <ChoiceCards options={options} isOn={isOn} onToggle={toggle} />}
+      {variant === "segmented" && <SegmentedControl options={options} value={String(current ?? "")} onChange={(v) => onAnswer(q.answerKey, v)} label={q.title} />}
+      {variant === "chips" && (
+        <ChipGroup options={options} isOn={isOn} onToggle={toggle}
+          onAll={multi ? () => setList(options.map((o) => o.value)) : undefined}
+          onReset={multi ? () => setList([]) : undefined}
+          allLabel={en ? "Select all" : "Alle wählen"} resetLabel={en ? "Reset" : "Zurücksetzen"} />
       )}
     </fieldset>
   );
 }
 
+/** Human-readable labels for an answered question (used in the summary). */
+function answerLabels(q: WizardQuestion, value: WizardAnswers[string] | undefined, locale: "de" | "en"): string[] {
+  if (value == null || value === "") return [];
+  if (value === NO_TOOL) return [locale === "en" ? "No tool yet" : "Noch kein Tool"];
+  const raws = Array.isArray(value) ? value.map(String) : [String(value)];
+  return raws.map((r) => optionTitle(q.options.find((o) => optionValue(q, o) === r) ?? ({} as WizardQuestion["options"][number])) || r);
+}
+
 function RecommendationView({ rec, c }: { rec: WizardRecommendation; c: Content }) {
   return (
     <div className="grid gap-5">
-      <div className="rounded-sm border border-primary bg-primary-soft px-4 py-4">
+      <div className="rounded-sm border border-primary border-l-4 bg-primary-soft px-5 py-5">
         <div className="label-caps text-xs text-primary">{rec.packageKey.replace(/_/g, " ")}</div>
         <h4 className="mt-1 text-2xl">{rec.packageTitle}</h4>
         <p className="mt-2 text-sm leading-relaxed text-foreground">{rec.packageText}</p>
@@ -205,7 +121,7 @@ function RecommendationView({ rec, c }: { rec: WizardRecommendation; c: Content 
           {rec.recommendedTools.map((tool) => {
             const price = tool.product?.specialPrice ?? tool.product?.price;
             return (
-              <div key={tool.key} className="flex items-center gap-3.5 rounded-sm border px-4 py-3.5">
+              <div key={tool.key} className="flex items-center gap-3.5 rounded-sm border border-border-strong bg-sunken px-4 py-3.5">
                 {tool.imageUrl && <img src={tool.imageUrl} alt="" loading="lazy" className="size-10 shrink-0 object-contain" />}
                 <span className="flex-1">
                   <span className="block font-display font-bold uppercase text-strong">{tool.name}</span>
@@ -262,6 +178,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
     };
   }, []);
 
+  const reduce = useReducedMotion();
   const steps = useMemo(() => config?.steps ?? [], [config]);
   const currentStep = steps[step];
 
@@ -281,7 +198,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
     if (nextStep?.type === "recommendation") {
       setStatus("loading");
       try {
-        const recommendation = await fetchWizardRecommendation(answers);
+        const recommendation = await fetchWizardRecommendation(portalAnswers(answers));
         setRec(recommendation);
         setStatus("idle");
         setStep(nextIndex);
@@ -301,7 +218,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
     setStatus("sending");
     setSubmitError("");
     try {
-      await submitWizardLead(answers, contact, slot || undefined);
+      await submitWizardLead(portalAnswers(answers), contact, slot || undefined);
       // Keep the owner notifications (WhatsApp/email) that run on stored leads.
       submitLead({
         data: {
@@ -311,7 +228,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
           contactName: str("name"),
           email: str("email"),
           phone: str("phone"),
-          details: { ...Object.fromEntries(Object.entries(answers).map(([key, value]) => [key, (Array.isArray(value) ? value.join(", ") : String(value)).slice(0, 300)])), package: rec?.packageKey ?? "", dctWizard: "tfd", ...(slot ? { termin: slot } : {}) },
+          details: { ...Object.fromEntries(Object.entries(portalAnswers(answers)).map(([key, value]) => [key, (Array.isArray(value) ? value.join(", ") : String(value)).slice(0, 300)])), package: rec?.packageKey ?? "", dctWizard: "tfd", ...(slot ? { termin: slot } : {}) },
         },
       }).catch((error) => console.error("Lead notification storage failed:", error));
       setStatus("done");
@@ -353,86 +270,104 @@ export function PartnerWizardDct({ c }: { c: Content }) {
 
   const visibleQuestions = currentStep?.questions.filter((q) => isVisible(q, answers)) ?? [];
 
+  const answeredSummary = steps.slice(0, step).flatMap((s, i) =>
+    s.type === "questions" ? s.questions.filter((q) => isVisible(q, answers)).flatMap((q) => answerLabels(q, answers[q.answerKey], c.locale).map((label) => ({ label, step: i, key: `${q.answerKey}-${label}` }))) : [],
+  );
+
   return (
     <div>
-      <div className="mb-8 grid gap-2.5" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
-        {steps.map((s, i) => {
-          const active = i <= step;
-          return (
-            <div key={s.key} className="grid gap-2">
-              <div className="h-[3px] overflow-hidden bg-border">
-                <div className={cn("h-full bg-primary transition-all duration-500", active ? "w-full" : "w-0")} />
+      <div className="overflow-hidden rounded-md border border-border-strong border-t-2 border-t-primary bg-card">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b bg-sunken px-5 py-4">
+          <span className="flex items-center gap-2"><ClipboardList className="size-4 text-primary" /><span className="label-caps text-sm text-strong">{config.name || c.partnerEmbed.kicker}</span></span>
+          <span className="font-mono text-xs tabular-nums text-muted-foreground">{String(step + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}</span>
+        </div>
+        <div className="h-[3px] bg-border lg:hidden"><div className="h-full bg-primary transition-all duration-500" style={{ width: `${((step + 1) / steps.length) * 100}%` }} /></div>
+
+        <div className="grid lg:grid-cols-[240px_1fr]">
+          <aside className="hidden border-r bg-sunken/40 p-5 lg:block">
+            <ol className="grid gap-1">
+              {steps.map((s, i) => (
+                <li key={s.key}>
+                  <button type="button" disabled={i > step} onClick={() => setStep(i)}
+                    className={cn("flex w-full items-center gap-3 rounded-sm border-l-2 px-3 py-2.5 text-left transition-colors", i === step ? "border-l-primary bg-card" : "border-l-transparent hover:bg-card disabled:hover:bg-transparent")}>
+                    <span className={cn("inline-flex size-6 shrink-0 items-center justify-center rounded-full border font-mono text-[11px]",
+                      i < step && "border-primary bg-primary text-primary-foreground", i === step && "border-primary text-primary", i > step && "border-border-strong text-faint")}>
+                      {i < step ? <Check className="size-3" /> : String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className={cn("label-caps text-xs", i <= step ? "text-strong" : "text-faint")}>{s.label}</span>
+                  </button>
+                </li>
+              ))}
+            </ol>
+            {answeredSummary.length > 0 && (
+              <div className="mt-6 border-t pt-5">
+                <div className="label-caps mb-2.5 text-[11px] text-faint">{c.locale === "en" ? "Your selection" : "Deine Auswahl"}</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {answeredSummary.map((a) => (
+                    <button key={a.key} type="button" onClick={() => setStep(a.step)} title={c.locale === "en" ? "Edit" : "Ändern"}
+                      className="rounded-full border border-border-strong bg-card px-2.5 py-1 text-xs text-foreground hover:border-primary">{a.label}</button>
+                  ))}
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span
-                  className={cn(
-                    "inline-flex size-5 items-center justify-center rounded-full border font-mono text-[11px]",
-                    i < step && "border-primary bg-primary text-primary-foreground",
-                    i === step && "border-primary text-primary",
-                    i > step && "text-faint",
-                  )}
-                >
-                  {i < step ? <Check className="size-3" /> : i + 1}
-                </span>
-                <span className={cn("label-caps hidden text-xs sm:inline", active ? "text-strong" : "text-faint")}>{s.label}</span>
-              </div>
+            )}
+          </aside>
+
+          <div className="p-5 md:p-7">
+            <AnimatePresence mode="wait">
+              <motion.div key={currentStep?.key ?? step} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 1 } : { opacity: 0, y: -6 }} transition={{ duration: 0.22, ease: "easeOut" }}>
+                <div className="label-caps text-xs text-primary">{c.locale === "en" ? "Step" : "Schritt"} {String(step + 1).padStart(2, "0")}</div>
+                <h3 className="mt-1 text-2xl">{currentStep?.label}</h3>
+
+                {currentStep?.type === "questions" && (
+                  <div className="mt-6 grid gap-7">
+                    {visibleQuestions.map((q) => (
+                      <QuestionBlock key={q.answerKey} q={q} answers={answers} onAnswer={onAnswer} locale={c.locale} />
+                    ))}
+                  </div>
+                )}
+
+                {currentStep?.type === "recommendation" && rec && (
+                  <div className="mt-6">
+                    <RecommendationView rec={rec} c={c} />
+                  </div>
+                )}
+
+                {currentStep?.type === "contact" && (
+                  <div className="mt-6 grid gap-6">
+                    <WizardContactFields questions={visibleQuestions} values={contact} onChange={(k, v) => setContact((s) => ({ ...s, [k]: v }))} showErrors={status === "invalid"} locale={c.locale} />
+                    {config.appointment?.enabled && <AppointmentPicker settings={config.appointment} locale={c.locale} value={slot} onChange={setSlot} />}
+                    {config.privacyNotice && <p className="text-xs leading-relaxed text-faint">{config.privacyNotice}</p>}
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+
+            {(status === "invalid" || status === "error") && (
+              <p role="alert" className="mt-5 text-sm text-destructive">
+                {status === "invalid" ? t.required : submitError || t.error}
+              </p>
+            )}
+
+            <div className="mt-7 flex items-center justify-between gap-3 border-t pt-5">
+              <Button variant="outline" disabled={step === 0} onClick={() => setStep((s) => Math.max(0, s - 1))} className="label-caps h-10 rounded-sm border-border-strong bg-sunken shadow-none">
+                <ArrowLeft />
+                {t.back}
+              </Button>
+              {currentStep?.type === "contact" ? (
+                <Button onClick={submit} disabled={status === "sending"} className="label-caps h-10 rounded-sm shadow-none">
+                  {status === "sending" ? <Loader2 className="animate-spin" /> : null}
+                  {status === "sending" ? t.sending : t.submit}
+                  <ArrowRight />
+                </Button>
+              ) : (
+                <Button onClick={next} disabled={status === "loading"} className="label-caps h-10 rounded-sm shadow-none">
+                  {status === "loading" ? <Loader2 className="animate-spin" /> : null}
+                  {currentStep?.type === "recommendation" && rec ? rec.nextStep || t.next : t.next}
+                  <ArrowRight />
+                </Button>
+              )}
             </div>
-          );
-        })}
-      </div>
-
-      <div className="rounded-md border bg-card p-5 md:p-7">
-        <AnimatePresence mode="wait">
-          <motion.div key={currentStep?.key ?? step} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
-            <h3 className="text-2xl">{currentStep?.label}</h3>
-
-            {currentStep?.type === "questions" && (
-              <div className="mt-5 grid gap-6">
-                {visibleQuestions.map((q) => (
-                  <QuestionBlock key={q.answerKey} q={q} answers={answers} onAnswer={onAnswer} />
-                ))}
-              </div>
-            )}
-
-            {currentStep?.type === "recommendation" && rec && (
-              <div className="mt-5">
-                <RecommendationView rec={rec} c={c} />
-              </div>
-            )}
-
-            {currentStep?.type === "contact" && (
-              <div className="mt-5 grid gap-5">
-                <WizardContactFields questions={visibleQuestions} values={contact} onChange={(k, v) => setContact((s) => ({ ...s, [k]: v }))} />
-                {config.appointment?.enabled && <AppointmentPicker settings={config.appointment} locale={c.locale} value={slot} onChange={setSlot} />}
-                {config.privacyNotice && <p className="text-xs leading-relaxed text-faint">{config.privacyNotice}</p>}
-              </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
-
-        {(status === "invalid" || status === "error") && (
-          <p role="alert" className="mt-5 text-sm text-destructive">
-            {status === "invalid" ? t.required : submitError || t.error}
-          </p>
-        )}
-
-        <div className="mt-7 flex items-center justify-between gap-3 border-t pt-5">
-          <Button variant="ghost" disabled={step === 0} onClick={() => setStep((s) => Math.max(0, s - 1))} className="label-caps rounded-sm">
-            <ArrowLeft />
-            {t.back}
-          </Button>
-          {currentStep?.type === "contact" ? (
-            <Button onClick={submit} size="lg" disabled={status === "sending"} className="label-caps rounded-sm">
-              {status === "sending" ? t.sending : t.submit}
-              <ArrowRight />
-            </Button>
-          ) : (
-            <Button onClick={next} size="lg" disabled={status === "loading"} className="label-caps rounded-sm">
-              {status === "loading" ? <Loader2 className="animate-spin" /> : null}
-              {currentStep?.type === "recommendation" && rec ? rec.nextStep || t.next : t.next}
-              <ArrowRight />
-            </Button>
-          )}
+          </div>
         </div>
       </div>
 
