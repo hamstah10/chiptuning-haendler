@@ -95,12 +95,6 @@ function Header({ c, mixed = false }: { c: Content; mixed?: boolean }) {
           <Logo />
         </a>
         <nav aria-label={c.chapterLabel} className="flex shrink-0 items-center gap-1 sm:gap-2">
-          <a
-            href="#anmeldung"
-            className="label-caps hidden rounded-sm px-3 py-2 text-muted-foreground transition-colors hover:text-foreground md:inline-flex"
-          >
-            {c.nav.wizard}
-          </a>
           <LanguageSelector locale={c.locale} />
           {!mixed && <ThemeToggle c={c} />}
           <Button asChild className="label-caps hidden rounded-sm sm:inline-flex">

@@ -9,7 +9,7 @@ export interface Kpi {
 
 const de = {
   locale: "de" as Locale,
-  chapters: ["Ausgangslage", "Lösung", "Anmeldung", "Ablauf", "Verdienst", "Konfigurator", "Startplan", "Vertrauen", "Fragen"],
+  chapters: ["Ausgangslage", "Lösung", "Wizard", "Ablauf", "Verdienst", "Konfigurator", "Startplan", "Vertrauen", "Fragen"],
   chapterLabel: "Kapitel",
   design: { label: "Design", light: "Hell", dark: "Dunkel", mixed: "Mix", heroImageAlt: "Illustrative Werkstattszene mit einem Sportcoupé auf dem Leistungsprüfstand" },
   dyno: { series: "Serie", tuned: "Getunt", caption: "Beispiel: 2.0 TDI, Stage 1", gain: "mehr Leistung" },
@@ -23,7 +23,6 @@ const de = {
   stepsHint: "Weiterscrollen, um alle Schritte zu sehen",
   nav: {
     story: "Die Geschichte",
-    wizard: "Wizard",
     process: "Ablauf",
     calculator: "Verdienst",
     configurator: "Konfigurator",
@@ -425,7 +424,7 @@ export type Content = typeof de;
 
 const en: Content = {
   locale: "en",
-  chapters: ["Situation", "Solution", "Sign-up", "Process", "Earnings", "Configurator", "Start plan", "Trust", "FAQ"],
+  chapters: ["Situation", "Solution", "Wizard", "Process", "Earnings", "Configurator", "Start plan", "Trust", "FAQ"],
   chapterLabel: "Chapter",
   design: { label: "Design", light: "Light", dark: "Dark", mixed: "Mix", heroImageAlt: "Illustrative workshop scene with a sports coupe on a dynamometer" },
   dyno: { series: "Stock", tuned: "Tuned", caption: "Example: 2.0 TDI, Stage 1", gain: "more power" },
@@ -439,7 +438,6 @@ const en: Content = {
   stepsHint: "Keep scrolling to see every step",
   nav: {
     story: "The story",
-    wizard: "Wizard",
     process: "Process",
     calculator: "Earnings",
     configurator: "Configurator",
