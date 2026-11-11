@@ -314,9 +314,9 @@ export function PartnerWizardDct({ c }: { c: Content }) {
           contactName: contact.name.trim(),
           email: contact.email.trim(),
           phone: contact.phone.trim(),
-          details: { ...answers, package: rec?.packageKey ?? "", dctWizard: "no1" },
+          details: { ...Object.fromEntries(Object.entries(answers).map(([key, value]) => [key, (Array.isArray(value) ? value.join(", ") : String(value)).slice(0, 300)])), package: rec?.packageKey ?? "", dctWizard: "no1" },
         },
-      }).catch(() => {});
+      }).catch((error) => console.error("Lead notification storage failed:", error));
       setStatus("done");
     } catch {
       setStatus("error");

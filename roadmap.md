@@ -2,7 +2,7 @@
 - [x] Replace the mixed landing's embedded wizard with a native DCT API wizard and matching design; configuration, recommendation and contact steps verified in the browser (no1 needs no token; a real submission would create a live lead in the partner portal, so it was not fired).
 - [x] Owner email notifications to hamstahstudio@gmail.com for every first-party lead form (test send OK).
 - [x] Queue owner WhatsApp notifications atomically for both first-party lead forms; verify a real wizard submission and remove its test row. Stored leads remain in dealer_leads.
-- [ ] Verify owner WhatsApp delivery after Meta approves dealer_form_notification (currently PENDING); publish the changes. Pending notifications resume one at a time on new submissions or callbacks, so quiet periods delay recovery.
+- [ ] Verify owner WhatsApp delivery (template APPROVED; blocked: Meta reports WhatsApp Business account currency not configured, error 131042). Wizard lead storage fixed (multi-select answers were rejected).
 - [ ] Forward external embedded DCT wizard submissions (blocked: the external portal must supply a forwarding hook or supported integration; first-party submission code cannot intercept its forms).
 - [x] Add the supplied public ElevenLabs Turbo voice agent to all landing compositions; mobile controls checked and user confirmed a working conversation.
 - [x] Add protected WhatsApp inbox, text replies inside 24 hours, signed durable receiver and traffic-triggered recovery; verify local signatures and mobile layout.
