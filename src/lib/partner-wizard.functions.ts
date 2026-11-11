@@ -36,7 +36,7 @@ export const partnerWizardProxy = createServerFn({ method: "POST" })
     const res = await fetch(`https://portal.dct-files.de${data.path}`, {
       method: data.body === undefined ? "GET" : "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: data.body === undefined ? undefined : JSON.stringify(data.body),
+      body: data.body === undefined ? null : JSON.stringify(data.body),
     });
     const json = (await res.json().catch(() => ({}))) as Record<string, unknown>;
     return { ok: res.ok, status: res.status, json: JSON.stringify(json) };
