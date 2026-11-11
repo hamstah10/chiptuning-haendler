@@ -31,3 +31,6 @@
 - [x] Soften chapter entrances and animate stable chapter navigation; verify scrolling and reduced motion.
 
 
+
+- [ ] DCT Partner Wizard im neuen Workspace verbinden
+- [ ] WhatsApp Business im neuen Workspace verbinden
