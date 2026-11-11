@@ -244,6 +244,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
   const [answers, setAnswers] = useState<WizardAnswers>({});
   const [contact, setContact] = useState<WizardContact>({});
   const [slot, setSlot] = useState("");
+  const [submitError, setSubmitError] = useState("");
   const [rec, setRec] = useState<WizardRecommendation | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "sending" | "done" | "error" | "invalid">("idle");
 
@@ -298,6 +299,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
       return;
     }
     setStatus("sending");
+    setSubmitError("");
     try {
       await submitWizardLead(answers, contact, slot || undefined);
       // Keep the owner notifications (WhatsApp/email) that run on stored leads.
@@ -313,7 +315,10 @@ export function PartnerWizardDct({ c }: { c: Content }) {
         },
       }).catch((error) => console.error("Lead notification storage failed:", error));
       setStatus("done");
-    } catch {
+    } catch (error) {
+      const status = (error as { status?: number }).status;
+      const message = error instanceof Error && status ? error.message : "";
+      setSubmitError(status === 409 && !message ? (c.locale === "de" ? "Dieser Termin ist nicht mehr frei. Bitte wähle einen anderen." : "This slot is no longer available. Please pick another one.") : message);
       setStatus("error");
     }
   };
@@ -407,7 +412,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
 
         {(status === "invalid" || status === "error") && (
           <p role="alert" className="mt-5 text-sm text-destructive">
-            {status === "invalid" ? t.required : t.error}
+            {status === "invalid" ? t.required : submitError || t.error}
           </p>
         )}
 
