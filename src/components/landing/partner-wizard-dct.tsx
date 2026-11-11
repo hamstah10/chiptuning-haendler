@@ -2,9 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { formatEuro } from "@/lib/format";
 import { submitLead } from "@/lib/leads.functions";
@@ -308,10 +305,10 @@ export function PartnerWizardDct({ c }: { c: Content }) {
         data: {
           source: "wizard",
           locale: c.locale,
-          company: str("company") || "-",
+          company: str("company"),
           contactName: str("name"),
           email: str("email"),
-          phone: str("phone") || "-",
+          phone: str("phone"),
           details: { ...Object.fromEntries(Object.entries(answers).map(([key, value]) => [key, (Array.isArray(value) ? value.join(", ") : String(value)).slice(0, 300)])), package: rec?.packageKey ?? "", dctWizard: "tfd", ...(slot ? { termin: slot } : {}) },
         },
       }).catch((error) => console.error("Lead notification storage failed:", error));
