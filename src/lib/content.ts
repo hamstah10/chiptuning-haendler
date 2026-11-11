@@ -262,7 +262,7 @@ const de = {
   },
   partnerEmbed: {
     kicker: "Direkt loslegen",
-    title: "Partner-Wizard",
+    title: "Chiptuning Händler werden",
     intro: "Der schnellste Weg in die Zusammenarbeit: Fülle den Wizard direkt hier aus – deine Angaben landen sofort bei uns.",
   },
   wizard: {
@@ -677,7 +677,7 @@ const en: Content = {
   },
   partnerEmbed: {
     kicker: "Get started right away",
-    title: "Partner wizard",
+    title: "Become a chip tuning dealer",
     intro: "The fastest way to start working together: fill in the wizard right here – your details reach us immediately.",
   },
   wizard: {
