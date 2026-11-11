@@ -23,6 +23,7 @@ const de = {
   stepsHint: "Weiterscrollen, um alle Schritte zu sehen",
   nav: {
     story: "Die Geschichte",
+    wizard: "Wizard",
     process: "Ablauf",
     calculator: "Verdienst",
     configurator: "Konfigurator",
@@ -438,6 +439,7 @@ const en: Content = {
   stepsHint: "Keep scrolling to see every step",
   nav: {
     story: "The story",
+    wizard: "Wizard",
     process: "Process",
     calculator: "Earnings",
     configurator: "Configurator",
