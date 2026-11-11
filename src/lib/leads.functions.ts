@@ -13,10 +13,10 @@ export const leadSchema = z.discriminatedUnion("source", [
   z.object({
     source: z.literal("wizard"),
     locale,
-    company: z.string().trim().min(2).max(150),
+    company: z.string().trim().max(150),
     contactName: name,
     email: z.string().trim().email().max(255),
-    phone: z.string().trim().min(5).max(40),
+    phone: z.string().trim().max(40),
     details: detailsSchema,
   }),
   z.object({
@@ -41,10 +41,10 @@ export const submitLead = createServerFn({ method: "POST" })
         ? {
             source: data.source,
             locale: data.locale,
-            company: data.company,
+            company: data.company || null,
             contact_name: data.contactName,
             email: data.email,
-            phone: data.phone,
+            phone: data.phone || null,
             details: data.details,
           }
         : {

@@ -2,9 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { formatEuro } from "@/lib/format";
 import { submitLead } from "@/lib/leads.functions";
@@ -14,10 +11,12 @@ import {
   fetchWizardRecommendation,
   submitWizardLead,
   type WizardAnswers,
+  type WizardContact,
   type WizardConfig,
   type WizardQuestion,
   type WizardRecommendation,
 } from "@/lib/partner-wizard-api";
+import { AppointmentPicker, WizardContactFields, contactMissing } from "./wizard-contact";
 
 function optionValue(q: WizardQuestion, o: WizardQuestion["options"][number]): string {
   if (q.questionType === "vehicleType") return String(o.id);
@@ -236,15 +235,15 @@ function RecommendationView({ rec, c }: { rec: WizardRecommendation; c: Content 
   );
 }
 
-/** Native DCT partner wizard (client no1) rendered in the site's own design. */
+/** Native DCT partner wizard (client tfd) rendered in the site's own design. */
 export function PartnerWizardDct({ c }: { c: Content }) {
   const t = c.wizard;
   const [config, setConfig] = useState<WizardConfig | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<WizardAnswers>({});
-  const [contact, setContact] = useState({ name: "", company: "", email: "", phone: "", message: "" });
-  const [privacy, setPrivacy] = useState(false);
+  const [contact, setContact] = useState<WizardContact>({});
+  const [slot, setSlot] = useState("");
   const [rec, setRec] = useState<WizardRecommendation | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "sending" | "done" | "error" | "invalid">("idle");
 
@@ -268,7 +267,9 @@ export function PartnerWizardDct({ c }: { c: Content }) {
   const onAnswer = (key: string, value: string | string[] | number[]) =>
     setAnswers((s) => ({ ...s, [key]: value }));
 
-  const contactValid = contact.name.trim().length > 1 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email) && privacy;
+  const contactQuestions = steps.find((s) => s.type === "contact")?.questions.filter((q) => isVisible(q, answers)) ?? [];
+  const contactValid = !contactMissing(contactQuestions, contact) && !(config?.appointment?.enabled && config.appointment.required && !slot);
+  const str = (k: string) => (typeof contact[k] === "string" ? (contact[k] as string).trim() : "");
 
   const next = async () => {
     if (!currentStep) return;
@@ -298,23 +299,17 @@ export function PartnerWizardDct({ c }: { c: Content }) {
     }
     setStatus("sending");
     try {
-      await submitWizardLead(answers, {
-        name: contact.name.trim(),
-        email: contact.email.trim(),
-        company: contact.company.trim() || undefined,
-        phone: contact.phone.trim() || undefined,
-        message: contact.message.trim() || undefined,
-      });
+      await submitWizardLead(answers, contact, slot || undefined);
       // Keep the owner notifications (WhatsApp/email) that run on stored leads.
       submitLead({
         data: {
           source: "wizard",
           locale: c.locale,
-          company: contact.company.trim(),
-          contactName: contact.name.trim(),
-          email: contact.email.trim(),
-          phone: contact.phone.trim(),
-          details: { ...Object.fromEntries(Object.entries(answers).map(([key, value]) => [key, (Array.isArray(value) ? value.join(", ") : String(value)).slice(0, 300)])), package: rec?.packageKey ?? "", dctWizard: "no1" },
+          company: str("company"),
+          contactName: str("name"),
+          email: str("email"),
+          phone: str("phone"),
+          details: { ...Object.fromEntries(Object.entries(answers).map(([key, value]) => [key, (Array.isArray(value) ? value.join(", ") : String(value)).slice(0, 300)])), package: rec?.packageKey ?? "", dctWizard: "tfd", ...(slot ? { termin: slot } : {}) },
         },
       }).catch((error) => console.error("Lead notification storage failed:", error));
       setStatus("done");
@@ -401,42 +396,10 @@ export function PartnerWizardDct({ c }: { c: Content }) {
             )}
 
             {currentStep?.type === "contact" && (
-              <div className="mt-5 grid gap-4">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="grid gap-1.5">
-                    <Label htmlFor="dct-name" className="label-caps text-xs text-strong">{t.fields.contactName} *</Label>
-                    <Input id="dct-name" value={contact.name} maxLength={255} onChange={(e) => setContact((s) => ({ ...s, name: e.target.value }))} className="h-11 rounded-sm bg-sunken" />
-                  </div>
-                  <div className="grid gap-1.5">
-                    <Label htmlFor="dct-company" className="label-caps text-xs text-strong">{t.fields.company}</Label>
-                    <Input id="dct-company" value={contact.company} maxLength={255} onChange={(e) => setContact((s) => ({ ...s, company: e.target.value }))} className="h-11 rounded-sm bg-sunken" />
-                  </div>
-                  <div className="grid gap-1.5">
-                    <Label htmlFor="dct-email" className="label-caps text-xs text-strong">{t.fields.email} *</Label>
-                    <Input id="dct-email" type="email" value={contact.email} maxLength={255} onChange={(e) => setContact((s) => ({ ...s, email: e.target.value }))} className="h-11 rounded-sm bg-sunken" />
-                  </div>
-                  <div className="grid gap-1.5">
-                    <Label htmlFor="dct-phone" className="label-caps text-xs text-strong">{t.fields.phone}</Label>
-                    <Input id="dct-phone" type="tel" value={contact.phone} maxLength={255} onChange={(e) => setContact((s) => ({ ...s, phone: e.target.value }))} className="h-11 rounded-sm bg-sunken" />
-                  </div>
-                </div>
-                <div className="grid gap-1.5">
-                  <Label htmlFor="dct-message" className="label-caps text-xs text-strong">{c.locale === "en" ? "Message" : "Nachricht"}</Label>
-                  <textarea
-                    id="dct-message"
-                    value={contact.message}
-                    maxLength={2000}
-                    rows={4}
-                    onChange={(e) => setContact((s) => ({ ...s, message: e.target.value }))}
-                    className="rounded-sm border border-input bg-sunken px-3 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
-                  />
-                </div>
-                <div className="flex items-start gap-3">
-                  <Checkbox id="dct-privacy" checked={privacy} onCheckedChange={(v) => setPrivacy(v === true)} className="mt-0.5 rounded-[4px]" />
-                  <Label htmlFor="dct-privacy" className="text-sm font-normal leading-relaxed text-foreground">
-                    {config.privacyNotice}
-                  </Label>
-                </div>
+              <div className="mt-5 grid gap-5">
+                <WizardContactFields questions={visibleQuestions} values={contact} onChange={(k, v) => setContact((s) => ({ ...s, [k]: v }))} />
+                {config.appointment?.enabled && <AppointmentPicker settings={config.appointment} locale={c.locale} value={slot} onChange={setSlot} />}
+                {config.privacyNotice && <p className="text-xs leading-relaxed text-faint">{config.privacyNotice}</p>}
               </div>
             )}
           </motion.div>
@@ -479,7 +442,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
               status,
               answers,
               contact,
-              privacy,
+              appointment: slot,
               recommendation: rec,
               config,
             },

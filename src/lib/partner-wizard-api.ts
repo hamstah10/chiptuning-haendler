@@ -1,10 +1,10 @@
 /**
  * DCT Partner Wizard headless API (portal.dct-files.de).
- * Public client config — no token required for client "no1".
+ * Public client config — no token required for client "tfd".
  */
 
 const API_BASE = "https://portal.dct-files.de";
-export const PARTNER_WIZARD_CLIENT = "no1";
+export const PARTNER_WIZARD_CLIENT = "tfd";
 
 export interface WizardOption {
   value: string | null;
@@ -22,7 +22,7 @@ export interface WizardQuestion {
   helpText: string | null;
   questionType: "generic" | "vehicleType" | "toolManufacturer";
   multiSelect: boolean;
-  fieldType: "text" | "email" | "textarea" | "checkbox" | null;
+  fieldType: "text" | "email" | "textarea" | "checkbox" | "select" | "radio" | null;
   required: boolean;
   dependsOnAnswerKey: string | null;
   dependsOnValue: string | null;
@@ -45,6 +45,7 @@ export interface WizardConfig {
   toolRequired: boolean;
   defaultVehiclePrice: number;
   privacyNotice: string;
+  appointment?: { enabled: boolean; required: boolean; title: string; durationMinutes: number; timezone: string } | null;
   toolDisclaimer: string;
   steps: WizardStep[];
 }
@@ -120,21 +121,27 @@ export function fetchWizardRecommendation(answers: WizardAnswers): Promise<Wizar
   return postJson("/api/tfd-partner-wizard/recommend", buildWizardRequest(answers));
 }
 
-export interface WizardContact {
-  name: string;
-  email: string;
-  company?: string | undefined;
-  phone?: string | undefined;
-  message?: string | undefined;
+export interface WizardSlot { start: string; end: string; time: string }
+export interface WizardDay { date: string; weekday: number; slots: WizardSlot[] }
+
+export async function fetchWizardAppointments(): Promise<WizardDay[]> {
+  const res = await fetch(`${API_BASE}/api/tfd-partner-wizard/appointments/${PARTNER_WIZARD_CLIENT}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Appointments failed (${res.status})`);
+  const data = (await res.json()) as { days?: WizardDay[] };
+  return (data.days ?? []).filter((d) => d.slots?.length);
 }
 
-export function submitWizardLead(answers: WizardAnswers, contact: WizardContact) {
-  return postJson<{ ok: boolean; id: number; message: string }>("/api/tfd-partner-wizard/leads", {
+export type WizardContact = Record<string, string | boolean | string[]>;
+
+export function submitWizardLead(answers: WizardAnswers, contact: WizardContact, appointmentStart?: string) {
+  return postJson<{ ok: boolean; id: number; message: string; appointment?: { start?: string } }>("/api/tfd-partner-wizard/leads", {
     ...buildWizardRequest(answers),
     contact,
-    privacyAccepted: true,
+    name: contact["name"], company: contact["company"], email: contact["email"], phone: contact["phone"], message: contact["message"],
+    privacyAccepted: contact["privacyAccepted"] === true,
     source: "chiptuning-company-website",
     website_confirm: "",
-    answers,
+    answers: { ...answers, contact, privacyAccepted: contact["privacyAccepted"] === true },
+    ...(appointmentStart ? { appointment: { start: appointmentStart } } : {}),
   });
 }
