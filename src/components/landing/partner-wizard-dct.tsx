@@ -364,6 +364,42 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                 </Button>
               )}
             </div>
+            </div>
+
+            <div>
+              <div className="font-mono text-xs uppercase tracking-wider text-faint">{c.locale === "en" ? "Your selection" : "Deine Auswahl"}</div>
+              <div className="mt-2.5 rounded-sm border bg-sunken px-4 py-3.5">
+                {answeredSummary.length > 0 ? (
+                  <div className="grid gap-3">
+                    {answeredSummary.map((a) => (
+                      <button key={a.key} type="button" onClick={() => setStep(a.step)} title={c.locale === "en" ? "Edit" : "Ändern"} className="group text-left">
+                        <span className="label-caps block text-[11px] text-faint transition-colors group-hover:text-primary">{a.title}</span>
+                        <span className="mt-1 flex flex-wrap gap-1.5">
+                          {a.labels.map((label) => (
+                            <span key={label} className="rounded-full border border-border-strong bg-card px-2 py-0.5 text-xs text-foreground transition-colors group-hover:border-primary">{label}</span>
+                          ))}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs leading-relaxed text-faint">
+                    {c.locale === "en" ? "Your answers will appear here as you go." : "Deine Antworten erscheinen hier, sobald du weitergehst."}
+                  </p>
+                )}
+              </div>
+              {rec && (
+                <div className="mt-4 rounded-sm border border-primary border-l-4 bg-primary-soft px-4 py-3.5">
+                  <div className="font-mono text-[11px] uppercase tracking-wider text-primary">{c.locale === "en" ? "Recommendation" : "Empfehlung"}</div>
+                  <div className="mt-1 font-display font-bold uppercase text-strong">{rec.packageTitle}</div>
+                  {rec.estimatedMonthlyRevenue != null && rec.estimatedMonthlyRevenue > 0 && (
+                    <div className="mt-1 font-mono text-xs tabular-nums text-muted-foreground">
+                      {c.calculator.perMonth}: {formatEuro(rec.estimatedMonthlyRevenue, c.locale)}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
