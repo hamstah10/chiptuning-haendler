@@ -116,6 +116,11 @@ export function CheckCards({ options, isOn, onToggle, onAll, onReset, allLabel, 
 export function LogoTiles({ options, isOn, onToggle, noneLabel, noneOn, onNone }: { options: FieldOption[]; isOn: (v: string) => boolean; onToggle: (v: string) => void; noneLabel: string; noneOn: boolean; onNone: () => void }) {
   return (
     <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+      <button type="button" role="radio" aria-checked={noneOn} onClick={onNone}
+        className={cn("relative grid h-24 place-items-center rounded-sm border-dashed px-3 py-3", tileBase, noneOn && tileOn)}>
+        <span className="absolute right-2 top-2">{tick(noneOn, true)}</span>
+        <span className="label-caps text-xs text-strong">{noneLabel}</span>
+      </button>
       {options.map((o) => {
         const on = isOn(o.value);
         return (
@@ -127,11 +132,6 @@ export function LogoTiles({ options, isOn, onToggle, noneLabel, noneOn, onNone }
           </button>
         );
       })}
-      <button type="button" role="radio" aria-checked={noneOn} onClick={onNone}
-        className={cn("relative grid h-24 place-items-center rounded-sm border-dashed px-3 py-3", tileBase, noneOn && tileOn)}>
-        <span className="absolute right-2 top-2">{tick(noneOn, true)}</span>
-        <span className="label-caps text-xs text-strong">{noneLabel}</span>
-      </button>
     </div>
   );
 }
