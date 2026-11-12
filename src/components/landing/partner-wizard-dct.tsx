@@ -92,7 +92,6 @@ function QuestionBlock({
         : q.options;
   const options: FieldOption[] = rawOptions.map((o) => ({ value: optionValue(q, o), title: optionTitle(o), text: o.text, icon: o.icon ?? o.imageUrl }));
   const list = Array.isArray(current) ? (current as (string | number)[]).map(String) : variant === "goalList" && current ? [String(current)] : [];
-  const _unusedList = Array.isArray(current) ? (current as (string | number)[]).map(String) : [];
   const multi = q.questionType === "vehicleType" || q.multiSelect || variant === "goalList";
   const isOn = (raw: string) => (multi ? list.includes(raw) : current === raw);
   const setList = (next: string[]) => onAnswer(q.answerKey, q.questionType === "vehicleType" ? next.map(Number) : next);
@@ -114,7 +113,12 @@ function QuestionBlock({
           )}
         </span>
         {multi && variant !== "goalList" && <span className="text-xs text-faint">{en ? "Multiple choice" : "Mehrfachauswahl"}</span>}
-        {trailing && <span className="ml-auto">{trailing}</span>}
+        {variant === "goalList" && (
+          <span className="ml-auto rounded-full border border-border-strong bg-card px-3 py-[5px] font-mono text-[11px] uppercase tracking-[0.06em] text-muted-foreground">
+            {list.length} / {options.length} {en ? "selected" : "gewählt"}
+          </span>
+        )}
+        {trailing && <span className={variant === "goalList" ? "" : "ml-auto"}>{trailing}</span>}
       </legend>
       {q.helpText && <p className="-mt-1 text-sm text-muted-foreground">{q.helpText}</p>}
       {variant === "imageCards" && (
