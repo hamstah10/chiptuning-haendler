@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { fetchWizardAppointments, type WizardConfig, type WizardContact, type WizardDay, type WizardQuestion } from "@/lib/partner-wizard-api";
 import { ChipGroup, SegmentedControl, type FieldOption } from "./wizard-fields";
 
-const fieldClass = "h-10 w-full rounded-sm border border-border-strong bg-sunken px-3 text-sm shadow-none outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring/30";
+const fieldClass = "h-10 w-full rounded-sm border border-border-strong bg-card px-3 text-sm shadow-none outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring/30";
 const optTitle = (o: WizardQuestion["options"][number]) => o.title ?? o.name ?? o.text ?? o.value ?? "";
 const toOptions = (q: WizardQuestion): FieldOption[] => q.options.map((o) => ({ value: o.value ?? String(o.id), title: optTitle(o), text: o.text }));
 const emailOk = (x: unknown) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(x));
@@ -34,7 +34,7 @@ function Field({ q, value, onChange, showErrors, locale }: { q: WizardQuestion; 
   if (q.fieldType === "checkbox" && !q.options.length) {
     return (
       <div className="grid gap-1 sm:col-span-2">
-        <div className={cn("flex items-start gap-3 rounded-sm border bg-sunken px-3.5 py-3", err ? "border-destructive" : "border-border-strong")}>
+        <div className={cn("flex items-start gap-3 rounded-sm border bg-card px-3.5 py-3", err ? "border-destructive" : "border-border-strong")}>
           <Switch id={id} checked={value === true} onCheckedChange={(c) => onChange(c === true)} className="mt-0.5" aria-invalid={err} />
           <Label htmlFor={id} className="text-sm font-normal leading-relaxed text-foreground">{label}</Label>
         </div>
@@ -66,7 +66,7 @@ function Field({ q, value, onChange, showErrors, locale }: { q: WizardQuestion; 
       <Label htmlFor={id} className="label-caps text-xs text-strong">{label}</Label>
       {q.fieldType === "select" ? (
         <Select value={String(value ?? "")} onValueChange={onChange}>
-          <SelectTrigger id={id} aria-invalid={err} className={cn("h-10 rounded-sm border-border-strong bg-sunken shadow-none", err && "border-destructive")}>
+          <SelectTrigger id={id} aria-invalid={err} className={cn("h-10 rounded-sm border-border-strong bg-card shadow-none", err && "border-destructive")}>
             <SelectValue placeholder={locale === "en" ? "Please choose" : "Bitte wählen"} />
           </SelectTrigger>
           <SelectContent>
@@ -78,7 +78,7 @@ function Field({ q, value, onChange, showErrors, locale }: { q: WizardQuestion; 
       ) : (
         <Input id={id} type={q.fieldType === "email" ? "email" : q.answerKey === "phone" ? "tel" : "text"} autoComplete={q.answerKey === "name" ? "name" : q.answerKey === "company" ? "organization" : q.answerKey === "phone" ? "tel" : q.fieldType === "email" ? "email" : undefined}
           maxLength={255} value={String(value ?? "")} onChange={(e) => onChange(e.target.value)} aria-invalid={err} aria-describedby={err ? `${id}-err` : undefined}
-          className={cn("h-10 rounded-sm border-border-strong bg-sunken shadow-none", err && "border-destructive")} />
+          className={cn("h-10 rounded-sm border-border-strong bg-card shadow-none", err && "border-destructive")} />
       )}
       {errNode}
     </div>
@@ -126,7 +126,7 @@ export function AppointmentPicker({ settings, locale, value, onChange }: { setti
   const mi = months.indexOf(month);
 
   return (
-    <div className="overflow-hidden rounded-sm border border-border-strong bg-sunken">
+    <div className="overflow-hidden rounded-sm border border-border-strong bg-card">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b px-4 py-3">
         <div className="label-caps text-xs text-strong">{settings.title}{settings.required ? <span className="text-primary"> *</span> : " (optional)"}</div>
         <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground"><Clock className="size-3.5" />{settings.durationMinutes} {en ? "min" : "Min."} · {settings.timezone.replace("_", " ")}</span>
@@ -151,7 +151,7 @@ export function AppointmentPicker({ settings, locale, value, onChange }: { setti
                   return (
                     <button key={d} type="button" disabled={!free} aria-pressed={on} onClick={() => setDay(d)}
                       className={cn("relative aspect-square rounded-sm font-mono text-sm tabular-nums transition-colors",
-                        on ? "bg-primary text-primary-foreground" : free ? "border border-border-strong bg-card text-strong hover:border-primary" : "text-faint")}>
+                        on ? "bg-primary text-primary-foreground" : free ? "border border-border-strong bg-sunken text-strong hover:border-primary" : "text-faint")}>
                       {Number(d.slice(8))}
                       {free && !on && <span className="absolute bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full bg-primary" />}
                     </button>
@@ -166,7 +166,7 @@ export function AppointmentPicker({ settings, locale, value, onChange }: { setti
                   const on = s.start === value;
                   return (
                     <button key={s.start} type="button" aria-pressed={on} onClick={() => onChange(on ? "" : s.start)}
-                      className={cn("inline-flex h-10 items-center justify-center gap-2 rounded-sm border font-mono text-sm tabular-nums transition-colors", on ? "border-primary bg-primary text-primary-foreground" : "border-border-strong bg-card hover:border-primary")}>
+                      className={cn("inline-flex h-10 items-center justify-center gap-2 rounded-sm border font-mono text-sm tabular-nums transition-colors", on ? "border-primary bg-primary text-primary-foreground" : "border-border-strong bg-sunken hover:border-primary")}>
                       {!on && <span className="size-1.5 rounded-full bg-success" />}{s.time}
                     </button>
                   );

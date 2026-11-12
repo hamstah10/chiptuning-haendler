@@ -171,7 +171,7 @@ function RecommendationView({ rec, c, answers, onChange }: { rec: WizardRecommen
             const on = selectedTool === tool.name;
             return (
               <button type="button" role="radio" aria-checked={on} key={tool.key} onClick={() => onChange("selectedTool", on ? "" : tool.name)}
-                className={`flex items-center gap-3.5 rounded-sm border px-4 py-3.5 text-left transition-colors ${on ? "border-primary bg-primary-soft" : "border-border-strong bg-sunken hover:border-primary/60"}`}>
+                className={`flex items-center gap-3.5 rounded-sm border px-4 py-3.5 text-left transition-colors ${on ? "border-primary bg-primary-soft" : "border-border-strong bg-card hover:border-primary/60"}`}>
                 <span className={`grid size-5 shrink-0 place-items-center rounded-full border-2 ${on ? "border-primary" : "border-border-strong"}`}>{on && <span className="size-2.5 rounded-full bg-primary" />}</span>
                 {(tool.imageUrl ?? tool.product?.imageUrl) && <img src={tool.imageUrl ?? tool.product?.imageUrl ?? ""} alt="" loading="lazy" className="size-10 shrink-0 object-contain" />}
                 <span className="flex-1">
@@ -199,7 +199,7 @@ function RecommendationView({ rec, c, answers, onChange }: { rec: WizardRecommen
             const on = selectedProducts.includes(label);
             return (
               <button type="button" aria-pressed={on} key={product.uid} onClick={() => toggleProduct(label)}
-                className={`flex items-center gap-3.5 rounded-sm border px-4 py-3.5 text-left transition-colors ${on ? "border-primary bg-primary-soft" : "border-border-strong bg-sunken hover:border-primary/60"}`}>
+                className={`flex items-center gap-3.5 rounded-sm border px-4 py-3.5 text-left transition-colors ${on ? "border-primary bg-primary-soft" : "border-border-strong bg-card hover:border-primary/60"}`}>
                 <span className={`grid size-5 shrink-0 place-items-center rounded-sm border-2 ${on ? "border-primary bg-primary text-primary-foreground" : "border-border-strong"}`}>{on && <Check className="size-3.5" />}</span>
                 {product.imageUrl && <img src={product.imageUrl} alt="" loading="lazy" className="size-14 shrink-0 object-contain" />}
                 <span className="flex-1">
@@ -438,7 +438,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
         <div className="h-[3px] bg-border"><div className="h-full bg-primary transition-all duration-500" style={{ width: `${((step + 1) / steps.length) * 100}%` }} /></div>
 
         <div>
-          <ol className="grid border-b bg-sunken/40" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
+            <ol className="grid border-b bg-card" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
             {steps.map((s, i) => {
               const StepIcon = STEP_ICONS[i] ?? Sparkles;
               return (
@@ -466,8 +466,21 @@ export function PartnerWizardDct({ c }: { c: Content }) {
           <div className="py-5 md:py-7">
             <AnimatePresence mode="wait">
               <motion.div key={currentStep?.key ?? step} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 1 } : { opacity: 0, y: -6 }} transition={{ duration: 0.22, ease: "easeOut" }}>
-                <div className="label-caps text-xs text-primary">{c.locale === "en" ? "Step" : "Schritt"} {String(step + 1).padStart(2, "0")}</div>
+                <div className="label-caps text-xs text-primary">{c.locale === "en" ? "Step" : "Schritt"} {String(step + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}</div>
                 <h3 className="mt-1 text-2xl">{currentStep?.label}</h3>
+                {currentStep?.type === "questions" && (
+                  <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border-strong bg-card px-2.5 py-1 font-mono uppercase tracking-wider text-muted-foreground">
+                      <span className="font-bold text-primary" aria-hidden>*</span>
+                      {answeredCount} / {visibleQuestions.length} {c.locale === "en" ? "answered" : "beantwortet"}
+                    </span>
+                    {!stepComplete && (
+                      <span className="text-faint">
+                        {c.locale === "en" ? "Pick one option for every open question." : "Bitte wähle bei jeder offenen Frage eine Option."}
+                      </span>
+                    )}
+                  </p>
+                )}
 
                 <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_260px]">
                 <div>
@@ -496,7 +509,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
 
                 <div className="min-w-0">
                   <div className="label-caps text-xs text-faint">{c.locale === "en" ? "Your selection" : "Deine Auswahl"}</div>
-                  <div className="mt-4 rounded-sm border bg-sunken px-4 py-3.5">
+                  <div className="mt-4 rounded-sm border bg-card px-4 py-3.5">
                     {answeredSummary.length > 0 ? (
                       <div className="grid gap-3">
                         {answeredSummary.map((a) => (
@@ -504,7 +517,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                             <span className="label-caps block text-[11px] text-faint transition-colors group-hover:text-primary">{a.title}</span>
                             <span className="mt-1 flex flex-wrap gap-1.5">
                               {a.labels.map((label) => (
-                                <span key={label} className="inline-flex items-center gap-1.5 rounded-full border border-border-strong bg-card px-2 py-0.5 text-xs text-foreground transition-colors group-hover:border-primary">
+                                <span key={label} className="inline-flex items-center gap-1.5 rounded-full border border-border-strong bg-sunken px-2 py-0.5 text-xs text-foreground transition-colors group-hover:border-primary">
                                   {a.image && <img src={a.image} alt="" loading="lazy" width={16} height={16} className="size-4 shrink-0 object-contain" />}
                                   {label}
                                 </span>
@@ -520,7 +533,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                     )}
                   </div>
                   {rec && (
-                    <div className="mt-4 rounded-sm border border-primary border-l-4 bg-primary-soft px-4 py-3.5">
+                    <div className="mt-4 rounded-sm border border-primary border-l-4 bg-card px-4 py-3.5">
                       <div className="font-mono text-[11px] uppercase tracking-wider text-primary">{c.locale === "en" ? "Recommendation" : "Empfehlung"}</div>
                       <div className="mt-1 font-display font-bold uppercase text-strong">{rec.packageTitle}</div>
                       {rec.estimatedMonthlyRevenue != null && rec.estimatedMonthlyRevenue > 0 && (
