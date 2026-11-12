@@ -294,7 +294,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
     const nextIndex = step + 1;
     const nextStep = steps[nextIndex];
     if (nextStep?.type === "recommendation") {
-      setStatus("loading");
+      if (!rec) setStatus("loading");
       try {
         const recommendation = await fetchWizardRecommendation(portalAnswers(overrideAnswers ?? answers));
         setRec(recommendation);
