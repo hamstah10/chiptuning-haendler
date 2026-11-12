@@ -137,10 +137,32 @@ function RecommendationView({ rec, c }: { rec: WizardRecommendation; c: Content 
             const price = tool.product?.specialPrice ?? tool.product?.price;
             return (
               <div key={tool.key} className="flex items-center gap-3.5 rounded-sm border border-border-strong bg-sunken px-4 py-3.5">
-                {tool.imageUrl && <img src={tool.imageUrl} alt="" loading="lazy" className="size-10 shrink-0 object-contain" />}
+                {(tool.imageUrl ?? tool.product?.imageUrl) && <img src={tool.imageUrl ?? tool.product?.imageUrl ?? ""} alt="" loading="lazy" className="size-10 shrink-0 object-contain" />}
                 <span className="flex-1">
                   <span className="block font-display font-bold uppercase text-strong">{tool.name}</span>
                   <span className="mt-0.5 block text-sm text-muted-foreground">{tool.description}</span>
+                </span>
+                {price && (
+                  <span className="whitespace-nowrap font-mono text-sm tabular-nums text-strong">
+                    {formatEuro(Number(price), c.locale)}
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {(rec.recommendedProducts ?? []).length > 0 && (
+        <div className="grid gap-2.5 sm:grid-cols-2">
+          {rec.recommendedProducts.map((product) => {
+            const price = product.specialPrice ?? product.price;
+            return (
+              <div key={product.uid} className="flex items-center gap-3.5 rounded-sm border border-border-strong bg-sunken px-4 py-3.5">
+                {product.imageUrl && <img src={product.imageUrl} alt="" loading="lazy" className="size-14 shrink-0 object-contain" />}
+                <span className="flex-1">
+                  <span className="block font-display font-bold uppercase text-strong">{product.title}</span>
+                  <span className="mt-0.5 block font-mono text-xs text-faint">{product.sku}</span>
                 </span>
                 {price && (
                   <span className="whitespace-nowrap font-mono text-sm tabular-nums text-strong">
