@@ -503,8 +503,14 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                 <div>
                 {currentStep?.type === "questions" && (
                   <div className="grid gap-7">
-                    {visibleQuestions.map((q) => (
-                      <QuestionBlock key={q.answerKey} q={q} answers={answers} onAnswer={onAnswer} locale={c.locale} />
+                    {visibleQuestions.map((q, qi) => (
+                      <QuestionBlock key={q.answerKey} q={q} answers={answers} onAnswer={onAnswer} locale={c.locale}
+                        trailing={qi === 0 ? (
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-border-strong bg-sunken px-2.5 py-1 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                            <span className="font-bold text-primary" aria-hidden>*</span>
+                            {answeredCount} / {visibleQuestions.length} {c.locale === "en" ? "answered" : "beantwortet"}
+                          </span>
+                        ) : undefined} />
                     ))}
                   </div>
                 )}
