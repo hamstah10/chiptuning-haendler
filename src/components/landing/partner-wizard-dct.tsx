@@ -271,7 +271,14 @@ export function PartnerWizardDct({ c }: { c: Content }) {
   const visibleQuestions = currentStep?.questions.filter((q) => isVisible(q, answers)) ?? [];
 
   const answeredSummary = steps.slice(0, step).flatMap((s, i) =>
-    s.type === "questions" ? s.questions.filter((q) => isVisible(q, answers)).flatMap((q) => answerLabels(q, answers[q.answerKey], c.locale).map((label) => ({ label, step: i, key: `${q.answerKey}-${label}` }))) : [],
+    s.type === "questions"
+      ? s.questions
+          .filter((q) => isVisible(q, answers))
+          .flatMap((q) => {
+            const labels = answerLabels(q, answers[q.answerKey], c.locale);
+            return labels.length > 0 ? [{ title: q.title, labels, step: i, key: q.answerKey }] : [];
+          })
+      : [],
   );
 
   return (
@@ -299,20 +306,10 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                 </li>
               ))}
             </ol>
-            {answeredSummary.length > 0 && (
-              <div className="mt-3 flex flex-wrap items-center gap-2 border-t pt-3">
-                <div className="label-caps text-[11px] text-faint">{c.locale === "en" ? "Your selection" : "Deine Auswahl"}</div>
-                <div className="flex flex-wrap gap-1.5">
-                  {answeredSummary.map((a) => (
-                    <button key={a.key} type="button" onClick={() => setStep(a.step)} title={c.locale === "en" ? "Edit" : "Ändern"}
-                      className="rounded-full border border-border-strong bg-card px-2.5 py-1 text-xs text-foreground hover:border-primary">{a.label}</button>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
-          <div className="p-5 md:p-7">
+          <div className="grid gap-6 p-5 md:p-7 lg:grid-cols-[1fr_260px]">
+            <div>
             <AnimatePresence mode="wait">
               <motion.div key={currentStep?.key ?? step} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 1 } : { opacity: 0, y: -6 }} transition={{ duration: 0.22, ease: "easeOut" }}>
                 <div className="label-caps text-xs text-primary">{c.locale === "en" ? "Step" : "Schritt"} {String(step + 1).padStart(2, "0")}</div>
@@ -365,6 +362,42 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                   {currentStep?.type === "recommendation" && rec ? rec.nextStep || t.next : t.next}
                   <ArrowRight />
                 </Button>
+              )}
+            </div>
+            </div>
+
+            <div>
+              <div className="font-mono text-xs uppercase tracking-wider text-faint">{c.locale === "en" ? "Your selection" : "Deine Auswahl"}</div>
+              <div className="mt-2.5 rounded-sm border bg-sunken px-4 py-3.5">
+                {answeredSummary.length > 0 ? (
+                  <div className="grid gap-3">
+                    {answeredSummary.map((a) => (
+                      <button key={a.key} type="button" onClick={() => setStep(a.step)} title={c.locale === "en" ? "Edit" : "Ändern"} className="group text-left">
+                        <span className="label-caps block text-[11px] text-faint transition-colors group-hover:text-primary">{a.title}</span>
+                        <span className="mt-1 flex flex-wrap gap-1.5">
+                          {a.labels.map((label) => (
+                            <span key={label} className="rounded-full border border-border-strong bg-card px-2 py-0.5 text-xs text-foreground transition-colors group-hover:border-primary">{label}</span>
+                          ))}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs leading-relaxed text-faint">
+                    {c.locale === "en" ? "Your answers will appear here as you go." : "Deine Antworten erscheinen hier, sobald du weitergehst."}
+                  </p>
+                )}
+              </div>
+              {rec && (
+                <div className="mt-4 rounded-sm border border-primary border-l-4 bg-primary-soft px-4 py-3.5">
+                  <div className="font-mono text-[11px] uppercase tracking-wider text-primary">{c.locale === "en" ? "Recommendation" : "Empfehlung"}</div>
+                  <div className="mt-1 font-display font-bold uppercase text-strong">{rec.packageTitle}</div>
+                  {rec.estimatedMonthlyRevenue != null && rec.estimatedMonthlyRevenue > 0 && (
+                    <div className="mt-1 font-mono text-xs tabular-nums text-muted-foreground">
+                      {c.calculator.perMonth}: {formatEuro(rec.estimatedMonthlyRevenue, c.locale)}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </div>
