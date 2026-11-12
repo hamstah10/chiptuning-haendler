@@ -70,7 +70,7 @@ export function StepSlider({ options, value, onChange, label }: { options: Field
         <div className="absolute left-[12.5%] top-3 h-0.5 -translate-y-1/2 rounded-full bg-[#bd1e23] transition-[width] duration-[220ms] ease-out" style={{ width: `${(pos / last) * 75}%` }} aria-hidden />
         <input
           type="range" min={0} max={last} step={1} value={pos} aria-label={label}
-          onChange={(e) => onChange(options[Number(e.target.value)].value)}
+          onChange={(e) => { const o = options[Number(e.target.value)]; if (o) onChange(o.value); }}
           className="absolute top-0 z-10 h-6 cursor-grab opacity-0 active:cursor-grabbing"
           style={{ left: "calc(12.5% - 14px)", width: "calc(75% + 28px)" }}
         />
