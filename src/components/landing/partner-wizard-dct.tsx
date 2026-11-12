@@ -305,7 +305,8 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                   <motion.span layoutId="wizard-step" className="absolute inset-x-0 bottom-0 h-0.5 bg-primary" />
                 )}
               </li>
-            ))}
+              );
+            })}
           </ol>
 
           <div className="p-5 md:p-7">
