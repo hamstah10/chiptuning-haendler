@@ -486,8 +486,10 @@ export function PartnerWizardDct({ c }: { c: Content }) {
           <div className="px-5 py-5 md:px-8 md:py-7">
             <AnimatePresence mode="wait">
               <motion.div key={currentStep?.key ?? step} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 1 } : { opacity: 0, y: -6 }} transition={{ duration: 0.22, ease: "easeOut" }}>
-                <div className="label-caps text-xs text-primary">{c.locale === "en" ? "Step" : "Schritt"} {String(step + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}</div>
-                <h3 className="mt-1 text-2xl italic">{currentStep?.label}</h3>
+                <div className="flex items-end justify-between gap-4">
+                  <h3 className="text-2xl italic">{currentStep?.label}</h3>
+                  <div className="label-caps shrink-0 text-xs text-primary">{c.locale === "en" ? "Step" : "Schritt"} {String(step + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}</div>
+                </div>
                 {currentStep?.type === "questions" && (
                   <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs">
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-border-strong bg-sunken px-2.5 py-1 font-mono uppercase tracking-wider text-muted-foreground">
