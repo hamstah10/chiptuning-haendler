@@ -1,9 +1,10 @@
 import type { WizardQuestion } from "./partner-wizard-api";
 
-export type WizardVariant = "imageCards" | "logoTiles" | "choiceCards" | "checkCards" | "segmented" | "chips";
+export type WizardVariant = "imageCards" | "logoTiles" | "choiceCards" | "checkCards" | "segmented" | "chips" | "stepSlider";
 
 /** Picks the input element that fits a wizard choice question based on the portal's question shape. */
-export function pickVariant(q: Pick<WizardQuestion, "questionType" | "multiSelect" | "options">): WizardVariant {
+export function pickVariant(q: Pick<WizardQuestion, "questionType" | "multiSelect" | "options" | "answerKey">): WizardVariant {
+  if (q.answerKey === "experience") return "stepSlider";
   if (q.questionType === "vehicleType") return "imageCards";
   if (q.questionType === "toolManufacturer") return "logoTiles";
   if (q.multiSelect) return q.options.some((o) => !!o.text) ? "checkCards" : "chips";
