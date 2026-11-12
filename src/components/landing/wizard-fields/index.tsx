@@ -172,7 +172,7 @@ export function ToolList({ tools, locale, label }: { tools: ToolItem[]; locale: 
     <div className="grid gap-2">
       {label && <div className="label-caps text-[11px] text-muted-foreground">{label}</div>}
       {tools.map((t) => (
-        <div key={t.key} className={cn("flex items-center gap-3 rounded-sm border border-border-strong bg-card", single ? "px-3.5 py-3" : "px-2.5 py-2")}>
+        <div key={t.key} className={cn("flex min-w-0 items-center gap-3 rounded-sm border border-border-strong bg-card", single ? "px-3.5 py-3" : "px-2.5 py-2")}>
           {t.image ? (
             <img src={t.image} alt="" loading="lazy" width={single ? 48 : 32} height={single ? 48 : 32}
               className={cn("shrink-0 object-contain", single ? "size-12" : "size-8")} />
