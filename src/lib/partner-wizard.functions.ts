@@ -4,7 +4,7 @@ import { z } from "zod";
 /** Optional server-side API token (Authorization: Bearer pw_…); never sent to the browser. */
 function portalHeaders(): Record<string, string> {
   const h: Record<string, string> = { "Content-Type": "application/json", Accept: "application/json", "X-TFD-Client": "tfd" };
-  const token = process.env.TFD_PARTNER_WIZARD_TOKEN;
+  const token = process.env["TFD_PARTNER_WIZARD_TOKEN"];
   if (token) h["Authorization"] = `Bearer ${token}`;
   else h["Origin"] = "https://www.chiptuning.company";
   return h;
