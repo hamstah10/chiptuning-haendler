@@ -291,12 +291,14 @@ export function PartnerWizardDct({ c }: { c: Content }) {
 
         <div>
           <ol className="grid border-b bg-sunken/40" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
-            {steps.map((s, i) => (
+            {steps.map((s, i) => {
+              const StepIcon = STEP_ICONS[i] ?? Sparkles;
+              return (
               <li key={s.key} className="relative">
                 <button type="button" disabled={i > step} onClick={() => setStep(i)}
                   className={cn("flex w-full items-center justify-center gap-1.5 px-2 py-3 text-center font-mono text-[10px] uppercase tracking-wider transition-colors sm:text-[11px]",
                     i <= step ? "text-strong" : "text-faint", i < step && "hover:text-primary")}>
-                  <span className="text-primary">{i < step ? <Check className="size-3" /> : String(i + 1).padStart(2, "0")}</span>
+                  <StepIcon className={cn("size-3.5 shrink-0", i === step ? "text-primary" : i < step ? "text-primary" : "text-faint")} />
                   <span className="hidden sm:inline">{s.label}</span>
                 </button>
                 {i === step && (
