@@ -37,4 +37,4 @@
 - [x] Wizard: Schritte oben statt linke Sidebar
 - [x] Wizard: Symbol vor jedem Schritt-Tab
 
-- [ ] Wizard: Seitenleiste etwas breiter machen
+- [x] Wizard: Seitenleiste etwas breiter machen
