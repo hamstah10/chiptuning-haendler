@@ -306,20 +306,10 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                 </li>
               ))}
             </ol>
-            {answeredSummary.length > 0 && (
-              <div className="mt-3 flex flex-wrap items-center gap-2 border-t pt-3">
-                <div className="label-caps text-[11px] text-faint">{c.locale === "en" ? "Your selection" : "Deine Auswahl"}</div>
-                <div className="flex flex-wrap gap-1.5">
-                  {answeredSummary.map((a) => (
-                    <button key={a.key} type="button" onClick={() => setStep(a.step)} title={c.locale === "en" ? "Edit" : "Ändern"}
-                      className="rounded-full border border-border-strong bg-card px-2.5 py-1 text-xs text-foreground hover:border-primary">{a.label}</button>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
-          <div className="p-5 md:p-7">
+          <div className="grid gap-6 p-5 md:p-7 lg:grid-cols-[1fr_260px]">
+            <div>
             <AnimatePresence mode="wait">
               <motion.div key={currentStep?.key ?? step} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 1 } : { opacity: 0, y: -6 }} transition={{ duration: 0.22, ease: "easeOut" }}>
                 <div className="label-caps text-xs text-primary">{c.locale === "en" ? "Step" : "Schritt"} {String(step + 1).padStart(2, "0")}</div>
