@@ -112,7 +112,12 @@ function answerLabels(q: WizardQuestion, value: WizardAnswers[string] | undefine
   return raws.map((r) => optionTitle(q.options.find((o) => optionValue(q, o) === r) ?? ({} as WizardQuestion["options"][number])) || r);
 }
 
-function RecommendationView({ rec, c }: { rec: WizardRecommendation; c: Content }) {
+function RecommendationView({ rec, c, answers, onChange }: { rec: WizardRecommendation; c: Content; answers: WizardAnswers; onChange: (key: string, value: string | string[]) => void }) {
+  const en = c.locale === "en";
+  const selectedTool = String(answers["selectedTool"] ?? "");
+  const selectedProducts = ((answers["selectedProducts"] as string[] | undefined) ?? []).map(String);
+  const toggleProduct = (sku: string) =>
+    onChange("selectedProducts", selectedProducts.includes(sku) ? selectedProducts.filter((v) => v !== sku) : [...selectedProducts, sku]);
   return (
     <div className="grid gap-5">
       <div className="rounded-sm border border-primary border-l-4 bg-primary-soft px-5 py-5">
@@ -132,11 +137,15 @@ function RecommendationView({ rec, c }: { rec: WizardRecommendation; c: Content 
       </div>
 
       {rec.recommendedTools.length > 0 && (
-        <div className="grid gap-2.5">
+        <div className="grid gap-2.5" role="radiogroup" aria-label={en ? "Choose one tool" : "Wähle ein Tool"}>
+          <div className="label-caps text-xs text-strong">{en ? "Choose one tool" : "Wähle 1 Tool"}</div>
           {rec.recommendedTools.map((tool) => {
             const price = tool.product?.specialPrice ?? tool.product?.price;
+            const on = selectedTool === tool.name;
             return (
-              <div key={tool.key} className="flex items-center gap-3.5 rounded-sm border border-border-strong bg-sunken px-4 py-3.5">
+              <button type="button" role="radio" aria-checked={on} key={tool.key} onClick={() => onChange("selectedTool", on ? "" : tool.name)}
+                className={`flex items-center gap-3.5 rounded-sm border px-4 py-3.5 text-left transition-colors ${on ? "border-primary bg-primary-soft" : "border-border-strong bg-sunken hover:border-primary/60"}`}>
+                <span className={`grid size-5 shrink-0 place-items-center rounded-full border-2 ${on ? "border-primary" : "border-border-strong"}`}>{on && <span className="size-2.5 rounded-full bg-primary" />}</span>
                 {(tool.imageUrl ?? tool.product?.imageUrl) && <img src={tool.imageUrl ?? tool.product?.imageUrl ?? ""} alt="" loading="lazy" className="size-10 shrink-0 object-contain" />}
                 <span className="flex-1">
                   <span className="block font-display font-bold uppercase text-strong">{tool.name}</span>
@@ -147,18 +156,24 @@ function RecommendationView({ rec, c }: { rec: WizardRecommendation; c: Content 
                     {formatEuro(Number(price), c.locale)}
                   </span>
                 )}
-              </div>
+              </button>
             );
           })}
         </div>
       )}
 
       {(rec.recommendedProducts ?? []).length > 0 && (
+        <div className="grid gap-2.5">
+        <div className="label-caps text-xs text-strong">{en ? "Choose products" : "Produkte auswählen"} <span className="normal-case text-faint">· {en ? "Multiple choice" : "Mehrfachauswahl"}</span></div>
         <div className="grid gap-2.5 sm:grid-cols-2">
           {rec.recommendedProducts.map((product) => {
             const price = product.specialPrice ?? product.price;
+            const label = `${product.title} (${product.sku})`;
+            const on = selectedProducts.includes(label);
             return (
-              <div key={product.uid} className="flex items-center gap-3.5 rounded-sm border border-border-strong bg-sunken px-4 py-3.5">
+              <button type="button" aria-pressed={on} key={product.uid} onClick={() => toggleProduct(label)}
+                className={`flex items-center gap-3.5 rounded-sm border px-4 py-3.5 text-left transition-colors ${on ? "border-primary bg-primary-soft" : "border-border-strong bg-sunken hover:border-primary/60"}`}>
+                <span className={`grid size-5 shrink-0 place-items-center rounded-sm border-2 ${on ? "border-primary bg-primary text-primary-foreground" : "border-border-strong"}`}>{on && <Check className="size-3.5" />}</span>
                 {product.imageUrl && <img src={product.imageUrl} alt="" loading="lazy" className="size-14 shrink-0 object-contain" />}
                 <span className="flex-1">
                   <span className="block font-display font-bold uppercase text-strong">{product.title}</span>
@@ -169,9 +184,10 @@ function RecommendationView({ rec, c }: { rec: WizardRecommendation; c: Content 
                     {formatEuro(Number(price), c.locale)}
                   </span>
                 )}
-              </div>
+              </button>
             );
           })}
+        </div>
         </div>
       )}
 
@@ -381,7 +397,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
 
                 {currentStep?.type === "recommendation" && rec && (
                   <div>
-                    <RecommendationView rec={rec} c={c} />
+                    <RecommendationView rec={rec} c={c} answers={answers} onChange={(k, v) => setAnswers((s) => ({ ...s, [k]: v }))} />
                   </div>
                 )}
 
