@@ -56,7 +56,7 @@ export function MixedHero({ c }: { c: Content }) {
           type="button"
           aria-label={c.locale === "de" ? "Vorheriges Bild" : "Previous image"}
           onClick={() => go(index - 1)}
-          className="absolute left-3 top-1/2 z-10 hidden size-11 -translate-y-1/2 items-center justify-center rounded-sm border border-border bg-background/60 text-foreground transition-colors hover:bg-background/90 md:left-5 md:flex"
+          className="absolute left-20 top-1/2 z-10 hidden size-11 -translate-y-1/2 items-center justify-center rounded-sm border border-border bg-background/60 text-foreground transition-colors hover:bg-background/90 md:flex"
         >
           <ChevronLeft className="size-5" />
         </button>
