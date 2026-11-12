@@ -19,6 +19,7 @@ import {
 } from "@/lib/partner-wizard-api";
 import { AppointmentPicker, WizardContactFields, contactMissing } from "./wizard-contact";
 import { ChipGroup, CheckCards, ChoiceCards, ImageCards, LogoTiles, SegmentedControl, StepSlider, ToolList, type FieldOption, type ToolItem } from "./wizard-fields";
+import { GoalList } from "./wizard-fields/goal-list";
 import { pickVariant } from "@/lib/wizard-variants";
 import { groupServiceOptions } from "@/lib/wizard-service-groups";
 import { sortToolBrands } from "@/lib/wizard-tool-order";
@@ -90,8 +91,9 @@ function QuestionBlock({
         ? sortToolBrands(q.options, optionTitle)
         : q.options;
   const options: FieldOption[] = rawOptions.map((o) => ({ value: optionValue(q, o), title: optionTitle(o), text: o.text, icon: o.icon ?? o.imageUrl }));
-  const list = Array.isArray(current) ? (current as (string | number)[]).map(String) : [];
-  const multi = q.questionType === "vehicleType" || q.multiSelect;
+  const list = Array.isArray(current) ? (current as (string | number)[]).map(String) : variant === "goalList" && current ? [String(current)] : [];
+  const _unusedList = Array.isArray(current) ? (current as (string | number)[]).map(String) : [];
+  const multi = q.questionType === "vehicleType" || q.multiSelect || variant === "goalList";
   const isOn = (raw: string) => (multi ? list.includes(raw) : current === raw);
   const setList = (next: string[]) => onAnswer(q.answerKey, q.questionType === "vehicleType" ? next.map(Number) : next);
   const toggle = (raw: string) => {
@@ -111,7 +113,7 @@ function QuestionBlock({
             </span>
           )}
         </span>
-        {multi && <span className="text-xs text-faint">{en ? "Multiple choice" : "Mehrfachauswahl"}</span>}
+        {multi && variant !== "goalList" && <span className="text-xs text-faint">{en ? "Multiple choice" : "Mehrfachauswahl"}</span>}
         {trailing && <span className="ml-auto">{trailing}</span>}
       </legend>
       {q.helpText && <p className="-mt-1 text-sm text-muted-foreground">{q.helpText}</p>}
@@ -122,6 +124,7 @@ function QuestionBlock({
         <LogoTiles options={options} isOn={isOn} onToggle={toggle} noneLabel={en ? "No tool yet" : "Noch kein Tool"} noneOn={current === NO_TOOL} onNone={() => onAnswer(q.answerKey, current === NO_TOOL ? "" : NO_TOOL)} />
       )}
       {variant === "stepSlider" && <StepSlider options={options} value={String(current ?? "")} onChange={(v) => onAnswer(q.answerKey, v)} label={q.title} />}
+      {variant === "goalList" && <GoalList options={options} isOn={isOn} onToggle={toggle} locale={locale} />}
       {variant === "choiceCards" && <ChoiceCards options={options} isOn={isOn} onToggle={toggle} />}
       {variant === "checkCards" && (
         <CheckCards options={options} isOn={isOn} onToggle={toggle}
