@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Car, Check, Globe, Loader2, Mail, Rocket, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatEuro } from "@/lib/format";
@@ -19,6 +19,9 @@ import {
 import { AppointmentPicker, WizardContactFields, contactMissing } from "./wizard-contact";
 import { ChipGroup, ChoiceCards, ImageCards, LogoTiles, SegmentedControl, type FieldOption } from "./wizard-fields";
 import { pickVariant } from "@/lib/wizard-variants";
+
+/** Icon per wizard step, matched by position. */
+const STEP_ICONS = [Rocket, Car, Globe, Sparkles, Mail];
 
 /** Local marker for "no tool yet"; never sent to the portal. */
 const NO_TOOL = "__none__";
@@ -288,30 +291,34 @@ export function PartnerWizardDct({ c }: { c: Content }) {
 
         <div>
           <ol className="grid border-b bg-sunken/40" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
-            {steps.map((s, i) => (
+            {steps.map((s, i) => {
+              const StepIcon = STEP_ICONS[i] ?? Sparkles;
+              return (
               <li key={s.key} className="relative">
                 <button type="button" disabled={i > step} onClick={() => setStep(i)}
                   className={cn("flex w-full items-center justify-center gap-1.5 px-2 py-3 text-center font-mono text-[10px] uppercase tracking-wider transition-colors sm:text-[11px]",
                     i <= step ? "text-strong" : "text-faint", i < step && "hover:text-primary")}>
-                  <span className="text-primary">{i < step ? <Check className="size-3" /> : String(i + 1).padStart(2, "0")}</span>
+                  <StepIcon className={cn("size-3.5 shrink-0", i === step ? "text-primary" : i < step ? "text-primary" : "text-faint")} />
                   <span className="hidden sm:inline">{s.label}</span>
                 </button>
                 {i === step && (
                   <motion.span layoutId="wizard-step" className="absolute inset-x-0 bottom-0 h-0.5 bg-primary" />
                 )}
               </li>
-            ))}
+              );
+            })}
           </ol>
 
-          <div className="grid gap-6 p-5 md:p-7 lg:grid-cols-[1fr_260px]">
-            <div>
+          <div className="p-5 md:p-7">
             <AnimatePresence mode="wait">
               <motion.div key={currentStep?.key ?? step} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 1 } : { opacity: 0, y: -6 }} transition={{ duration: 0.22, ease: "easeOut" }}>
                 <div className="label-caps text-xs text-primary">{c.locale === "en" ? "Step" : "Schritt"} {String(step + 1).padStart(2, "0")}</div>
                 <h3 className="mt-1 text-2xl">{currentStep?.label}</h3>
 
+                <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_260px]">
+                <div>
                 {currentStep?.type === "questions" && (
-                  <div className="mt-6 grid gap-7">
+                  <div className="grid gap-7">
                     {visibleQuestions.map((q) => (
                       <QuestionBlock key={q.answerKey} q={q} answers={answers} onAnswer={onAnswer} locale={c.locale} />
                     ))}
@@ -319,18 +326,55 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                 )}
 
                 {currentStep?.type === "recommendation" && rec && (
-                  <div className="mt-6">
+                  <div>
                     <RecommendationView rec={rec} c={c} />
                   </div>
                 )}
 
                 {currentStep?.type === "contact" && (
-                  <div className="mt-6 grid gap-6">
+                  <div className="grid gap-6">
                     <WizardContactFields questions={visibleQuestions} values={contact} onChange={(k, v) => setContact((s) => ({ ...s, [k]: v }))} showErrors={status === "invalid"} locale={c.locale} />
                     {config.appointment?.enabled && <AppointmentPicker settings={config.appointment} locale={c.locale} value={slot} onChange={setSlot} />}
                     {config.privacyNotice && <p className="text-xs leading-relaxed text-faint">{config.privacyNotice}</p>}
                   </div>
                 )}
+                </div>
+
+                <div>
+                  <div className="font-mono text-xs uppercase tracking-wider text-faint">{c.locale === "en" ? "Your selection" : "Deine Auswahl"}</div>
+                  <div className="mt-2.5 rounded-sm border bg-sunken px-4 py-3.5">
+                    {answeredSummary.length > 0 ? (
+                      <div className="grid gap-3">
+                        {answeredSummary.map((a) => (
+                          <button key={a.key} type="button" onClick={() => setStep(a.step)} title={c.locale === "en" ? "Edit" : "Ändern"} className="group text-left">
+                            <span className="label-caps block text-[11px] text-faint transition-colors group-hover:text-primary">{a.title}</span>
+                            <span className="mt-1 flex flex-wrap gap-1.5">
+                              {a.labels.map((label) => (
+                                <span key={label} className="rounded-full border border-border-strong bg-card px-2 py-0.5 text-xs text-foreground transition-colors group-hover:border-primary">{label}</span>
+                              ))}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs leading-relaxed text-faint">
+                        {c.locale === "en" ? "Your answers will appear here as you go." : "Deine Antworten erscheinen hier, sobald du weitergehst."}
+                      </p>
+                    )}
+                  </div>
+                  {rec && (
+                    <div className="mt-4 rounded-sm border border-primary border-l-4 bg-primary-soft px-4 py-3.5">
+                      <div className="font-mono text-[11px] uppercase tracking-wider text-primary">{c.locale === "en" ? "Recommendation" : "Empfehlung"}</div>
+                      <div className="mt-1 font-display font-bold uppercase text-strong">{rec.packageTitle}</div>
+                      {rec.estimatedMonthlyRevenue != null && rec.estimatedMonthlyRevenue > 0 && (
+                        <div className="mt-1 font-mono text-xs tabular-nums text-muted-foreground">
+                          {c.calculator.perMonth}: {formatEuro(rec.estimatedMonthlyRevenue, c.locale)}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+                </div>
               </motion.div>
             </AnimatePresence>
 
@@ -357,42 +401,6 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                   {currentStep?.type === "recommendation" && rec ? rec.nextStep || t.next : t.next}
                   <ArrowRight />
                 </Button>
-              )}
-            </div>
-            </div>
-
-            <div>
-              <div className="font-mono text-xs uppercase tracking-wider text-faint">{c.locale === "en" ? "Your selection" : "Deine Auswahl"}</div>
-              <div className="mt-2.5 rounded-sm border bg-sunken px-4 py-3.5">
-                {answeredSummary.length > 0 ? (
-                  <div className="grid gap-3">
-                    {answeredSummary.map((a) => (
-                      <button key={a.key} type="button" onClick={() => setStep(a.step)} title={c.locale === "en" ? "Edit" : "Ändern"} className="group text-left">
-                        <span className="label-caps block text-[11px] text-faint transition-colors group-hover:text-primary">{a.title}</span>
-                        <span className="mt-1 flex flex-wrap gap-1.5">
-                          {a.labels.map((label) => (
-                            <span key={label} className="rounded-full border border-border-strong bg-card px-2 py-0.5 text-xs text-foreground transition-colors group-hover:border-primary">{label}</span>
-                          ))}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-xs leading-relaxed text-faint">
-                    {c.locale === "en" ? "Your answers will appear here as you go." : "Deine Antworten erscheinen hier, sobald du weitergehst."}
-                  </p>
-                )}
-              </div>
-              {rec && (
-                <div className="mt-4 rounded-sm border border-primary border-l-4 bg-primary-soft px-4 py-3.5">
-                  <div className="font-mono text-[11px] uppercase tracking-wider text-primary">{c.locale === "en" ? "Recommendation" : "Empfehlung"}</div>
-                  <div className="mt-1 font-display font-bold uppercase text-strong">{rec.packageTitle}</div>
-                  {rec.estimatedMonthlyRevenue != null && rec.estimatedMonthlyRevenue > 0 && (
-                    <div className="mt-1 font-mono text-xs tabular-nums text-muted-foreground">
-                      {c.calculator.perMonth}: {formatEuro(rec.estimatedMonthlyRevenue, c.locale)}
-                    </div>
-                  )}
-                </div>
               )}
             </div>
           </div>
