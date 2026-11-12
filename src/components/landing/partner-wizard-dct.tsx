@@ -1,5 +1,5 @@
 import { calcPackagePrice } from "@/lib/wizard-package-price";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowLeft, ArrowRight, Car, Check, Globe, Loader2, Mail, Rocket, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -72,11 +72,13 @@ function QuestionBlock({
   answers,
   onAnswer,
   locale,
+  trailing,
 }: {
   q: WizardQuestion;
   answers: WizardAnswers;
   onAnswer: (key: string, value: string | string[] | number[]) => void;
   locale: "de" | "en";
+  trailing?: ReactNode;
 }) {
   const en = locale === "en";
   const current = answers[q.answerKey];
@@ -110,6 +112,7 @@ function QuestionBlock({
           )}
         </span>
         {multi && <span className="text-xs text-faint">{en ? "Multiple choice" : "Mehrfachauswahl"}</span>}
+        {trailing && <span className="ml-auto">{trailing}</span>}
       </legend>
       {q.helpText && <p className="-mt-1 text-sm text-muted-foreground">{q.helpText}</p>}
       {variant === "imageCards" && (
