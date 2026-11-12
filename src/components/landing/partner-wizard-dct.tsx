@@ -389,6 +389,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
 
   const visibleQuestions = currentStep?.questions.filter((q) => isVisible(q, answers)) ?? [];
   const stepComplete = currentStep?.type !== "questions" || visibleQuestions.every((q) => isAnswered(answers[q.answerKey]));
+  const answeredCount = visibleQuestions.filter((q) => isAnswered(answers[q.answerKey])).length;
 
   const recStepIndex = steps.findIndex((s) => s.type === "recommendation");
   const pickedTool = String(answers["selectedTool"] ?? "");
