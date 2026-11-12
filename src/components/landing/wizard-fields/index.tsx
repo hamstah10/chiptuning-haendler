@@ -158,3 +158,36 @@ export function SegmentedControl({ options, value, onChange, label }: { options:
     </div>
   );
 }
+
+/** A recommended tool as shown in the sidebar: name, optional note, picture and price. */
+export interface ToolItem { key: string; title: string; text?: string | null; image?: string | null; price?: string | number | null }
+
+/**
+ * Tools with their picture. One tool renders as a prominent card, several as compact list rows.
+ */
+export function ToolList({ tools, locale, label }: { tools: ToolItem[]; locale: "de" | "en"; label?: string }) {
+  if (tools.length === 0) return null;
+  const single = tools.length === 1;
+  return (
+    <div className="grid gap-2">
+      {label && <div className="label-caps text-[11px] text-muted-foreground">{label}</div>}
+      {tools.map((t) => (
+        <div key={t.key} className={cn("flex items-center gap-3 rounded-sm border border-border-strong bg-card", single ? "px-3.5 py-3" : "px-2.5 py-2")}>
+          {t.image ? (
+            <img src={t.image} alt="" loading="lazy" width={single ? 48 : 32} height={single ? 48 : 32}
+              className={cn("shrink-0 object-contain", single ? "size-12" : "size-8")} />
+          ) : (
+            <span className={cn("shrink-0 rounded-sm border border-dashed border-border-strong", single ? "size-12" : "size-8")} aria-hidden />
+          )}
+          <span className="min-w-0 flex-1">
+            <span className={cn("block truncate font-display font-bold uppercase leading-tight text-strong", single ? "text-sm" : "text-xs")}>{t.title}</span>
+            {single && t.text && <span className="mt-0.5 block text-xs leading-snug text-muted-foreground">{t.text}</span>}
+          </span>
+          {t.price != null && t.price !== "" && (
+            <span className="whitespace-nowrap font-mono text-xs tabular-nums text-strong">{formatEuro(Number(t.price), locale)}</span>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
