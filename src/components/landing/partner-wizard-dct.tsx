@@ -68,7 +68,8 @@ function QuestionBlock({
   const en = locale === "en";
   const current = answers[q.answerKey];
   const variant = pickVariant(q);
-  const options: FieldOption[] = q.options.map((o) => ({ value: optionValue(q, o), title: optionTitle(o), text: o.text, icon: o.icon ?? o.imageUrl }));
+  const rawOptions = q.questionType === "vehicleType" ? sortVehicleTypes(q.options, optionTitle) : q.options;
+  const options: FieldOption[] = rawOptions.map((o) => ({ value: optionValue(q, o), title: optionTitle(o), text: o.text, icon: o.icon ?? o.imageUrl }));
   const list = Array.isArray(current) ? (current as (string | number)[]).map(String) : [];
   const multi = q.questionType === "vehicleType" || q.multiSelect;
   const isOn = (raw: string) => (multi ? list.includes(raw) : current === raw);
