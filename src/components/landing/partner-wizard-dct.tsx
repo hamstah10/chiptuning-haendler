@@ -337,7 +337,16 @@ export function PartnerWizardDct({ c }: { c: Content }) {
 
   const visibleQuestions = currentStep?.questions.filter((q) => isVisible(q, answers)) ?? [];
 
-  const answeredSummary = steps.slice(0, step).flatMap((s, i) =>
+  const recStepIndex = steps.findIndex((s) => s.type === "recommendation");
+  const pickedTool = String(answers["selectedTool"] ?? "");
+  const pickedProducts = (answers["selectedProducts"] as string[] | undefined) ?? [];
+  const recSummary = recStepIndex >= 0 && recStepIndex <= step
+    ? [
+        ...(pickedTool ? [{ title: c.locale === "en" ? "Tool" : "Tool", labels: [pickedTool], step: recStepIndex, key: "selectedTool" }] : []),
+        ...(pickedProducts.length ? [{ title: c.locale === "en" ? "Products" : "Produkte", labels: pickedProducts, step: recStepIndex, key: "selectedProducts" }] : []),
+      ]
+    : [];
+  const answeredSummary = [...steps.slice(0, step + 1).flatMap((s, i) =>
     s.type === "questions"
       ? s.questions
           .filter((q) => isVisible(q, answers))
@@ -346,7 +355,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
             return labels.length > 0 ? [{ title: q.title, labels, step: i, key: q.answerKey }] : [];
           })
       : [],
-  );
+  ), ...recSummary];
 
   return (
     <div>
@@ -428,7 +437,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                       </div>
                     ) : (
                       <p className="text-xs leading-relaxed text-faint">
-                        {c.locale === "en" ? "Your answers will appear here as you go." : "Deine Antworten erscheinen hier, sobald du weitergehst."}
+                        {c.locale === "en" ? "Your answers will appear here as you go." : "Deine Antworten erscheinen hier, sobald du etwas auswählst."}
                       </p>
                     )}
                   </div>
