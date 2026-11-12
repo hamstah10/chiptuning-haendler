@@ -89,11 +89,19 @@ function QuestionBlock({
     if (multi) return setList(list.includes(raw) ? list.filter((v) => v !== raw) : [...list, raw]);
     onAnswer(q.answerKey, current === raw ? "" : raw);
   };
+  const answered = Array.isArray(current) ? current.length > 0 : current !== undefined && current !== null && String(current) !== "";
 
   return (
     <fieldset className="grid gap-3">
       <legend className="mb-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span className="label-caps text-xs text-strong">{q.title}</span>
+        <span className="label-caps text-xs text-strong">
+          {q.title}
+          {!answered && (
+            <span className="ml-1 font-bold text-primary" aria-hidden>
+              *
+            </span>
+          )}
+        </span>
         {multi && <span className="text-xs text-faint">{en ? "Multiple choice" : "Mehrfachauswahl"}</span>}
       </legend>
       {q.helpText && <p className="-mt-1 text-sm text-muted-foreground">{q.helpText}</p>}
@@ -258,17 +266,30 @@ export function PartnerWizardDct({ c }: { c: Content }) {
 
   const onAnswer = (key: string, value: string | string[] | number[]) => {
     setAnswers((s) => ({ ...s, [key]: value }));
-    // Auto-advance once every visible question of the step has an answer.
-    // Multi-select questions never trigger it themselves — the visitor may want to pick more.
-    if (currentStep?.type !== "questions") return;
-    const q = currentStep.questions.find((x) => x.answerKey === key);
-    if (!q || q.questionType === "vehicleType" || q.multiSelect) return;
-    const nextAnswers = { ...answers, [key]: value };
-    const visible = currentStep.questions.filter((x) => isVisible(x, nextAnswers));
-    if (visible.every((x) => isAnswered(nextAnswers[x.answerKey]))) {
-      window.setTimeout(() => void next(nextAnswers), 300);
-    }
   };
+
+  const recStepIdx = steps.findIndex((s) => s.type === "recommendation");
+
+  // Prefetch the recommendation once a questions step is fully answered,
+  // so the sidebar can show it before the recommendation step is reached.
+  useEffect(() => {
+    if (!currentStep || currentStep.type !== "questions" || step < 1 || (recStepIdx >= 0 && step >= recStepIdx)) return;
+    const visible = currentStep.questions.filter((q) => isVisible(q, answers));
+    if (visible.length === 0 || !visible.every((q) => isAnswered(answers[q.answerKey]))) return;
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      fetchWizardRecommendation(portalAnswers(answers))
+        .then((r) => {
+          if (!cancelled) setRec(r);
+        })
+        .catch(() => {});
+    }, 250);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [answers, currentStep, step, recStepIdx]);
 
   const contactQuestions = steps.find((s) => s.type === "contact")?.questions.filter((q) => isVisible(q, answers)) ?? [];
   const contactValid = !contactMissing(contactQuestions, contact) && !(config?.appointment?.enabled && config.appointment.required && !slot);
@@ -281,7 +302,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
     const nextIndex = step + 1;
     const nextStep = steps[nextIndex];
     if (nextStep?.type === "recommendation") {
-      setStatus("loading");
+      if (!rec) setStatus("loading");
       try {
         const recommendation = await fetchWizardRecommendation(portalAnswers(overrideAnswers ?? answers));
         setRec(recommendation);
@@ -354,6 +375,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
   }
 
   const visibleQuestions = currentStep?.questions.filter((q) => isVisible(q, answers)) ?? [];
+  const stepComplete = currentStep?.type !== "questions" || visibleQuestions.every((q) => isAnswered(answers[q.answerKey]));
 
   const recStepIndex = steps.findIndex((s) => s.type === "recommendation");
   const pickedTool = String(answers["selectedTool"] ?? "");
@@ -481,6 +503,13 @@ export function PartnerWizardDct({ c }: { c: Content }) {
               </p>
             )}
 
+            {!stepComplete && (
+              <p className="mt-5 flex items-center gap-1.5 text-xs text-muted-foreground">
+                <span className="font-bold text-primary" aria-hidden>*</span>
+                {c.locale === "en" ? "Please make a selection to continue." : "Bitte triff eine Auswahl, um fortzufahren."}
+              </p>
+            )}
+
             <div className="mt-7 flex items-center justify-between gap-3 border-t pt-5">
               <Button variant="outline" disabled={step === 0} onClick={() => setStep((s) => Math.max(0, s - 1))} className="label-caps h-10 rounded-sm border-border-strong bg-sunken shadow-none">
                 <ArrowLeft />
@@ -493,7 +522,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                   <ArrowRight />
                 </Button>
               ) : (
-                <Button onClick={() => void next()} disabled={status === "loading"} className="label-caps h-10 rounded-sm shadow-none">
+                <Button onClick={() => void next()} disabled={status === "loading" || !stepComplete} className="label-caps h-10 rounded-sm shadow-none">
                   {status === "loading" ? <Loader2 className="animate-spin" /> : null}
                   {currentStep?.type === "recommendation" && rec ? rec.nextStep || t.next : t.next}
                   <ArrowRight />
