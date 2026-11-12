@@ -3,6 +3,8 @@ import { cn } from "@/lib/utils";
 import type { FieldOption } from "./index";
 
 const ICONS = [Rocket, Briefcase, Zap];
+/** Portal answer values in list order; used to look up the corrected labels. */
+const GOAL_VALUES = ["start", "workshop", "active"];
 const COPY = {
   de: [
     ["Neu starten", "Ich möchte in das Thema Chiptuning / Verbrauchsoptimierung & Optionen einsteigen."],
@@ -15,6 +17,12 @@ const COPY = {
     ["Active tuner", "I work on vehicles regularly."],
   ],
 } as const;
+
+/** Corrected goal title for a portal answer value (the portal text contains typos). */
+export function goalTitle(value: string, locale: "de" | "en"): string | undefined {
+  const i = GOAL_VALUES.indexOf(value);
+  return i === -1 ? undefined : COPY[locale][i][0];
+}
 
 /** Multi-select goal list: numbered rows with icon box, text and square checkbox. */
 export function GoalList({ options, isOn, onToggle, locale }: { options: FieldOption[]; isOn: (v: string) => boolean; onToggle: (v: string) => void; locale: "de" | "en" }) {
