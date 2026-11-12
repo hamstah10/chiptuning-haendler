@@ -495,6 +495,13 @@ export function PartnerWizardDct({ c }: { c: Content }) {
               </p>
             )}
 
+            {!stepComplete && (
+              <p className="mt-5 flex items-center gap-1.5 text-xs text-muted-foreground">
+                <span className="font-bold text-primary" aria-hidden>*</span>
+                {c.locale === "en" ? "Please make a selection to continue." : "Bitte triff eine Auswahl, um fortzufahren."}
+              </p>
+            )}
+
             <div className="mt-7 flex items-center justify-between gap-3 border-t pt-5">
               <Button variant="outline" disabled={step === 0} onClick={() => setStep((s) => Math.max(0, s - 1))} className="label-caps h-10 rounded-sm border-border-strong bg-sunken shadow-none">
                 <ArrowLeft />
@@ -507,7 +514,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                   <ArrowRight />
                 </Button>
               ) : (
-                <Button onClick={() => void next()} disabled={status === "loading"} className="label-caps h-10 rounded-sm shadow-none">
+                <Button onClick={() => void next()} disabled={status === "loading" || !stepComplete} className="label-caps h-10 rounded-sm shadow-none">
                   {status === "loading" ? <Loader2 className="animate-spin" /> : null}
                   {currentStep?.type === "recommendation" && rec ? rec.nextStep || t.next : t.next}
                   <ArrowRight />
