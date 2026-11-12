@@ -23,6 +23,7 @@ import { GoalList, goalTitle } from "./wizard-fields/goal-list";
 import { pickVariant } from "@/lib/wizard-variants";
 import { groupServiceOptions } from "@/lib/wizard-service-groups";
 import { sortToolBrands } from "@/lib/wizard-tool-order";
+import { SERVICE_ICON_SVG } from "@/lib/wizard-service-icons";
 
 /** Icon per wizard step, matched by position. */
 const STEP_ICONS = [Rocket, Car, Globe, Sparkles, Mail];
@@ -90,7 +91,13 @@ function QuestionBlock({
       : q.questionType === "toolManufacturer"
         ? sortToolBrands(q.options, optionTitle)
         : q.options;
-  const options: FieldOption[] = rawOptions.map((o) => ({ value: optionValue(q, o), title: optionTitle(o), text: o.text, icon: o.icon ?? o.imageUrl }));
+  const options: FieldOption[] = rawOptions.map((o) => ({
+    value: optionValue(q, o),
+    title: optionTitle(o),
+    text: o.text,
+    icon: o.icon ?? o.imageUrl,
+    svg: q.questionType === "service" ? SERVICE_ICON_SVG[optionValue(q, o)] : undefined,
+  }));
   const list = Array.isArray(current) ? (current as (string | number)[]).map(String) : variant === "goalList" && current ? [String(current)] : [];
   const multi = q.questionType === "vehicleType" || q.multiSelect || variant === "goalList";
   const isOn = (raw: string) => (multi ? list.includes(raw) : current === raw);
