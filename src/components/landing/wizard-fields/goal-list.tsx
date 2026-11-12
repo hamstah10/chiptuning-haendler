@@ -21,7 +21,7 @@ const COPY = {
 /** Corrected goal title for a portal answer value (the portal text contains typos). */
 export function goalTitle(value: string, locale: "de" | "en"): string | undefined {
   const i = GOAL_VALUES.indexOf(value);
-  return i === -1 ? undefined : COPY[locale][i][0];
+  return i === -1 ? undefined : COPY[locale][i]?.[0];
 }
 
 /** Multi-select goal list: numbered rows with icon box, text and square checkbox. */
