@@ -19,6 +19,7 @@ import {
 import { AppointmentPicker, WizardContactFields, contactMissing } from "./wizard-contact";
 import { ChipGroup, CheckCards, ChoiceCards, ImageCards, LogoTiles, SegmentedControl, type FieldOption } from "./wizard-fields";
 import { pickVariant } from "@/lib/wizard-variants";
+import { groupServiceOptions } from "@/lib/wizard-service-groups";
 
 /** Icon per wizard step, matched by position. */
 const STEP_ICONS = [Rocket, Car, Globe, Sparkles, Mail];
@@ -52,6 +53,16 @@ function isVisible(q: WizardQuestion, answers: WizardAnswers): boolean {
   const dep = answers[q.dependsOnAnswerKey];
   if (Array.isArray(dep)) return dep.map(String).includes(q.dependsOnValue ?? "");
   return String(dep ?? "") === q.dependsOnValue;
+}
+
+/** Labelled groups for the service list: performance tuning vs. the other tuning options. */
+function serviceSections(options: FieldOption[], en: boolean) {
+  const groups = groupServiceOptions(options);
+  if (groups.length < 2) return undefined;
+  const labels = en
+    ? { performance: "Performance tuning", options: "Tuning options" }
+    : { performance: "Leistungsoptimierungen", options: "Tuning-Optionen" };
+  return groups.map((g) => ({ label: labels[g.id], options: g.options }));
 }
 
 function QuestionBlock({
@@ -95,6 +106,7 @@ function QuestionBlock({
       {variant === "choiceCards" && <ChoiceCards options={options} isOn={isOn} onToggle={toggle} />}
       {variant === "checkCards" && (
         <CheckCards options={options} isOn={isOn} onToggle={toggle}
+          sections={serviceSections(options, en)}
           onAll={multi ? () => setList(options.map((o) => o.value)) : undefined}
           onReset={multi ? () => setList([]) : undefined}
           allLabel={en ? "Select all" : "Alle wählen"} resetLabel={en ? "Reset" : "Zurücksetzen"} />
