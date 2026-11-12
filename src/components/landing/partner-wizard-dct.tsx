@@ -36,6 +36,17 @@ function optionTitle(o: WizardQuestion["options"][number]): string {
   return o.title ?? o.name ?? "";
 }
 
+/** Vehicle types shown first, in this order; everything else keeps the API order. */
+const VEHICLE_TYPE_ORDER = ["pkw", "lkw", "agrar"];
+
+function sortVehicleTypes<T>(options: T[], title: (o: T) => string): T[] {
+  const rank = (o: T) => {
+    const i = VEHICLE_TYPE_ORDER.indexOf(title(o).trim().toLowerCase());
+    return i === -1 ? VEHICLE_TYPE_ORDER.length : i;
+  };
+  return [...options].sort((a, b) => rank(a) - rank(b));
+}
+
 function isVisible(q: WizardQuestion, answers: WizardAnswers): boolean {
   if (!q.dependsOnAnswerKey) return true;
   const dep = answers[q.dependsOnAnswerKey];
@@ -57,7 +68,8 @@ function QuestionBlock({
   const en = locale === "en";
   const current = answers[q.answerKey];
   const variant = pickVariant(q);
-  const options: FieldOption[] = q.options.map((o) => ({ value: optionValue(q, o), title: optionTitle(o), text: o.text, icon: o.icon ?? o.imageUrl }));
+  const rawOptions = q.questionType === "vehicleType" ? sortVehicleTypes(q.options, optionTitle) : q.options;
+  const options: FieldOption[] = rawOptions.map((o) => ({ value: optionValue(q, o), title: optionTitle(o), text: o.text, icon: o.icon ?? o.imageUrl }));
   const list = Array.isArray(current) ? (current as (string | number)[]).map(String) : [];
   const multi = q.questionType === "vehicleType" || q.multiSelect;
   const isOn = (raw: string) => (multi ? list.includes(raw) : current === raw);
