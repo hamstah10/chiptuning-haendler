@@ -52,6 +52,22 @@ export function MixedHero({ c }: { c: Content }) {
           />
         </AnimatePresence>
         <div className="mixed-hero-shade absolute inset-0 -z-10" aria-hidden />
+        <button
+          type="button"
+          aria-label={c.locale === "de" ? "Vorheriges Bild" : "Previous image"}
+          onClick={() => go(index - 1)}
+          className="absolute left-3 top-1/2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-sm border border-border bg-background/60 text-foreground transition-colors hover:bg-background/90 md:left-5"
+        >
+          <ChevronLeft className="size-5" />
+        </button>
+        <button
+          type="button"
+          aria-label={c.locale === "de" ? "Nächstes Bild" : "Next image"}
+          onClick={() => go(index + 1)}
+          className="absolute right-3 top-1/2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-sm border border-border bg-background/60 text-foreground transition-colors hover:bg-background/90 md:right-5"
+        >
+          <ChevronRight className="size-5" />
+        </button>
         <div className="relative mx-auto flex h-full max-w-6xl flex-col justify-center px-5 py-12 md:py-16 md:pl-20">
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 24 }}
