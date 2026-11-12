@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { formatEuro } from "@/lib/format";
 
 export interface FieldOption { value: string; title: string; text?: string | null; icon?: string | null }
 
