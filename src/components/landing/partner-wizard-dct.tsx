@@ -17,7 +17,7 @@ import {
   type WizardRecommendation,
 } from "@/lib/partner-wizard-api";
 import { AppointmentPicker, WizardContactFields, contactMissing } from "./wizard-contact";
-import { ChipGroup, CheckCards, ChoiceCards, ImageCards, LogoTiles, SegmentedControl, type FieldOption } from "./wizard-fields";
+import { ChipGroup, CheckCards, ChoiceCards, ImageCards, LogoTiles, SegmentedControl, ToolList, type FieldOption, type ToolItem } from "./wizard-fields";
 import { pickVariant } from "@/lib/wizard-variants";
 import { groupServiceOptions } from "@/lib/wizard-service-groups";
 
