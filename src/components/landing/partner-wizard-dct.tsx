@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Car, Check, Globe, Loader2, Mail, Rocket, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatEuro } from "@/lib/format";
@@ -19,6 +19,9 @@ import {
 import { AppointmentPicker, WizardContactFields, contactMissing } from "./wizard-contact";
 import { ChipGroup, ChoiceCards, ImageCards, LogoTiles, SegmentedControl, type FieldOption } from "./wizard-fields";
 import { pickVariant } from "@/lib/wizard-variants";
+
+/** Icon per wizard step, matched by position. */
+const STEP_ICONS = [Rocket, Car, Globe, Sparkles, Mail];
 
 /** Local marker for "no tool yet"; never sent to the portal. */
 const NO_TOOL = "__none__";
