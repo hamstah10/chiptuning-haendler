@@ -13,13 +13,15 @@ export interface WizardOption {
   text: string | null;
   icon: string | null;
   imageUrl: string | null;
+  optionId?: number | null;
+  numericValue?: number | null;
 }
 
 export interface WizardQuestion {
   answerKey: string;
   title: string;
   helpText: string | null;
-  questionType: "generic" | "vehicleType" | "toolManufacturer";
+  questionType: "generic" | "vehicleType" | "toolManufacturer" | "service" | "volume";
   multiSelect: boolean;
   fieldType: "text" | "email" | "textarea" | "checkbox" | "select" | "radio" | null;
   required: boolean;
@@ -86,16 +88,28 @@ export interface WizardRecommendation {
 export type WizardAnswers = Record<string, string | string[] | number[]>;
 
 /** Maps collected answers to the fixed field names the recommend/leads API expects. */
+let knownQuestions: WizardQuestion[] = [];
+
+/** Answer key of the first question with the given portal type, falling back to the standard key. */
+const keyFor = (type: WizardQuestion["questionType"], fallback: string) =>
+  knownQuestions.find((q) => q.questionType === type)?.answerKey ?? fallback;
+
 export function buildWizardRequest(answers: WizardAnswers) {
-  const vehicles = (answers["vehicles"] as number[] | undefined) ?? [];
+  const vehicles = ((answers[keyFor("vehicleType", "vehicles")] as number[] | undefined) ?? []).map(Number);
+  const volumeQ = knownQuestions.find((q) => q.questionType === "volume");
+  const volumeValue = volumeQ ? String(answers[volumeQ.answerKey] ?? "") : "";
+  const monthly = volumeQ?.options.find((o) => o.value === volumeValue)?.numericValue;
+  const level = answers["desiredToolLevel"] as string | undefined;
   return {
     clientId: PARTNER_WIZARD_CLIENT,
     goal: (answers["goal"] as string) || undefined,
     experience: (answers["experience"] as string) || undefined,
     vehicleCategories: vehicles,
     mainVehicleCategory: vehicles[0],
-    currentTool: (answers["tool"] as string) || undefined,
-    services: (answers["services"] as string[] | undefined) ?? [],
+    currentTool: (answers[keyFor("toolManufacturer", "tool")] as string) || undefined,
+    services: (answers[keyFor("service", "services")] as string[] | undefined) ?? [],
+    ...(typeof monthly === "number" ? { monthlyVehicleCount: monthly } : {}),
+    ...(level === "slave" || level === "master" || level === "unknown" ? { desiredToolLevel: level } : {}),
     website: (answers["website"] as string) || undefined,
   };
 }
@@ -110,7 +124,9 @@ async function proxy<T>(path: string, body?: unknown): Promise<T> {
 const postJson = <T,>(path: string, body: unknown) => proxy<T>(path, body);
 
 export async function fetchWizardConfig(): Promise<WizardConfig> {
-  return proxy<WizardConfig>(`/api/tfd-partner-wizard/config/${PARTNER_WIZARD_CLIENT}`);
+  const config = await proxy<WizardConfig>(`/api/tfd-partner-wizard/config/${PARTNER_WIZARD_CLIENT}`);
+  knownQuestions = config.steps.flatMap((s) => s.questions);
+  return config;
 }
 
 export function fetchWizardRecommendation(answers: WizardAnswers): Promise<WizardRecommendation> {
