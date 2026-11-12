@@ -100,8 +100,8 @@ function QuestionBlock({
 
   return (
     <fieldset className="grid gap-3">
-      <legend className="mb-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span className="label-caps text-xs text-strong">
+      <legend className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <span className="label-caps text-sm text-strong">
           {q.title}
           {!answered && (
             <span className="ml-1 font-bold text-primary" aria-hidden>
@@ -487,7 +487,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
             <AnimatePresence mode="wait">
               <motion.div key={currentStep?.key ?? step} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 1 } : { opacity: 0, y: -6 }} transition={{ duration: 0.22, ease: "easeOut" }}>
                 <div className="label-caps text-xs text-primary">{c.locale === "en" ? "Step" : "Schritt"} {String(step + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}</div>
-                <h3 className="mt-1 text-2xl">{currentStep?.label}</h3>
+                <h3 className="mt-1 text-2xl italic">{currentStep?.label}</h3>
                 {currentStep?.type === "questions" && (
                   <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs">
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-border-strong bg-sunken px-2.5 py-1 font-mono uppercase tracking-wider text-muted-foreground">
