@@ -218,7 +218,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
   const contactValid = !contactMissing(contactQuestions, contact) && !(config?.appointment?.enabled && config.appointment.required && !slot);
   const str = (k: string) => (typeof contact[k] === "string" ? (contact[k] as string).trim() : "");
 
-  const next = async () => {
+  const next = async (overrideAnswers?: WizardAnswers) => {
     if (!currentStep) return;
     if (currentStep.type === "contact") return;
     setStatus("idle");
@@ -227,7 +227,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
     if (nextStep?.type === "recommendation") {
       setStatus("loading");
       try {
-        const recommendation = await fetchWizardRecommendation(portalAnswers(answers));
+        const recommendation = await fetchWizardRecommendation(portalAnswers(overrideAnswers ?? answers));
         setRec(recommendation);
         setStatus("idle");
         setStep(nextIndex);
