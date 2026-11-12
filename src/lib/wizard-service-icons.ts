@@ -7,6 +7,8 @@
  */
 import adblue from "@/assets/wizard-icons/adblue.svg?raw";
 import agr from "@/assets/wizard-icons/agr.svg?raw";
+import coding from "@/assets/wizard-icons/coding.svg?raw";
+import diagnose from "@/assets/wizard-icons/diagnose.svg?raw";
 import dpf from "@/assets/wizard-icons/dpf.svg?raw";
 import dsg from "@/assets/wizard-icons/dsg.svg?raw";
 import eco from "@/assets/wizard-icons/eco.svg?raw";
@@ -20,6 +22,8 @@ import vmax from "@/assets/wizard-icons/vmax.svg?raw";
 export const SERVICE_ICON_SVG: Record<string, string> = {
   adblue,
   agr,
+  coding,
+  diagnose,
   dpf,
   dsg,
   eco,
