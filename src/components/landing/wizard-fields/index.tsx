@@ -10,7 +10,7 @@ const tick = (on: boolean, small = false) => (
   </span>
 );
 
-const tileBase = "border bg-sunken transition-colors hover:border-border-strong active:translate-y-px";
+const tileBase = "border border-border-strong bg-card transition-colors hover:border-primary/60 active:translate-y-px";
 const tileOn = "border-primary bg-primary-soft hover:border-primary";
 
 /** Large single-choice cards with an index marker and description. */
@@ -125,7 +125,7 @@ export function ChipGroup({ options, isOn, onToggle, onAll, onReset, allLabel, r
           const on = isOn(o.value);
           return (
             <button key={o.value} type="button" aria-pressed={on} onClick={() => onToggle(o.value)} title={o.text ?? undefined}
-              className={cn("inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm transition-colors active:translate-y-px", on ? "border-primary bg-primary text-primary-foreground" : "border-border-strong bg-sunken text-foreground hover:border-primary")}>
+              className={cn("inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm transition-colors active:translate-y-px", on ? "border-primary bg-primary text-primary-foreground" : "border-border-strong bg-card text-foreground hover:border-primary")}>
               {on && <Check className="size-3.5" />}
               {o.title}
             </button>
@@ -145,12 +145,12 @@ export function ChipGroup({ options, isOn, onToggle, onAll, onReset, allLabel, r
 /** Side-by-side segmented switch for short single-choice answers. */
 export function SegmentedControl({ options, value, onChange, label }: { options: FieldOption[]; value: string; onChange: (v: string) => void; label?: string }) {
   return (
-    <div role="radiogroup" aria-label={label} className="flex w-full flex-col overflow-hidden rounded-sm border border-border-strong bg-sunken sm:inline-flex sm:w-auto sm:flex-row">
+    <div role="radiogroup" aria-label={label} className="flex w-full flex-col overflow-hidden rounded-sm border border-border-strong bg-card sm:inline-flex sm:w-auto sm:flex-row">
       {options.map((o, i) => {
         const on = value === o.value;
         return (
           <button key={o.value} type="button" role="radio" aria-checked={on} onClick={() => onChange(on ? "" : o.value)}
-            className={cn("h-10 px-4 text-sm transition-colors", i > 0 && "border-t border-border-strong sm:border-l sm:border-t-0", on ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-card")}>
+            className={cn("h-10 px-4 text-sm transition-colors", i > 0 && "border-t border-border-strong sm:border-l sm:border-t-0", on ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-sunken")}>
             {o.title}
           </button>
         );
@@ -172,7 +172,7 @@ export function ToolList({ tools, locale, label }: { tools: ToolItem[]; locale: 
     <div className="grid gap-2">
       {label && <div className="label-caps text-[11px] text-muted-foreground">{label}</div>}
       {tools.map((t) => (
-        <div key={t.key} className={cn("flex min-w-0 items-center gap-3 rounded-sm border border-border-strong bg-card", single ? "px-3.5 py-3" : "px-2.5 py-2")}>
+        <div key={t.key} className={cn("flex min-w-0 items-center gap-3 rounded-sm border border-border-strong bg-sunken", single ? "px-3.5 py-3" : "px-2.5 py-2")}>
           {t.image ? (
             <img src={t.image} alt="" loading="lazy" width={single ? 48 : 32} height={single ? 48 : 32}
               className={cn("shrink-0 object-contain", single ? "size-12" : "size-8")} />
