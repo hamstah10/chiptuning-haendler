@@ -114,6 +114,14 @@ export function MixedHero({ c }: { c: Content }) {
               {c.hero.scroll}
             </a>
             <div className="flex items-center gap-2" role="tablist" aria-label={c.locale === "de" ? "Bilder" : "Images"}>
+              <button
+                type="button"
+                aria-label={c.locale === "de" ? "Vorheriges Bild" : "Previous image"}
+                onClick={() => go(index - 1)}
+                className="flex size-8 items-center justify-center rounded-sm border border-border bg-background/60 text-foreground transition-colors hover:bg-background/90 md:hidden"
+              >
+                <ChevronLeft className="size-4" />
+              </button>
               {SLIDES.map((src, i) => (
                 <button
                   key={src}
@@ -131,7 +139,7 @@ export function MixedHero({ c }: { c: Content }) {
                 type="button"
                 aria-label={c.locale === "de" ? "Nächstes Bild" : "Next image"}
                 onClick={() => go(index + 1)}
-                className="flex size-8 items-center justify-center rounded-sm border border-border bg-background/60 text-foreground transition-colors hover:bg-background/90"
+                className="flex size-8 items-center justify-center rounded-sm border border-border bg-background/60 text-foreground transition-colors hover:bg-background/90 md:hidden"
               >
                 <ChevronRight className="size-4" />
               </button>
