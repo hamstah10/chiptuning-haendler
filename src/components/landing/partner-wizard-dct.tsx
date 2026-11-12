@@ -303,15 +303,16 @@ export function PartnerWizardDct({ c }: { c: Content }) {
             ))}
           </ol>
 
-          <div className="grid gap-6 p-5 md:p-7 lg:grid-cols-[1fr_260px]">
-            <div>
+          <div className="p-5 md:p-7">
             <AnimatePresence mode="wait">
               <motion.div key={currentStep?.key ?? step} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 1 } : { opacity: 0, y: -6 }} transition={{ duration: 0.22, ease: "easeOut" }}>
                 <div className="label-caps text-xs text-primary">{c.locale === "en" ? "Step" : "Schritt"} {String(step + 1).padStart(2, "0")}</div>
                 <h3 className="mt-1 text-2xl">{currentStep?.label}</h3>
 
+                <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_260px]">
+                <div>
                 {currentStep?.type === "questions" && (
-                  <div className="mt-6 grid gap-7">
+                  <div className="grid gap-7">
                     {visibleQuestions.map((q) => (
                       <QuestionBlock key={q.answerKey} q={q} answers={answers} onAnswer={onAnswer} locale={c.locale} />
                     ))}
@@ -319,13 +320,13 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                 )}
 
                 {currentStep?.type === "recommendation" && rec && (
-                  <div className="mt-6">
+                  <div>
                     <RecommendationView rec={rec} c={c} />
                   </div>
                 )}
 
                 {currentStep?.type === "contact" && (
-                  <div className="mt-6 grid gap-6">
+                  <div className="grid gap-6">
                     <WizardContactFields questions={visibleQuestions} values={contact} onChange={(k, v) => setContact((s) => ({ ...s, [k]: v }))} showErrors={status === "invalid"} locale={c.locale} />
                     {config.appointment?.enabled && <AppointmentPicker settings={config.appointment} locale={c.locale} value={slot} onChange={setSlot} />}
                     {config.privacyNotice && <p className="text-xs leading-relaxed text-faint">{config.privacyNotice}</p>}
