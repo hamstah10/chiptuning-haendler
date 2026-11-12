@@ -336,26 +336,38 @@ export function PartnerWizardDct({ c }: { c: Content }) {
     }
     setStatus("sending");
     setSubmitError("");
+    const storeLead = () => submitLead({
+      data: {
+        source: "wizard",
+        locale: c.locale,
+        company: str("company"),
+        contactName: str("name"),
+        email: str("email"),
+        phone: str("phone"),
+        details: { ...Object.fromEntries(Object.entries(portalAnswers(answers)).map(([key, value]) => [key, (Array.isArray(value) ? value.join(", ") : String(value)).slice(0, 300)])), package: rec?.packageKey ?? "", dctWizard: "tfd", ...(slot ? { termin: slot } : {}) },
+      },
+    });
+    let portalError: unknown = null;
     try {
       await submitWizardLead(portalAnswers(answers), contact, slot || undefined);
-      // Keep the owner notifications (WhatsApp/email) that run on stored leads.
-      submitLead({
-        data: {
-          source: "wizard",
-          locale: c.locale,
-          company: str("company"),
-          contactName: str("name"),
-          email: str("email"),
-          phone: str("phone"),
-          details: { ...Object.fromEntries(Object.entries(portalAnswers(answers)).map(([key, value]) => [key, (Array.isArray(value) ? value.join(", ") : String(value)).slice(0, 300)])), package: rec?.packageKey ?? "", dctWizard: "tfd", ...(slot ? { termin: slot } : {}) },
-        },
-      }).catch((error) => console.error("Lead notification storage failed:", error));
+    } catch (error) {
+      portalError = error;
+    }
+    const status = (portalError as { status?: number } | null)?.status;
+    if (status === 409) {
+      const message = portalError instanceof Error ? portalError.message : "";
+      setSubmitError(message || (c.locale === "de" ? "Dieser Termin ist nicht mehr frei. Bitte wähle einen anderen." : "This slot is no longer available. Please pick another one."));
+      setStatus("error");
+      return;
+    }
+    // Portal outages must not lose the enquiry: our own stored lead (WhatsApp + email) is the fallback.
+    try {
+      if (portalError) console.error("Portal submit failed, using own lead storage:", portalError);
+      await storeLead();
       setStatus("done");
     } catch (error) {
-      const status = (error as { status?: number }).status;
-      const message = error instanceof Error && status ? error.message : "";
-      setSubmitError(status === 409 && !message ? (c.locale === "de" ? "Dieser Termin ist nicht mehr frei. Bitte wähle einen anderen." : "This slot is no longer available. Please pick another one.") : message);
-      setStatus("error");
+      console.error("Lead storage failed:", error);
+      if (portalError) { setSubmitError(""); setStatus("error"); } else setStatus("done");
     }
   };
 
