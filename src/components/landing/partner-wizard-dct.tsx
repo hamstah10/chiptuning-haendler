@@ -102,7 +102,7 @@ function QuestionBlock({
 
   return (
     <fieldset className="grid gap-3">
-      <legend className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+      <legend className="mb-3 flex w-full flex-wrap items-baseline gap-x-3 gap-y-1">
         <span className="label-caps text-sm text-strong">
           {q.title}
           {!answered && (
