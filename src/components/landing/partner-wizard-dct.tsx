@@ -99,7 +99,7 @@ function QuestionBlock({
     svg: q.questionType === "service" ? SERVICE_ICON_SVG[optionValue(q, o)] : undefined,
   }));
   const list = Array.isArray(current) ? (current as (string | number)[]).map(String) : variant === "goalList" && current ? [String(current)] : [];
-  const multi = q.questionType === "vehicleType" || q.multiSelect || variant === "goalList";
+  const multi = q.questionType === "vehicleType" || q.multiSelect;
   const isOn = (raw: string) => (multi ? list.includes(raw) : current === raw);
   const setList = (next: string[]) => onAnswer(q.answerKey, q.questionType === "vehicleType" ? next.map(Number) : next);
   const toggle = (raw: string) => {

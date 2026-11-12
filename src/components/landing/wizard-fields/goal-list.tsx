@@ -33,7 +33,7 @@ export function GoalList({ options, isOn, onToggle, locale }: { options: FieldOp
         const Icon = ICONS[i] ?? Rocket;
         const copy = options.length === 3 ? COPY[locale][i] : undefined;
         return (
-          <button key={o.value} type="button" role="checkbox" aria-checked={on} onClick={() => onToggle(o.value)}
+          <button key={o.value} type="button" role="radio" aria-checked={on} onClick={() => onToggle(o.value)}
             className={cn(
               "flex w-full items-center gap-4 rounded-sm border-[1.5px] px-[18px] py-4 text-left transition-colors duration-[160ms] ease-out",
               on ? "border-primary bg-[#f1dcdd] dark:bg-primary/10" : "border-[#dcdcdc] bg-card hover:border-border-strong dark:border-[#2a2a2a] dark:bg-[#1c1c1c]",
