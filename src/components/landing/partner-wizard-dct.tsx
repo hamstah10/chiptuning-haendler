@@ -493,17 +493,9 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                   <h3 className="text-2xl italic">{currentStep?.label}</h3>
                   <div className="label-caps shrink-0 text-xs text-primary">{c.locale === "en" ? "Step" : "Schritt"} {String(step + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}</div>
                 </div>
-                {currentStep?.type === "questions" && (
-                  <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border-strong bg-sunken px-2.5 py-1 font-mono uppercase tracking-wider text-muted-foreground">
-                      <span className="font-bold text-primary" aria-hidden>*</span>
-                      {answeredCount} / {visibleQuestions.length} {c.locale === "en" ? "answered" : "beantwortet"}
-                    </span>
-                    {!stepComplete && (
-                      <span className="text-faint">
-                        {c.locale === "en" ? "Pick one option for every open question." : "Bitte wähle bei jeder offenen Frage eine Option."}
-                      </span>
-                    )}
+                {currentStep?.type === "questions" && !stepComplete && (
+                  <p className="mt-2.5 text-xs text-faint">
+                    {c.locale === "en" ? "Pick one option for every open question." : "Bitte wähle bei jeder offenen Frage eine Option."}
                   </p>
                 )}
 
