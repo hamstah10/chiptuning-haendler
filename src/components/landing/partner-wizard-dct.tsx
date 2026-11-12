@@ -17,7 +17,7 @@ import {
   type WizardRecommendation,
 } from "@/lib/partner-wizard-api";
 import { AppointmentPicker, WizardContactFields, contactMissing } from "./wizard-contact";
-import { ChipGroup, ChoiceCards, ImageCards, LogoTiles, SegmentedControl, type FieldOption } from "./wizard-fields";
+import { ChipGroup, CheckCards, ChoiceCards, ImageCards, LogoTiles, SegmentedControl, type FieldOption } from "./wizard-fields";
 import { pickVariant } from "@/lib/wizard-variants";
 
 /** Icon per wizard step, matched by position. */
@@ -93,6 +93,12 @@ function QuestionBlock({
         <LogoTiles options={options} isOn={isOn} onToggle={toggle} noneLabel={en ? "No tool yet" : "Noch kein Tool"} noneOn={current === NO_TOOL} onNone={() => onAnswer(q.answerKey, current === NO_TOOL ? "" : NO_TOOL)} />
       )}
       {variant === "choiceCards" && <ChoiceCards options={options} isOn={isOn} onToggle={toggle} />}
+      {variant === "checkCards" && (
+        <CheckCards options={options} isOn={isOn} onToggle={toggle}
+          onAll={multi ? () => setList(options.map((o) => o.value)) : undefined}
+          onReset={multi ? () => setList([]) : undefined}
+          allLabel={en ? "Select all" : "Alle wählen"} resetLabel={en ? "Reset" : "Zurücksetzen"} />
+      )}
       {variant === "segmented" && <SegmentedControl options={options} value={String(current ?? "")} onChange={(v) => onAnswer(q.answerKey, v)} label={q.title} />}
       {variant === "chips" && (
         <ChipGroup options={options} isOn={isOn} onToggle={toggle}
