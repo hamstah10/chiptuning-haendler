@@ -197,14 +197,28 @@ export function PartnerWizardDct({ c }: { c: Content }) {
   const steps = useMemo(() => config?.steps ?? [], [config]);
   const currentStep = steps[step];
 
-  const onAnswer = (key: string, value: string | string[] | number[]) =>
+  const isAnswered = (value: unknown) =>
+    Array.isArray(value) ? value.length > 0 : value !== undefined && value !== null && String(value) !== "";
+
+  const onAnswer = (key: string, value: string | string[] | number[]) => {
     setAnswers((s) => ({ ...s, [key]: value }));
+    // Auto-advance once every visible question of the step has an answer.
+    // Multi-select questions never trigger it themselves — the visitor may want to pick more.
+    if (currentStep?.type !== "questions") return;
+    const q = currentStep.questions.find((x) => x.answerKey === key);
+    if (!q || q.questionType === "vehicleType" || q.multiSelect) return;
+    const nextAnswers = { ...answers, [key]: value };
+    const visible = currentStep.questions.filter((x) => isVisible(x, nextAnswers));
+    if (visible.every((x) => isAnswered(nextAnswers[x.answerKey]))) {
+      window.setTimeout(() => void next(nextAnswers), 300);
+    }
+  };
 
   const contactQuestions = steps.find((s) => s.type === "contact")?.questions.filter((q) => isVisible(q, answers)) ?? [];
   const contactValid = !contactMissing(contactQuestions, contact) && !(config?.appointment?.enabled && config.appointment.required && !slot);
   const str = (k: string) => (typeof contact[k] === "string" ? (contact[k] as string).trim() : "");
 
-  const next = async () => {
+  const next = async (overrideAnswers?: WizardAnswers) => {
     if (!currentStep) return;
     if (currentStep.type === "contact") return;
     setStatus("idle");
@@ -213,7 +227,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
     if (nextStep?.type === "recommendation") {
       setStatus("loading");
       try {
-        const recommendation = await fetchWizardRecommendation(portalAnswers(answers));
+        const recommendation = await fetchWizardRecommendation(portalAnswers(overrideAnswers ?? answers));
         setRec(recommendation);
         setStatus("idle");
         setStep(nextIndex);
@@ -414,7 +428,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                   <ArrowRight />
                 </Button>
               ) : (
-                <Button onClick={next} disabled={status === "loading"} className="label-caps h-10 rounded-sm shadow-none">
+                <Button onClick={() => void next()} disabled={status === "loading"} className="label-caps h-10 rounded-sm shadow-none">
                   {status === "loading" ? <Loader2 className="animate-spin" /> : null}
                   {currentStep?.type === "recommendation" && rec ? rec.nextStep || t.next : t.next}
                   <ArrowRight />
