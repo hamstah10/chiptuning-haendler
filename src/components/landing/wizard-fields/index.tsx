@@ -1,8 +1,27 @@
+import { useState } from "react";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatEuro } from "@/lib/format";
 
 export interface FieldOption { value: string; title: string; text?: string | null; icon?: string | null }
+
+/** Portal option picture; hidden when the file cannot load, recoloured in dark mode. */
+function OptionIcon({ src, className }: { src: string; className?: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) return null;
+  return (
+    <img
+      src={src}
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+      width={32}
+      height={32}
+      onError={() => setFailed(true)}
+      className={cn("shrink-0 object-contain dark:brightness-0 dark:invert", className)}
+    />
+  );
+}
 
 const tick = (on: boolean, small = false) => (
   <span className={cn("inline-flex shrink-0 items-center justify-center rounded-full border", small ? "size-4" : "size-5", on ? "border-primary bg-primary text-primary-foreground" : "border-border-strong text-transparent")}>
@@ -66,6 +85,7 @@ export function CheckCards({ options, isOn, onToggle, onAll, onReset, allLabel, 
     return (
       <button key={o.value} type="button" aria-pressed={on} onClick={() => onToggle(o.value)}
         className={cn("flex w-full items-start gap-2.5 rounded-sm px-3.5 py-3 text-left", tileBase, on && tileOn)}>
+        {o.icon && <OptionIcon src={o.icon} className="mt-0.5 size-8" />}
         <span className="flex-1">
           <span className="block font-display text-sm font-bold uppercase leading-tight text-strong">{o.title}</span>
           {o.text && <span className="mt-1 block text-xs leading-snug text-muted-foreground">{o.text}</span>}
