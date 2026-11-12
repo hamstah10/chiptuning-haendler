@@ -72,7 +72,7 @@ const de = {
     kicker: "Tuning Drive",
     title: "Von Serie bis Stage 2 – in Sekunden.",
     stages: [
-      { label: "Stock", title: "Serienstand", text: "Das Steuergerät im Originalzustand – die Basis für jede Optimierung.", ps: "150 PS", nm: "320 Nm" },
+      { label: "Stock", title: "Serienstand", text: "Das Steuergerät im Originalzustand – die Basis für jede Optimierung.", ps: "651 PS", nm: "657 Nm" },
       { label: "Stage 1", title: "Mehr Leistung, keine Umbauten", text: "Optimiertes Kennfeld auf Serienhardware. Der häufigste Auftrag – kein Umbau nötig.", ps: "190 PS", nm: "400 Nm" },
       { label: "Stage 2", title: "Hardware-Upgrade", text: "Angepasste Ladedruck- und Einspritzkurve für Fahrzeuge mit Downpipe oder Sportluftfilter.", ps: "220 PS", nm: "440 Nm" },
       { label: "Stage 3", title: "Maximale Leistung", text: "Volle Ausschöpfung mit größerem Turbo und verstärkten Anbauteilen – für Performance-Projekte.", ps: "280 PS", nm: "500 Nm" },
