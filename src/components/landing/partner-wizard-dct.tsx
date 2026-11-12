@@ -271,7 +271,14 @@ export function PartnerWizardDct({ c }: { c: Content }) {
   const visibleQuestions = currentStep?.questions.filter((q) => isVisible(q, answers)) ?? [];
 
   const answeredSummary = steps.slice(0, step).flatMap((s, i) =>
-    s.type === "questions" ? s.questions.filter((q) => isVisible(q, answers)).flatMap((q) => answerLabels(q, answers[q.answerKey], c.locale).map((label) => ({ label, step: i, key: `${q.answerKey}-${label}` }))) : [],
+    s.type === "questions"
+      ? s.questions
+          .filter((q) => isVisible(q, answers))
+          .flatMap((q) => {
+            const labels = answerLabels(q, answers[q.answerKey], c.locale);
+            return labels.length > 0 ? [{ title: q.title, labels, step: i, key: q.answerKey }] : [];
+          })
+      : [],
   );
 
   return (
