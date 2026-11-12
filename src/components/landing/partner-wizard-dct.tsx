@@ -298,8 +298,14 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                 <button type="button" disabled={i > step} onClick={() => setStep(i)}
                   className={cn("flex w-full items-center justify-center gap-1.5 px-2 py-3 text-center font-mono text-[10px] uppercase tracking-wider transition-colors sm:text-[11px]",
                     i <= step ? "text-strong" : "text-faint", i < step && "hover:text-primary")}>
-                  <StepIcon className={cn("size-3.5 shrink-0", i === step ? "text-primary" : i < step ? "text-primary" : "text-faint")} />
-                  <span className="hidden sm:inline">{s.label}</span>
+                  {i < step ? (
+                    <span className="inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                      <Check className="size-2.5" />
+                    </span>
+                  ) : (
+                    <StepIcon className={cn("size-3.5 shrink-0", i === step ? "text-primary" : "text-faint")} />
+                  )}
+                  <span className={cn("hidden sm:inline", i < step && "text-primary")}>{s.label}</span>
                 </button>
                 {i === step && (
                   <motion.span layoutId="wizard-step" className="absolute inset-x-0 bottom-0 h-0.5 bg-primary" />
