@@ -291,22 +291,21 @@ export function PartnerWizardDct({ c }: { c: Content }) {
         <div className="h-[3px] bg-border"><div className="h-full bg-primary transition-all duration-500" style={{ width: `${((step + 1) / steps.length) * 100}%` }} /></div>
 
         <div>
-          <div className="border-b bg-sunken/40 px-5 py-3">
-            <ol className="flex gap-1 overflow-x-auto">
-              {steps.map((s, i) => (
-                <li key={s.key} className="flex-1 shrink-0">
-                  <button type="button" disabled={i > step} onClick={() => setStep(i)}
-                    className={cn("flex w-full items-center gap-2.5 whitespace-nowrap rounded-sm border-b-2 px-3 py-2.5 text-left transition-colors", i === step ? "border-b-primary bg-card" : "border-b-transparent hover:bg-card disabled:hover:bg-transparent")}>
-                    <span className={cn("inline-flex size-6 shrink-0 items-center justify-center rounded-full border font-mono text-[11px]",
-                      i < step && "border-primary bg-primary text-primary-foreground", i === step && "border-primary text-primary", i > step && "border-border-strong text-faint")}>
-                      {i < step ? <Check className="size-3" /> : String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className={cn("label-caps text-xs", i <= step ? "text-strong" : "text-faint")}>{s.label}</span>
-                  </button>
-                </li>
-              ))}
-            </ol>
-          </div>
+          <ol className="grid border-b bg-sunken/40" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
+            {steps.map((s, i) => (
+              <li key={s.key} className="relative">
+                <button type="button" disabled={i > step} onClick={() => setStep(i)}
+                  className={cn("flex w-full items-center justify-center gap-1.5 px-2 py-3 text-center font-mono text-[10px] uppercase tracking-wider transition-colors sm:text-[11px]",
+                    i <= step ? "text-strong" : "text-faint", i < step && "hover:text-primary")}>
+                  <span className="text-primary">{i < step ? <Check className="size-3" /> : String(i + 1).padStart(2, "0")}</span>
+                  <span className="hidden sm:inline">{s.label}</span>
+                </button>
+                {i === step && (
+                  <motion.span layoutId="wizard-step" className="absolute inset-x-0 bottom-0 h-0.5 bg-primary" />
+                )}
+              </li>
+            ))}
+          </ol>
 
           <div className="grid gap-6 p-5 md:p-7 lg:grid-cols-[1fr_260px]">
             <div>
