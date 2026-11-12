@@ -428,7 +428,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                   <ArrowRight />
                 </Button>
               ) : (
-                <Button onClick={next} disabled={status === "loading"} className="label-caps h-10 rounded-sm shadow-none">
+                <Button onClick={() => void next()} disabled={status === "loading"} className="label-caps h-10 rounded-sm shadow-none">
                   {status === "loading" ? <Loader2 className="animate-spin" /> : null}
                   {currentStep?.type === "recommendation" && rec ? rec.nextStep || t.next : t.next}
                   <ArrowRight />
