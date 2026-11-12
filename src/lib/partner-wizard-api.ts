@@ -102,7 +102,7 @@ export function buildWizardRequest(answers: WizardAnswers) {
   const level = answers["desiredToolLevel"] as string | undefined;
   return {
     clientId: PARTNER_WIZARD_CLIENT,
-    goal: (answers["goal"] as string) || undefined,
+    goal: (Array.isArray(answers["goal"]) ? String(answers["goal"][0] ?? "") : (answers["goal"] as string)) || undefined,
     experience: (answers["experience"] as string) || undefined,
     vehicleCategories: vehicles,
     mainVehicleCategory: vehicles[0],
