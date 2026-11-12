@@ -741,7 +741,7 @@ export function LandingPageLight({ c, mixed = false }: { c: Content; mixed?: boo
               kicker={c.partnerEmbed.kicker}
               title={c.partnerEmbed.title}
               intro={c.partnerEmbed.intro}
-              className="bg-sunken"
+              className="bg-card"
             >
               <Reveal>
                 <PartnerWizardDct c={c} />
