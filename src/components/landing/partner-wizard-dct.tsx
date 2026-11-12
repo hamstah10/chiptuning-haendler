@@ -405,7 +405,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
   const recSummary = recStepIndex >= 0 && recStepIndex <= step
     ? [
         ...(pickedTool ? [{ title: c.locale === "en" ? "Tool" : "Tool", labels: [pickedTool], step: recStepIndex, key: "selectedTool", image: recommendedTools.find((t) => t.title === pickedTool)?.image ?? pickedToolImage ?? undefined }] : []),
-        ...(pickedProducts.length ? [{ title: c.locale === "en" ? "Products" : "Produkte", labels: pickedProducts, step: recStepIndex, key: "selectedProducts" }] : []),
+        ...(pickedProducts.length ? [{ title: c.locale === "en" ? "Products" : "Produkte", labels: pickedProducts, step: recStepIndex, key: "selectedProducts", image: undefined as string | undefined }] : []),
       ]
     : [];
   const answeredSummary = [...steps.slice(0, step + 1).flatMap((s, i) =>
