@@ -341,8 +341,8 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                 </div>
 
                 <div>
-                  <div className="font-mono text-xs uppercase tracking-wider text-faint">{c.locale === "en" ? "Your selection" : "Deine Auswahl"}</div>
-                  <div className="mt-2.5 rounded-sm border bg-sunken px-4 py-3.5">
+                  <div className="label-caps text-xs text-faint">{c.locale === "en" ? "Your selection" : "Deine Auswahl"}</div>
+                  <div className="mt-4 rounded-sm border bg-sunken px-4 py-3.5">
                     {answeredSummary.length > 0 ? (
                       <div className="grid gap-3">
                         {answeredSummary.map((a) => (
