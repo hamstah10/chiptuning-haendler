@@ -34,20 +34,20 @@ export function ChoiceCards({ options, isOn, onToggle }: { options: FieldOption[
   );
 }
 
-/** Image cards (vehicle types), multi-select, with a selection counter. */
+/** Compact horizontal buttons (vehicle types): icon left, label beside it, multi-select with counter. */
 export function ImageCards({ options, isOn, onToggle, countLabel }: { options: FieldOption[]; isOn: (v: string) => boolean; onToggle: (v: string) => void; countLabel: (n: number) => string }) {
   const count = options.filter((o) => isOn(o.value)).length;
   return (
     <div className="grid gap-2">
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
         {options.map((o) => {
           const on = isOn(o.value);
           return (
             <button key={o.value} type="button" aria-pressed={on} onClick={() => onToggle(o.value)}
-              className={cn("relative flex flex-col items-center gap-2.5 rounded-sm px-3 py-4 text-center", tileBase, on && tileOn)}>
-              <span className="absolute right-2 top-2">{tick(on, true)}</span>
-              {o.icon && <img src={o.icon} alt="" loading="lazy" className="size-14 object-contain" width={56} height={56} />}
-              <span className="font-display text-sm font-bold uppercase leading-tight text-strong">{o.title}</span>
+              className={cn("flex h-12 w-full items-center gap-3 rounded-sm px-3 text-left", tileBase, on && tileOn)}>
+              {o.icon && <img src={o.icon} alt="" loading="lazy" className="size-8 shrink-0 object-contain" width={32} height={32} />}
+              <span className="flex-1 truncate font-display text-sm font-bold uppercase leading-tight text-strong">{o.title}</span>
+              {tick(on, true)}
             </button>
           );
         })}
