@@ -1,5 +1,5 @@
 import { calcPackagePrice } from "@/lib/wizard-package-price";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowLeft, ArrowRight, Car, Check, Globe, Loader2, Mail, Rocket, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -72,11 +72,13 @@ function QuestionBlock({
   answers,
   onAnswer,
   locale,
+  trailing,
 }: {
   q: WizardQuestion;
   answers: WizardAnswers;
   onAnswer: (key: string, value: string | string[] | number[]) => void;
   locale: "de" | "en";
+  trailing?: ReactNode;
 }) {
   const en = locale === "en";
   const current = answers[q.answerKey];
@@ -100,7 +102,7 @@ function QuestionBlock({
 
   return (
     <fieldset className="grid gap-3">
-      <legend className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+      <legend className="mb-3 flex w-full flex-wrap items-baseline gap-x-3 gap-y-1">
         <span className="label-caps text-sm text-strong">
           {q.title}
           {!answered && (
@@ -110,6 +112,7 @@ function QuestionBlock({
           )}
         </span>
         {multi && <span className="text-xs text-faint">{en ? "Multiple choice" : "Mehrfachauswahl"}</span>}
+        {trailing && <span className="ml-auto">{trailing}</span>}
       </legend>
       {q.helpText && <p className="-mt-1 text-sm text-muted-foreground">{q.helpText}</p>}
       {variant === "imageCards" && (
@@ -490,17 +493,9 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                   <h3 className="text-2xl italic">{currentStep?.label}</h3>
                   <div className="label-caps shrink-0 text-xs text-primary">{c.locale === "en" ? "Step" : "Schritt"} {String(step + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}</div>
                 </div>
-                {currentStep?.type === "questions" && (
-                  <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border-strong bg-sunken px-2.5 py-1 font-mono uppercase tracking-wider text-muted-foreground">
-                      <span className="font-bold text-primary" aria-hidden>*</span>
-                      {answeredCount} / {visibleQuestions.length} {c.locale === "en" ? "answered" : "beantwortet"}
-                    </span>
-                    {!stepComplete && (
-                      <span className="text-faint">
-                        {c.locale === "en" ? "Pick one option for every open question." : "Bitte wähle bei jeder offenen Frage eine Option."}
-                      </span>
-                    )}
+                {currentStep?.type === "questions" && !stepComplete && (
+                  <p className="mt-2.5 text-xs text-faint">
+                    {c.locale === "en" ? "Pick one option for every open question." : "Bitte wähle bei jeder offenen Frage eine Option."}
                   </p>
                 )}
 
@@ -508,8 +503,14 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                 <div>
                 {currentStep?.type === "questions" && (
                   <div className="grid gap-7">
-                    {visibleQuestions.map((q) => (
-                      <QuestionBlock key={q.answerKey} q={q} answers={answers} onAnswer={onAnswer} locale={c.locale} />
+                    {visibleQuestions.map((q, qi) => (
+                      <QuestionBlock key={q.answerKey} q={q} answers={answers} onAnswer={onAnswer} locale={c.locale}
+                        trailing={qi === 0 ? (
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-border-strong bg-sunken px-2.5 py-1 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                            <span className="font-bold text-primary" aria-hidden>*</span>
+                            {answeredCount} / {visibleQuestions.length} {c.locale === "en" ? "answered" : "beantwortet"}
+                          </span>
+                        ) : undefined} />
                     ))}
                   </div>
                 )}
