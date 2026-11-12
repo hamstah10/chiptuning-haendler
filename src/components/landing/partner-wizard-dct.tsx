@@ -1,3 +1,4 @@
+import { calcPackagePrice } from "@/lib/wizard-package-price";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowLeft, ArrowRight, Car, Check, Globe, Loader2, Mail, Rocket, Sparkles } from "lucide-react";
@@ -217,6 +218,18 @@ function RecommendationView({ rec, c, answers, onChange }: { rec: WizardRecommen
         </div>
       )}
 
+      {(() => {
+        const pk = calcPackagePrice(rec, selectedTool, selectedProducts);
+        if (pk.total <= 0) return null;
+        return (
+          <div className="grid gap-1.5 rounded-sm border border-primary bg-primary-soft px-4 py-3.5">
+            <div className="label-caps text-xs text-strong">{en ? "Your package price" : "Dein Paketpreis"}</div>
+            {pk.toolPrice > 0 && <div className="flex justify-between text-sm text-muted-foreground"><span>Tool</span><span className="font-mono tabular-nums">{formatEuro(pk.toolPrice, c.locale)}</span></div>}
+            {pk.productsPrice > 0 && <div className="flex justify-between text-sm text-muted-foreground"><span>{en ? "Products" : "Produkte"}</span><span className="font-mono tabular-nums">{formatEuro(pk.productsPrice, c.locale)}</span></div>}
+            <div className="flex justify-between border-t border-border-strong pt-1.5 font-display font-bold uppercase text-strong"><span>{en ? "Total" : "Gesamt"}</span><span className="font-mono tabular-nums">{formatEuro(pk.total, c.locale)}</span></div>
+          </div>
+        );
+      })()}
       {rec.estimatedMonthlyRevenue != null && rec.estimatedMonthlyRevenue > 0 && (
         <p className="text-sm text-muted-foreground">
           {c.calculator.perMonth}:{" "}
