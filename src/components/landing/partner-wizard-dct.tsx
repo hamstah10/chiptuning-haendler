@@ -21,6 +21,7 @@ import { AppointmentPicker, WizardContactFields, contactMissing } from "./wizard
 import { ChipGroup, CheckCards, ChoiceCards, ImageCards, LogoTiles, SegmentedControl, ToolList, type FieldOption, type ToolItem } from "./wizard-fields";
 import { pickVariant } from "@/lib/wizard-variants";
 import { groupServiceOptions } from "@/lib/wizard-service-groups";
+import { sortToolBrands } from "@/lib/wizard-tool-order";
 
 /** Icon per wizard step, matched by position. */
 const STEP_ICONS = [Rocket, Car, Globe, Sparkles, Mail];
@@ -80,7 +81,12 @@ function QuestionBlock({
   const en = locale === "en";
   const current = answers[q.answerKey];
   const variant = pickVariant(q);
-  const rawOptions = q.questionType === "vehicleType" ? sortVehicleTypes(q.options, optionTitle) : q.options;
+  const rawOptions =
+    q.questionType === "vehicleType"
+      ? sortVehicleTypes(q.options, optionTitle)
+      : q.questionType === "toolManufacturer"
+        ? sortToolBrands(q.options, optionTitle)
+        : q.options;
   const options: FieldOption[] = rawOptions.map((o) => ({ value: optionValue(q, o), title: optionTitle(o), text: o.text, icon: o.icon ?? o.imageUrl }));
   const list = Array.isArray(current) ? (current as (string | number)[]).map(String) : [];
   const multi = q.questionType === "vehicleType" || q.multiSelect;
