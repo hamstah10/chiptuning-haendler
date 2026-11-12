@@ -7,7 +7,8 @@ const q = (questionType: "generic" | "vehicleType" | "toolManufacturer", multiSe
 describe("pickVariant", () => {
   it("vehicle types become image cards", () => expect(pickVariant(q("vehicleType", true, [opt(null)]))).toBe("imageCards"));
   it("tool manufacturers become logo tiles", () => expect(pickVariant(q("toolManufacturer", false, [opt("a")]))).toBe("logoTiles"));
-  it("multi-select questions become chips", () => expect(pickVariant(q("generic", true, Array(12).fill(opt("a"))))).toBe("chips"));
+  it("multi-select questions without text become chips", () => expect(pickVariant(q("generic", true, Array(12).fill(opt(null))))).toBe("chips"));
+  it("multi-select questions with descriptions become check cards", () => expect(pickVariant(q("generic", true, Array(12).fill(opt("a"))))).toBe("checkCards"));
   it("up to 4 described single answers become choice cards", () => expect(pickVariant(q("generic", false, Array(4).fill(opt("a"))))).toBe("choiceCards"));
   it("short single answers without text become a segmented bar", () => expect(pickVariant(q("generic", false, Array(3).fill(opt(null))))).toBe("segmented"));
 });

@@ -57,6 +57,35 @@ export function ImageCards({ options, isOn, onToggle, countLabel }: { options: F
   );
 }
 
+/** Multi-select cards with a tick marker and the option's description text. */
+export function CheckCards({ options, isOn, onToggle, onAll, onReset, allLabel, resetLabel }: { options: FieldOption[]; isOn: (v: string) => boolean; onToggle: (v: string) => void; onAll?: (() => void) | undefined; onReset?: (() => void) | undefined; allLabel?: string; resetLabel?: string }) {
+  return (
+    <div className="grid gap-2.5">
+      <div className="grid gap-2.5 sm:grid-cols-2">
+        {options.map((o) => {
+          const on = isOn(o.value);
+          return (
+            <button key={o.value} type="button" aria-pressed={on} onClick={() => onToggle(o.value)}
+              className={cn("flex w-full items-start gap-3.5 rounded-sm px-4 py-3.5 text-left", tileBase, on && tileOn)}>
+              <span className="flex-1">
+                <span className="block font-display font-bold uppercase leading-tight text-strong">{o.title}</span>
+                {o.text && <span className="mt-1 block text-sm text-muted-foreground">{o.text}</span>}
+              </span>
+              {tick(on)}
+            </button>
+          );
+        })}
+      </div>
+      {onAll && onReset && options.length > 5 && (
+        <div className="flex gap-4 text-xs">
+          <button type="button" onClick={onAll} className="label-caps text-primary hover:underline">{allLabel}</button>
+          <button type="button" onClick={onReset} className="label-caps text-muted-foreground hover:text-strong">{resetLabel}</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /** Manufacturer logo tiles, single choice, plus an explicit "no tool yet" tile. */
 export function LogoTiles({ options, isOn, onToggle, noneLabel, noneOn, onNone }: { options: FieldOption[]; isOn: (v: string) => boolean; onToggle: (v: string) => void; noneLabel: string; noneOn: boolean; onNone: () => void }) {
   return (
