@@ -286,7 +286,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
 
   return (
     <div>
-      <div className="overflow-hidden rounded-md border border-border-strong border-t-2 border-t-primary bg-card">
+      <div className="overflow-hidden rounded-md border border-border-strong bg-card">
         <div className="h-[3px] bg-border"><div className="h-full bg-primary transition-all duration-500" style={{ width: `${((step + 1) / steps.length) * 100}%` }} /></div>
 
         <div>
