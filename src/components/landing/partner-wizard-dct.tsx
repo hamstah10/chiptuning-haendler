@@ -258,17 +258,30 @@ export function PartnerWizardDct({ c }: { c: Content }) {
 
   const onAnswer = (key: string, value: string | string[] | number[]) => {
     setAnswers((s) => ({ ...s, [key]: value }));
-    // Auto-advance once every visible question of the step has an answer.
-    // Multi-select questions never trigger it themselves — the visitor may want to pick more.
-    if (currentStep?.type !== "questions") return;
-    const q = currentStep.questions.find((x) => x.answerKey === key);
-    if (!q || q.questionType === "vehicleType" || q.multiSelect) return;
-    const nextAnswers = { ...answers, [key]: value };
-    const visible = currentStep.questions.filter((x) => isVisible(x, nextAnswers));
-    if (visible.every((x) => isAnswered(nextAnswers[x.answerKey]))) {
-      window.setTimeout(() => void next(nextAnswers), 300);
-    }
   };
+
+  const recStepIdx = steps.findIndex((s) => s.type === "recommendation");
+
+  // Prefetch the recommendation once a questions step is fully answered,
+  // so the sidebar can show it before the recommendation step is reached.
+  useEffect(() => {
+    if (!currentStep || currentStep.type !== "questions" || step < 1 || (recStepIdx >= 0 && step >= recStepIdx)) return;
+    const visible = currentStep.questions.filter((q) => isVisible(q, answers));
+    if (visible.length === 0 || !visible.every((q) => isAnswered(answers[q.answerKey]))) return;
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      fetchWizardRecommendation(portalAnswers(answers))
+        .then((r) => {
+          if (!cancelled) setRec(r);
+        })
+        .catch(() => {});
+    }, 250);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [answers, currentStep, step, recStepIdx]);
 
   const contactQuestions = steps.find((s) => s.type === "contact")?.questions.filter((q) => isVisible(q, answers)) ?? [];
   const contactValid = !contactMissing(contactQuestions, contact) && !(config?.appointment?.enabled && config.appointment.required && !slot);
