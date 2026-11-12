@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowLeft, ArrowRight, Check, ClipboardList, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatEuro } from "@/lib/format";
@@ -284,10 +284,6 @@ export function PartnerWizardDct({ c }: { c: Content }) {
   return (
     <div>
       <div className="overflow-hidden rounded-md border border-border-strong border-t-2 border-t-primary bg-card">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b bg-sunken px-5 py-4">
-          <span className="flex items-center gap-2"><ClipboardList className="size-4 text-primary" /><span className="label-caps text-sm text-strong">{config.name || c.partnerEmbed.kicker}</span></span>
-          <span className="font-mono text-xs tabular-nums text-muted-foreground">{String(step + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}</span>
-        </div>
         <div className="h-[3px] bg-border"><div className="h-full bg-primary transition-all duration-500" style={{ width: `${((step + 1) / steps.length) * 100}%` }} /></div>
 
         <div>
