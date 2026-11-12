@@ -380,9 +380,31 @@ export function PartnerWizardDct({ c }: { c: Content }) {
   const recStepIndex = steps.findIndex((s) => s.type === "recommendation");
   const pickedTool = String(answers["selectedTool"] ?? "");
   const pickedProducts = (answers["selectedProducts"] as string[] | undefined) ?? [];
+
+  /** The tool the visitor picked in the questions steps, with its picture from the API. */
+  const toolQuestion = steps.flatMap((s) => s.questions).find((q) => q.questionType === "toolManufacturer");
+  const pickedToolOption = toolQuestion
+    ? toolQuestion.options.find((o) => optionValue(toolQuestion, o) === String(answers[toolQuestion.answerKey] ?? ""))
+    : undefined;
+  const pickedToolImage = pickedToolOption?.icon ?? pickedToolOption?.imageUrl ?? null;
+
+  /** Tools the portal recommends; fall back to the picked tool so the sidebar always shows a picture. */
+  const recommendedTools: ToolItem[] = (rec?.recommendedTools ?? []).map((t) => ({
+    key: t.key,
+    title: t.name,
+    text: t.description,
+    image: t.imageUrl ?? t.product?.imageUrl ?? null,
+    price: t.product?.specialPrice ?? t.product?.price ?? null,
+  }));
+  const sidebarTools: ToolItem[] = recommendedTools.length > 0
+    ? recommendedTools
+    : pickedToolOption
+      ? [{ key: "picked-tool", title: optionTitle(pickedToolOption), image: pickedToolImage }]
+      : [];
+
   const recSummary = recStepIndex >= 0 && recStepIndex <= step
     ? [
-        ...(pickedTool ? [{ title: c.locale === "en" ? "Tool" : "Tool", labels: [pickedTool], step: recStepIndex, key: "selectedTool" }] : []),
+        ...(pickedTool ? [{ title: c.locale === "en" ? "Tool" : "Tool", labels: [pickedTool], step: recStepIndex, key: "selectedTool", image: recommendedTools.find((t) => t.title === pickedTool)?.image ?? pickedToolImage ?? undefined }] : []),
         ...(pickedProducts.length ? [{ title: c.locale === "en" ? "Products" : "Produkte", labels: pickedProducts, step: recStepIndex, key: "selectedProducts" }] : []),
       ]
     : [];
@@ -392,7 +414,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
           .filter((q) => isVisible(q, answers))
           .flatMap((q) => {
             const labels = answerLabels(q, answers[q.answerKey], c.locale);
-            return labels.length > 0 ? [{ title: q.title, labels, step: i, key: q.answerKey }] : [];
+            return labels.length > 0 ? [{ title: q.title, labels, step: i, key: q.answerKey, image: q.answerKey === toolQuestion?.answerKey ? pickedToolImage ?? undefined : undefined }] : [];
           })
       : [],
   ), ...recSummary];
@@ -469,7 +491,10 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                             <span className="label-caps block text-[11px] text-faint transition-colors group-hover:text-primary">{a.title}</span>
                             <span className="mt-1 flex flex-wrap gap-1.5">
                               {a.labels.map((label) => (
-                                <span key={label} className="rounded-full border border-border-strong bg-card px-2 py-0.5 text-xs text-foreground transition-colors group-hover:border-primary">{label}</span>
+                                <span key={label} className="inline-flex items-center gap-1.5 rounded-full border border-border-strong bg-card px-2 py-0.5 text-xs text-foreground transition-colors group-hover:border-primary">
+                                  {a.image && <img src={a.image} alt="" loading="lazy" width={16} height={16} className="size-4 shrink-0 object-contain" />}
+                                  {label}
+                                </span>
                               ))}
                             </span>
                           </button>
@@ -488,6 +513,12 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                       {rec.estimatedMonthlyRevenue != null && rec.estimatedMonthlyRevenue > 0 && (
                         <div className="mt-1 font-mono text-xs tabular-nums text-muted-foreground">
                           {c.calculator.perMonth}: {formatEuro(rec.estimatedMonthlyRevenue, c.locale)}
+                        </div>
+                      )}
+                      {sidebarTools.length > 0 && (
+                        <div className="mt-3">
+                          <ToolList tools={sidebarTools} locale={c.locale}
+                            label={c.locale === "en" ? (sidebarTools.length > 1 ? "Recommended tools" : "Recommended tool") : sidebarTools.length > 1 ? "Empfohlene Tools" : "Empfohlenes Tool"} />
                         </div>
                       )}
                     </div>
