@@ -14,8 +14,9 @@ export function groupServiceOptions<T extends { value: string }>(options: T[]): 
   const isPerformance = (o: T) => PERFORMANCE.test(key(o.value));
   const performance = options.filter(isPerformance);
   if (performance.length === 0) return [];
-  return [
+  const groups: { id: WizardServiceGroupId; options: T[] }[] = [
     { id: "performance", options: performance },
     { id: "options", options: options.filter((o) => !isPerformance(o)) },
-  ].filter((g) => g.options.length > 0);
+  ];
+  return groups.filter((g) => g.options.length > 0);
 }
