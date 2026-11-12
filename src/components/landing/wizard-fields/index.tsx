@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check } from "lucide-react";
+import { Check, Gauge, Laptop, Sprout, Wrench } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatEuro } from "@/lib/format";
 
