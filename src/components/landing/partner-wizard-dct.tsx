@@ -89,11 +89,19 @@ function QuestionBlock({
     if (multi) return setList(list.includes(raw) ? list.filter((v) => v !== raw) : [...list, raw]);
     onAnswer(q.answerKey, current === raw ? "" : raw);
   };
+  const answered = Array.isArray(current) ? current.length > 0 : current !== undefined && current !== null && String(current) !== "";
 
   return (
     <fieldset className="grid gap-3">
       <legend className="mb-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span className="label-caps text-xs text-strong">{q.title}</span>
+        <span className="label-caps text-xs text-strong">
+          {q.title}
+          {!answered && (
+            <span className="ml-1 font-bold text-primary" aria-hidden>
+              *
+            </span>
+          )}
+        </span>
         {multi && <span className="text-xs text-faint">{en ? "Multiple choice" : "Mehrfachauswahl"}</span>}
       </legend>
       {q.helpText && <p className="-mt-1 text-sm text-muted-foreground">{q.helpText}</p>}
