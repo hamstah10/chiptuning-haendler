@@ -19,7 +19,7 @@ import {
 } from "@/lib/partner-wizard-api";
 import { AppointmentPicker, WizardContactFields, contactMissing } from "./wizard-contact";
 import { ChipGroup, CheckCards, ChoiceCards, ImageCards, LogoTiles, SegmentedControl, StepSlider, ToolList, type FieldOption, type ToolItem } from "./wizard-fields";
-import { GoalList } from "./wizard-fields/goal-list";
+import { GoalList, goalTitle } from "./wizard-fields/goal-list";
 import { pickVariant } from "@/lib/wizard-variants";
 import { groupServiceOptions } from "@/lib/wizard-service-groups";
 import { sortToolBrands } from "@/lib/wizard-tool-order";
@@ -153,6 +153,7 @@ function answerLabels(q: WizardQuestion, value: WizardAnswers[string] | undefine
   if (value == null || value === "") return [];
   if (value === NO_TOOL) return [locale === "en" ? "No tool yet" : "Noch kein Tool"];
   const raws = Array.isArray(value) ? value.map(String) : [String(value)];
+  if (q.answerKey === "goal") return raws.map((r) => goalTitle(r, locale) ?? r);
   return raws.map((r) => optionTitle(q.options.find((o) => optionValue(q, o) === r) ?? ({} as WizardQuestion["options"][number])) || r);
 }
 
