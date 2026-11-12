@@ -76,6 +76,7 @@ export interface WizardRecommendation {
   packageText: string;
   packageFeatures: string[];
   recommendedTools: WizardRecommendedTool[];
+  recommendedProducts: WizardToolProduct[];
   toolDirection: string;
   nextStep: string;
   estimatedMonthlyRevenue: number | null;
