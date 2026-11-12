@@ -95,6 +95,7 @@ function QuestionBlock({
       {variant === "choiceCards" && <ChoiceCards options={options} isOn={isOn} onToggle={toggle} />}
       {variant === "checkCards" && (
         <CheckCards options={options} isOn={isOn} onToggle={toggle}
+          sections={serviceSections(options, en)}
           onAll={multi ? () => setList(options.map((o) => o.value)) : undefined}
           onReset={multi ? () => setList([]) : undefined}
           allLabel={en ? "Select all" : "Alle wählen"} resetLabel={en ? "Reset" : "Zurücksetzen"} />

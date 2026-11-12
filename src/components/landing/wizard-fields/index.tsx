@@ -57,25 +57,30 @@ export function ImageCards({ options, isOn, onToggle, countLabel }: { options: F
   );
 }
 
-/** Multi-select cards with a tick marker and the option's description text. */
-export function CheckCards({ options, isOn, onToggle, onAll, onReset, allLabel, resetLabel }: { options: FieldOption[]; isOn: (v: string) => boolean; onToggle: (v: string) => void; onAll?: (() => void) | undefined; onReset?: (() => void) | undefined; allLabel?: string; resetLabel?: string }) {
+/** Multi-select cards with a tick marker and the option's description text, optionally split into labelled groups. */
+export function CheckCards({ options, isOn, onToggle, onAll, onReset, allLabel, resetLabel, sections }: { options: FieldOption[]; isOn: (v: string) => boolean; onToggle: (v: string) => void; onAll?: (() => void) | undefined; onReset?: (() => void) | undefined; allLabel?: string; resetLabel?: string; sections?: { label: string; options: FieldOption[] }[] | undefined }) {
+  const groups = sections && sections.length > 1 ? sections : [{ label: null, options }];
+  const card = (o: FieldOption) => {
+    const on = isOn(o.value);
+    return (
+      <button key={o.value} type="button" aria-pressed={on} onClick={() => onToggle(o.value)}
+        className={cn("flex w-full items-start gap-3.5 rounded-sm px-4 py-3.5 text-left", tileBase, on && tileOn)}>
+        <span className="flex-1">
+          <span className="block font-display font-bold uppercase leading-tight text-strong">{o.title}</span>
+          {o.text && <span className="mt-1 block text-sm text-muted-foreground">{o.text}</span>}
+        </span>
+        {tick(on)}
+      </button>
+    );
+  };
   return (
-    <div className="grid gap-2.5">
-      <div className="grid gap-2.5 sm:grid-cols-2">
-        {options.map((o) => {
-          const on = isOn(o.value);
-          return (
-            <button key={o.value} type="button" aria-pressed={on} onClick={() => onToggle(o.value)}
-              className={cn("flex w-full items-start gap-3.5 rounded-sm px-4 py-3.5 text-left", tileBase, on && tileOn)}>
-              <span className="flex-1">
-                <span className="block font-display font-bold uppercase leading-tight text-strong">{o.title}</span>
-                {o.text && <span className="mt-1 block text-sm text-muted-foreground">{o.text}</span>}
-              </span>
-              {tick(on)}
-            </button>
-          );
-        })}
-      </div>
+    <div className="grid gap-4">
+      {groups.map((g, i) => (
+        <div key={g.label ?? i} className="grid gap-2.5">
+          {g.label && <p className="label-caps text-xs text-muted-foreground">{g.label}</p>}
+          <div className="grid gap-2.5 sm:grid-cols-2">{g.options.map(card)}</div>
+        </div>
+      ))}
       {onAll && onReset && options.length > 5 && (
         <div className="flex gap-4 text-xs">
           <button type="button" onClick={onAll} className="label-caps text-primary hover:underline">{allLabel}</button>
