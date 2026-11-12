@@ -483,7 +483,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                   </p>
                 )}
 
-                <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_260px]">
+                <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_300px]">
                 <div>
                 {currentStep?.type === "questions" && (
                   <div className="grid gap-7">
