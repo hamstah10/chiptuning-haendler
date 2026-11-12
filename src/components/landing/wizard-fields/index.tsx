@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check } from "lucide-react";
+import { Check, Gauge, Laptop, Sprout, Wrench } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatEuro } from "@/lib/format";
 
@@ -50,6 +50,71 @@ export function ChoiceCards({ options, isOn, onToggle }: { options: FieldOption[
           </button>
         );
       })}
+    </div>
+  );
+}
+
+const STEP_SLIDER_ICONS = [Sprout, Laptop, Wrench, Gauge];
+
+/** Single choice as a draggable step slider: dot, icon and title per stage, description box for the chosen stage. */
+export function StepSlider({ options, value, onChange, label }: { options: FieldOption[]; value: string; onChange: (v: string) => void; label?: string }) {
+  const chosen = options.findIndex((o) => o.value === value);
+  const pos = chosen >= 0 ? chosen : 0;
+  const last = Math.max(options.length - 1, 1);
+  const current = chosen >= 0 ? options[chosen] : undefined;
+  const cols = { gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` };
+  return (
+    <div>
+      <div className="relative">
+        <div className="absolute left-[12.5%] right-[12.5%] top-3 h-0.5 -translate-y-1/2 rounded-full bg-[#cfcfcf] dark:bg-[#333]" aria-hidden />
+        <div className="absolute left-[12.5%] top-3 h-0.5 -translate-y-1/2 rounded-full bg-[#bd1e23] transition-[width] duration-[220ms] ease-out" style={{ width: `${(pos / last) * 75}%` }} aria-hidden />
+        <input
+          type="range" min={0} max={last} step={1} value={pos} aria-label={label}
+          onChange={(e) => { const o = options[Number(e.target.value)]; if (o) onChange(o.value); }}
+          className="absolute top-0 z-10 h-6 cursor-grab opacity-0 active:cursor-grabbing"
+          style={{ left: "calc(12.5% - 14px)", width: "calc(75% + 28px)" }}
+        />
+        <div role="radiogroup" aria-label={label} className="relative grid" style={cols}>
+          {options.map((o, i) => {
+            const on = i === chosen;
+            const passed = chosen >= 0 && i < chosen;
+            return (
+              <button key={o.value} type="button" role="radio" aria-checked={on} onClick={() => onChange(o.value)} className="flex h-6 items-center justify-center">
+                <span className={cn(
+                  "rounded-full transition-all duration-[180ms] ease-out",
+                  on
+                    ? "size-6 border-2 border-[#bd1e23] bg-[#bd1e23] shadow-[0_0_0_6px_rgba(189,30,35,0.22)]"
+                    : passed
+                      ? "size-4 border-2 border-[#bd1e23] bg-[#bd1e23]"
+                      : "size-4 border-2 border-[#cfcfcf] bg-white dark:border-[#333] dark:bg-[#232323]",
+                )} />
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <div className="mt-[18px] grid" style={cols}>
+        {options.map((o, i) => {
+          const Icon = STEP_SLIDER_ICONS[i] ?? Gauge;
+          const on = i === chosen;
+          const passed = chosen >= 0 && i < chosen;
+          return (
+            <button key={o.value} type="button" onClick={() => onChange(o.value)} className="flex flex-col items-center gap-1.5 px-1 text-center">
+              <Icon strokeWidth={1.8} className={cn("size-7", on ? "text-[#1a1a1a] dark:text-white" : passed ? "text-[#bd1e23]" : "text-[#999]")} />
+              <span className={cn("font-display text-[13px] font-bold uppercase leading-tight", on ? "text-[#1a1a1a] dark:text-white" : passed ? "text-[#333] dark:text-[#ededed]" : "text-[#888]")}>{o.title}</span>
+            </button>
+          );
+        })}
+      </div>
+      {current && (
+        <div className="mt-7 flex gap-4 rounded-[4px] border border-[#dcdcdc] bg-white px-5 py-[18px] dark:border-[#333] dark:bg-[#1c1c1c]">
+          <span className="font-mono text-xs tabular-nums text-[#bd1e23]">{String(chosen + 1).padStart(2, "0")}</span>
+          <span>
+            <span className="block font-display text-[15px] font-bold uppercase text-[#1a1a1a] dark:text-white">{current.title}</span>
+            {current.text && <span className="mt-1 block text-sm leading-[1.45] text-[#555] dark:text-[#ededed]/80">{current.text}</span>}
+          </span>
+        </div>
+      )}
     </div>
   );
 }

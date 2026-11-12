@@ -18,7 +18,7 @@ import {
   type WizardRecommendation,
 } from "@/lib/partner-wizard-api";
 import { AppointmentPicker, WizardContactFields, contactMissing } from "./wizard-contact";
-import { ChipGroup, CheckCards, ChoiceCards, ImageCards, LogoTiles, SegmentedControl, ToolList, type FieldOption, type ToolItem } from "./wizard-fields";
+import { ChipGroup, CheckCards, ChoiceCards, ImageCards, LogoTiles, SegmentedControl, StepSlider, ToolList, type FieldOption, type ToolItem } from "./wizard-fields";
 import { pickVariant } from "@/lib/wizard-variants";
 import { groupServiceOptions } from "@/lib/wizard-service-groups";
 import { sortToolBrands } from "@/lib/wizard-tool-order";
@@ -118,6 +118,7 @@ function QuestionBlock({
       {variant === "logoTiles" && (
         <LogoTiles options={options} isOn={isOn} onToggle={toggle} noneLabel={en ? "No tool yet" : "Noch kein Tool"} noneOn={current === NO_TOOL} onNone={() => onAnswer(q.answerKey, current === NO_TOOL ? "" : NO_TOOL)} />
       )}
+      {variant === "stepSlider" && <StepSlider options={options} value={String(current ?? "")} onChange={(v) => onAnswer(q.answerKey, v)} label={q.title} />}
       {variant === "choiceCards" && <ChoiceCards options={options} isOn={isOn} onToggle={toggle} />}
       {variant === "checkCards" && (
         <CheckCards options={options} isOn={isOn} onToggle={toggle}
