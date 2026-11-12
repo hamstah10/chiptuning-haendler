@@ -434,7 +434,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
 
   return (
     <div>
-      <div className="overflow-hidden rounded-md border border-border-strong bg-card">
+      <div className="overflow-hidden">
         <div className="h-[3px] bg-border"><div className="h-full bg-primary transition-all duration-500" style={{ width: `${((step + 1) / steps.length) * 100}%` }} /></div>
 
         <div>
@@ -463,7 +463,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
             })}
           </ol>
 
-          <div className="p-5 md:p-7">
+          <div className="py-5 md:py-7">
             <AnimatePresence mode="wait">
               <motion.div key={currentStep?.key ?? step} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 1 } : { opacity: 0, y: -6 }} transition={{ duration: 0.22, ease: "easeOut" }}>
                 <div className="label-caps text-xs text-primary">{c.locale === "en" ? "Step" : "Schritt"} {String(step + 1).padStart(2, "0")}</div>
