@@ -36,6 +36,17 @@ function optionTitle(o: WizardQuestion["options"][number]): string {
   return o.title ?? o.name ?? "";
 }
 
+/** Vehicle types shown first, in this order; everything else keeps the API order. */
+const VEHICLE_TYPE_ORDER = ["pkw", "lkw", "agrar"];
+
+function sortVehicleTypes<T>(options: T[], title: (o: T) => string): T[] {
+  const rank = (o: T) => {
+    const i = VEHICLE_TYPE_ORDER.indexOf(title(o).trim().toLowerCase());
+    return i === -1 ? VEHICLE_TYPE_ORDER.length : i;
+  };
+  return [...options].sort((a, b) => rank(a) - rank(b));
+}
+
 function isVisible(q: WizardQuestion, answers: WizardAnswers): boolean {
   if (!q.dependsOnAnswerKey) return true;
   const dep = answers[q.dependsOnAnswerKey];
