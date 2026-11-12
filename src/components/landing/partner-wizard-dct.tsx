@@ -281,15 +281,15 @@ export function PartnerWizardDct({ c }: { c: Content }) {
           <span className="flex items-center gap-2"><ClipboardList className="size-4 text-primary" /><span className="label-caps text-sm text-strong">{config.name || c.partnerEmbed.kicker}</span></span>
           <span className="font-mono text-xs tabular-nums text-muted-foreground">{String(step + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}</span>
         </div>
-        <div className="h-[3px] bg-border lg:hidden"><div className="h-full bg-primary transition-all duration-500" style={{ width: `${((step + 1) / steps.length) * 100}%` }} /></div>
+        <div className="h-[3px] bg-border"><div className="h-full bg-primary transition-all duration-500" style={{ width: `${((step + 1) / steps.length) * 100}%` }} /></div>
 
-        <div className="grid lg:grid-cols-[240px_1fr]">
-          <aside className="hidden border-r bg-sunken/40 p-5 lg:block">
-            <ol className="grid gap-1">
+        <div>
+          <div className="border-b bg-sunken/40 px-5 py-3">
+            <ol className="flex gap-1 overflow-x-auto">
               {steps.map((s, i) => (
-                <li key={s.key}>
+                <li key={s.key} className="flex-1 shrink-0">
                   <button type="button" disabled={i > step} onClick={() => setStep(i)}
-                    className={cn("flex w-full items-center gap-3 rounded-sm border-l-2 px-3 py-2.5 text-left transition-colors", i === step ? "border-l-primary bg-card" : "border-l-transparent hover:bg-card disabled:hover:bg-transparent")}>
+                    className={cn("flex w-full items-center gap-2.5 whitespace-nowrap rounded-sm border-b-2 px-3 py-2.5 text-left transition-colors", i === step ? "border-b-primary bg-card" : "border-b-transparent hover:bg-card disabled:hover:bg-transparent")}>
                     <span className={cn("inline-flex size-6 shrink-0 items-center justify-center rounded-full border font-mono text-[11px]",
                       i < step && "border-primary bg-primary text-primary-foreground", i === step && "border-primary text-primary", i > step && "border-border-strong text-faint")}>
                       {i < step ? <Check className="size-3" /> : String(i + 1).padStart(2, "0")}
@@ -300,8 +300,8 @@ export function PartnerWizardDct({ c }: { c: Content }) {
               ))}
             </ol>
             {answeredSummary.length > 0 && (
-              <div className="mt-6 border-t pt-5">
-                <div className="label-caps mb-2.5 text-[11px] text-faint">{c.locale === "en" ? "Your selection" : "Deine Auswahl"}</div>
+              <div className="mt-3 flex flex-wrap items-center gap-2 border-t pt-3">
+                <div className="label-caps text-[11px] text-faint">{c.locale === "en" ? "Your selection" : "Deine Auswahl"}</div>
                 <div className="flex flex-wrap gap-1.5">
                   {answeredSummary.map((a) => (
                     <button key={a.key} type="button" onClick={() => setStep(a.step)} title={c.locale === "en" ? "Edit" : "Ändern"}
@@ -310,7 +310,7 @@ export function PartnerWizardDct({ c }: { c: Content }) {
                 </div>
               </div>
             )}
-          </aside>
+          </div>
 
           <div className="p-5 md:p-7">
             <AnimatePresence mode="wait">
