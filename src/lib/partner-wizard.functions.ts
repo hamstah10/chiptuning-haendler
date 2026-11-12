@@ -1,6 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
+/** Optional server-side API token (Authorization: Bearer pw_…); never sent to the browser. */
+function portalHeaders(): Record<string, string> {
+  const h: Record<string, string> = { "Content-Type": "application/json", Accept: "application/json", "X-TFD-Client": "tfd" };
+  const token = process.env.TFD_PARTNER_WIZARD_TOKEN;
+  if (token) h["Authorization"] = `Bearer ${token}`;
+  else h["Origin"] = "https://www.chiptuning.company";
+  return h;
+}
+
 const PORTAL_LEADS_URL = "https://portal.dct-files.de/api/tfd-partner-wizard/leads";
 
 /** Server-side proxy: the portal sends no CORS headers on lead submissions. */
@@ -9,7 +18,7 @@ export const submitPartnerWizardLead = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const res = await fetch(PORTAL_LEADS_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      headers: portalHeaders(),
       body: JSON.stringify(data),
     });
     const body = (await res.json().catch(() => ({}))) as Record<string, unknown>;
@@ -35,7 +44,7 @@ export const partnerWizardProxy = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const res = await fetch(`https://portal.dct-files.de${data.path}`, {
       method: data.body === undefined ? "GET" : "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      headers: portalHeaders(),
       body: data.body === undefined ? null : JSON.stringify(data.body),
     });
     const json = (await res.json().catch(() => ({}))) as Record<string, unknown>;
