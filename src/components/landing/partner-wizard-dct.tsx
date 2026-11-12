@@ -137,7 +137,7 @@ function RecommendationView({ rec, c }: { rec: WizardRecommendation; c: Content 
             const price = tool.product?.specialPrice ?? tool.product?.price;
             return (
               <div key={tool.key} className="flex items-center gap-3.5 rounded-sm border border-border-strong bg-sunken px-4 py-3.5">
-                {tool.imageUrl && <img src={tool.imageUrl} alt="" loading="lazy" className="size-10 shrink-0 object-contain" />}
+                {(tool.imageUrl ?? tool.product?.imageUrl) && <img src={tool.imageUrl ?? tool.product?.imageUrl ?? ""} alt="" loading="lazy" className="size-10 shrink-0 object-contain" />}
                 <span className="flex-1">
                   <span className="block font-display font-bold uppercase text-strong">{tool.name}</span>
                   <span className="mt-0.5 block text-sm text-muted-foreground">{tool.description}</span>
