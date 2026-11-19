@@ -38,3 +38,6 @@
 - [x] Wizard: Symbol vor jedem Schritt-Tab
 
 - [x] Wizard: Seitenleiste etwas breiter machen
+- [x] Sign-in-with-Lovable-Button von der Anmeldeseite entfernen
+- [x] Google-Anmelde-Button von der Anmeldeseite entfernen
+- [ ] Google/Lovable im Backend als Anmelde-Methoden abschalten – wartet auf Antwort des Nutzers
